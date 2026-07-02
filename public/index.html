@@ -66,7 +66,7 @@
 
     .hero {
       display: flex; align-items: flex-end; justify-content: space-between; gap: 40px;
-      padding: 80px 0 96px; border-bottom: 1px solid var(--line);
+      padding: 96px 0 128px; border-bottom: 1px solid var(--line);
     }
     .hero .tagline { font-family: var(--sans); font-size: 14px; color: var(--ink-soft); max-width: 320px; }
     .hero h1 {
@@ -93,10 +93,37 @@
       transition: background .2s ease, padding .2s ease;
     }
     .update-actions {
-      display: flex; flex-direction: column; gap: 8px; align-items: flex-start;
+      display: flex; flex-direction: column; gap: 0;
       padding-top: 2px;
+      align-items: stretch;
+      min-width: 90px;
     }
-    .update-actions .go { font-size: 11px; }
+    .update-actions .go,
+    .update-actions .btn-translate {
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--mono); font-size: 11px;
+      letter-spacing: 0.06em;
+      color: var(--ink-mute);
+      background: var(--bg);
+      border: 1px solid var(--line);
+      padding: 7px 12px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all .2s ease;
+      white-space: nowrap;
+      min-width: 88px;
+    }
+    .update-actions .go { border-radius: 6px 6px 0 0; border-bottom: none; }
+    .update-actions .btn-translate { border-radius: 0 0 6px 6px; }
+    .update-actions .go:hover,
+    .update-actions .btn-translate:hover {
+      color: var(--accent); background: #fff5f0;
+    }
+    .update-actions .go:hover { border-color: var(--accent); }
+    .update-actions .btn-translate:hover { border-color: var(--accent); }
+    .update-actions .btn-translate.translated {
+      color: var(--accent); background: #fff5f0;
+    }
     .update-item:hover { background: var(--bg-soft); padding-left: 12px; padding-right: 12px; }
     .update-item .date { font-family: var(--mono); font-size: 13px; color: var(--ink-mute); letter-spacing: 0.04em; padding-top: 2px; }
     .update-item .num { font-family: var(--serif); font-weight: 500; font-size: 32px; color: var(--ink); text-align: right; line-height: 1; }
@@ -120,26 +147,33 @@
 
     /* 收藏按钮(⭐) */
     .btn-fav {
-      background: none; border: 1px solid var(--line);
+      background: var(--bg); border: 1px solid var(--line);
       border-radius: 6px;
-      width: 30px; height: 30px;
+      width: 88px; height: 32px;
       display: inline-flex; align-items: center; justify-content: center;
       cursor: pointer;
       color: var(--ink-mute);
-      font-size: 14px;
+      font-size: 13px;
       line-height: 1;
       transition: all .2s ease;
       padding: 0;
+      margin-top: 6px;
       align-self: start;
+      gap: 4px;
+      font-family: var(--mono);
+      letter-spacing: 0.04em;
     }
-    .btn-fav:hover { color: #ff8a3d; border-color: #ff8a3d; }
+    .btn-fav:hover { color: #ff8a3d; border-color: #ff8a3d; background: #fff5f0; }
     .btn-fav.is-fav { color: #ff8a3d; border-color: #ff8a3d; background: #fff5f0; }
+    .btn-fav .star { font-size: 14px; line-height: 1; }
+    .btn-fav .label { font-size: 10px; }
     /* 论文卡片里 ⭐ 浮在右上角(不影响其它布局) */
     .paper-card { position: relative; }
     .paper-card .btn-fav.paper-fav {
       position: absolute;
       top: 14px; right: 14px;
       z-index: 2;
+      margin-top: 0;
     }
     .paper-card .btn-fav.paper-fav.is-fav { color: #ff8a3d; border-color: #ff8a3d; background: #fff5f0; }
 
@@ -1416,10 +1450,10 @@
             <div class="meta-sub">@${esc(u.username)}</div>
           </div>
           <div class="update-actions">
-            <a class="go" href="${esc(u.link||u.url)}" target="_blank" rel="noopener">SOURCE →</a>
-            <button class="btn-translate" onclick="toggleTranslate(this, this.parentElement.querySelector('.text'), this.parentElement.querySelector('.text').textContent)">译</button>
-          </div>
-          <button class="btn-fav ${isFavorited(u, 'tweet') ? 'is-fav' : ''}" data-i="${i}" data-type="tweet" data-username="${esc(u.username||'')}" title="收藏">★</button>
+             <a class="go" href="${esc(u.link||u.url)}" target="_blank" rel="noopener">SOURCE →</a>
+             <button class="btn-translate" onclick="toggleTranslate(this, this.parentElement.parentElement.querySelector('.text'), this.parentElement.parentElement.querySelector('.text').textContent)">译</button>
+           </div>
+           <button class="btn-fav ${isFavorited(u, 'tweet') ? 'is-fav' : ''}" data-i="${i}" data-type="tweet" data-username="${esc(u.username||'')}" title="收藏"><span class="star">★</span><span class="label">收藏</span></button>
         </li>
       `).join('');
       // 绑定收藏按钮
