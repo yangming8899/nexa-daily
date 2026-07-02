@@ -264,6 +264,7 @@ module.exports = async (req, res) => {
     res.status(404).json({ error: 'Not found' });
   } catch (e) {
     console.error('[api]', url, e);
-    res.status(500).json({ ok: false, error: e.message });
+    // 调试:返回完整堆栈
+    res.status(500).json({ ok: false, error: e.message, stack: e.stack?.split('\n').slice(0, 5).join('\n') });
   }
 };
