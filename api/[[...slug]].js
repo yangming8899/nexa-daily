@@ -56,14 +56,27 @@ async function handleRefresh(req, res) {
   if (debug) {
     probe = [];
     const s = require('../lib/sources');
-    for (const p of people.slice(0, 3)) {
+    for (const p of people) {
       const u = (p.url||'').match(/(?:xcancel|x|twitter|nitter)\.com\/([^/?#]+)/i)?.[1];
       if (!u) continue;
       try {
         const r = await s.fetchUserTweets(u);
-        probe.push({ user: u, count: r.length });
+        // 也返回 sample HTML 片段,排查过滤
+        let html = '', fetchErr = null;
+        try {
+          html = await s.fetchText(`https://nitter.net/${u}`);
+        } catch (e) { fetchErr = e.message; }
+        probe.push({
+          user: u,
+          name: p.name,
+          count: r.length,
+          sample_text: r.slice(0, 2).map(t => t.text.slice(0, 80)),
+          html_len: html.length,
+          html_first: html ? html.slice(0, 300) : '',
+          fetch_err: fetchErr,
+        });
       } catch (e) {
-        probe.push({ user: u, err: e.message.slice(0, 150).replace(/token=[a-z0-9]+/i, 'token=***') });
+        probe.push({ user: u, name: p.name, err: e.message.slice(0, 150).replace(/token=[a-z0-9]+/i, 'token=***') });
       }
     }
   }
