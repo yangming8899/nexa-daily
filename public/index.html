@@ -311,6 +311,43 @@
     }
     .fav-clear:hover { color: #d44; border-color: #d44; }
 
+    /* 分类筛选条(第二排) */
+    .fav-cats {
+      display: flex; align-items: center; gap: 4px;
+      padding: 8px 22px;
+      background: var(--bg);
+      border-bottom: 1px solid var(--line);
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .fav-cats::-webkit-scrollbar { display: none; }
+    .fav-cat {
+      background: var(--bg-soft);
+      border: 1px solid var(--line);
+      font-family: var(--sans);
+      font-size: 11px;
+      color: var(--ink-soft);
+      padding: 4px 10px;
+      border-radius: 100px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all .15s ease;
+    }
+    .fav-cat:hover { color: var(--accent); border-color: var(--accent); }
+    .fav-cat.is-active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+    /* 收藏条目里的分类徽章 */
+    .fav-cat-badge {
+      display: inline-flex; align-items: center; gap: 3px;
+      font-family: var(--sans); font-size: 10px;
+      color: var(--ink-mute);
+      background: var(--bg-soft);
+      border: 1px solid var(--line);
+      padding: 2px 7px;
+      border-radius: 100px;
+      white-space: nowrap;
+    }
+
     .fav-modal-body {
       flex: 1;
       overflow-y: auto;
@@ -479,6 +516,27 @@
     .summary-modal-body .summary-link:hover {
       background: var(--accent);
       color: var(--bg);
+    }
+    /* AI 总结条目里的小 ⭐ 收藏按钮 */
+    .summary-modal-body .summary-fav-btn {
+      flex: 0 0 auto;
+      align-self: center;
+      background: transparent;
+      border: 1px solid var(--line);
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      color: var(--ink-mute);
+      font-size: 13px;
+      cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 0;
+      transition: all .15s ease;
+    }
+    .summary-modal-body .summary-fav-btn:hover {
+      color: #ff8a3d; border-color: #ff8a3d; background: #fff5f0;
+    }
+    .summary-modal-body .summary-fav-btn.is-fav {
+      color: #ff8a3d; border-color: #ff8a3d; background: #fff5f0;
     }
     .summary-ask-wrap {
       margin-top: 24px;
@@ -1061,6 +1119,18 @@
         <button class="fav-tab" data-filter="tweet" onclick="filterFav(this)">推文</button>
         <button class="fav-clear" onclick="clearAllFav()" title="清空所有收藏">清空</button>
       </div>
+      <div class="fav-cats" id="favCats">
+        <button class="fav-cat is-active" data-cat="all" onclick="filterFavCat(this)">全部</button>
+        <button class="fav-cat" data-cat="llm" onclick="filterFavCat(this)">🤖 大模型</button>
+        <button class="fav-cat" data-cat="embodied" onclick="filterFavCat(this)">🦾 具身</button>
+        <button class="fav-cat" data-cat="agi" onclick="filterFavCat(this)">🧠 AGI/推理</button>
+        <button class="fav-cat" data-cat="multimodal" onclick="filterFavCat(this)">🎨 多模态</button>
+        <button class="fav-cat" data-cat="science" onclick="filterFavCat(this)">🔬 科学</button>
+        <button class="fav-cat" data-cat="company" onclick="filterFavCat(this)">🏢 公司/产品</button>
+        <button class="fav-cat" data-cat="research" onclick="filterFavCat(this)">📚 研究方法</button>
+        <button class="fav-cat" data-cat="industry" onclick="filterFavCat(this)">📊 行业/趋势</button>
+        <button class="fav-cat" data-cat="other" onclick="filterFavCat(this)">🗂️ 其他</button>
+      </div>
       <div class="fav-modal-body" id="favBody">
         <div class="fav-empty">还没有收藏,去 Updates 或 Papers 卡片右上角点 ⭐ 收藏你感兴趣的内容。</div>
       </div>
@@ -1561,6 +1631,22 @@
             window.open(a.dataset.url, '_blank', 'noopener');
           });
         });
+        // 绑定 summary 收藏按钮
+        card.querySelectorAll('.summary-fav-btn').forEach(btn => {
+          const url = btn.dataset.url;
+          const type = btn.dataset.type;
+          const sources = type === 'paper' ? _currentSources.papers : _currentSources.updates;
+          const source = sources.find(s => (s.link || s.url) === url);
+          if (!source) return;
+          btn.classList.toggle('is-fav', isFavorited(source, type));
+          btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleFavorite(source, type);
+            btn.classList.toggle('is-fav', isFavorited(source, type));
+            updateFavBadge();
+          });
+        });
       } else {
         card.innerHTML = `<div class="summary-empty">点击右上「✨ AI 总结」让 AI 帮你梳理今日值得关注的内容。</div>`;
       }
@@ -1589,10 +1675,14 @@
       const linkHtml = match
         ? `<a class="summary-link" data-url="${esc(match.url)}" title="查看来源: ${esc(match.label)}">↗ 打开来源</a>`
         : '';
+      const favHtml = match
+        ? `<button class="summary-fav-btn" data-url="${esc(match.url)}" data-type="${isPapers ? 'paper' : 'tweet'}" title="收藏">★</button>`
+        : '';
       return `<div class="summary-item">
         ${num ? `<span class="summary-num">${num}</span>` : '<span class="summary-num">·</span>'}
         <p class="summary-text">${text}</p>
         ${linkHtml}
+        ${favHtml}
       </div>`;
     }
 
@@ -1653,11 +1743,59 @@
     let _currentSources = { updates: [], papers: [] }; // 当前推文+论文,让 summary 里每条可跳转
 
     /* ── 收藏夹 ── */
-    // 结构: { [id]: { type: 'tweet'|'paper', savedAt: number, ...item } }
+    // 结构: { [id]: { type: 'tweet'|'paper', category, savedAt, ...item } }
     // id 规则: tweet => `t:${username}:${text.slice(0,30)}`; paper => `p:${url}`
     let _favorites = {};
+
+    // ── 自动分类 ──
+    // 关键词规则:匹配优先级按数组顺序,先匹配先赢
+    const CATEGORY_RULES = [
+      { id: 'embodied',  patterns: /\b(robot|embod|manipul|gr00t|figure\b|humanoid|navigation|locomotion|具身|机器人|机械臂|机械手|人形)\b/i },
+      { id: 'agi',       patterns: /\b(agi|reasoning|reason\b|emergent|scaling\s*law|superintel|通用人工|涌现|推理|智能|意识|thinking\s*model|chain.of.thought)\b/i },
+      { id: 'science',   patterns: /\b(drug\s*discovery|protein|folding|alpha.?fold|chemistry|materials?\b|biology|medical\b|medicine|genome|genomic|药物|生物|蛋白|化学|材料|医学|基因)\b/i },
+      { id: 'multimodal',patterns: /\b(multimodal|vision|image\s*gen|video\s*gen|text.to.image|text.to.video|audio|voice|speech|whisper|多模态|图像|视频|音频|语音|文生图|文生视频)\b/i },
+      { id: 'llm',       patterns: /\b(llm|gpt.?4|gpt.?5|claude|llama|gemini|deepseek|qwen|mistral|训练|微调|rlhf|transformer|attention|finetun|prompt|tokeniz|蒸馏|sft|dpo|对齐|大语言|大模型|指令)\b/i },
+      { id: 'company',   patterns: /\b(openai|anthropic|deepmind|google\s+ai|xai|meta\s+ai|nvidia|tsmc|融资|funding|launch|发布|推出|partnership|ipo|收购|acqui|api\b|chatgpt|copilot)\b/i },
+      { id: 'research',  patterns: /\b(benchmark|eval|ablation|蒸馏|distill|quantiz|pruning|架构|architecture|训练数据|dataset|baseline|sota|评估|基准|测试集|综述|survey)\b/i },
+      { id: 'industry',  patterns: /\b(market|industry|regulation|trend|chip\b|半导体|芯片|英伟达|台积电|市场|行业|趋势|政策|监管|投资|估值)\b/i },
+    ];
+    const CATEGORIES = {
+      llm:        { label: '大模型',   emoji: '🤖' },
+      embodied:   { label: '具身/机器人', emoji: '🦾' },
+      agi:        { label: 'AGI/推理', emoji: '🧠' },
+      science:    { label: 'AI for Science', emoji: '🔬' },
+      multimodal: { label: '多模态',   emoji: '🎨' },
+      company:    { label: '公司/产品', emoji: '🏢' },
+      research:   { label: '研究方法', emoji: '📚' },
+      industry:   { label: '行业/趋势', emoji: '📊' },
+      other:      { label: '其他',     emoji: '🗂️' },
+    };
+    function autoCategorize(item) {
+      const text = [
+        item.title || '',
+        item.text || '',
+        item.subtitle || '',
+        item.author || '',
+        item.username || '',
+        item.body || '',
+      ].join(' ').toLowerCase();
+      for (const r of CATEGORY_RULES) if (r.patterns.test(text)) return r.id;
+      return 'other';
+    }
+
     function loadFavorites() {
-      try { _favorites = JSON.parse(localStorage.getItem(FAV_KEY) || '{}'); } catch (e) { _favorites = {}; }
+      try {
+        _favorites = JSON.parse(localStorage.getItem(FAV_KEY) || '{}');
+        // 老数据回填分类
+        let dirty = false;
+        for (const id in _favorites) {
+          if (!_favorites[id].category) {
+            _favorites[id].category = autoCategorize(_favorites[id]);
+            dirty = true;
+          }
+        }
+        if (dirty) saveFavorites();
+      } catch (e) { _favorites = {}; }
     }
     function saveFavorites() {
       try { localStorage.setItem(FAV_KEY, JSON.stringify(_favorites)); } catch (e) {}
@@ -1672,7 +1810,7 @@
       if (_favorites[id]) {
         delete _favorites[id];
       } else {
-        _favorites[id] = { type, savedAt: Date.now(), ...item };
+        _favorites[id] = { type, savedAt: Date.now(), category: autoCategorize(item), ...item };
       }
       saveFavorites();
       updateFavBadge();
@@ -1789,6 +1927,7 @@
 
     /* ── 收藏夹 ── */
     let _favFilter = 'all';
+    let _favCatFilter = 'all';
     function openFavorites() {
       $('favModal').classList.add('is-open');
       document.body.style.overflow = 'hidden';
@@ -1802,6 +1941,12 @@
       document.querySelectorAll('.fav-tab').forEach(t => t.classList.remove('is-active'));
       btn.classList.add('is-active');
       _favFilter = btn.dataset.filter;
+      renderFavorites();
+    }
+    function filterFavCat(btn) {
+      document.querySelectorAll('.fav-cat').forEach(t => t.classList.remove('is-active'));
+      btn.classList.add('is-active');
+      _favCatFilter = btn.dataset.cat;
       renderFavorites();
     }
     function clearAllFav() {
@@ -1820,13 +1965,14 @@
       const body = $('favBody');
       const items = Object.values(_favorites)
         .filter(it => _favFilter === 'all' || it.type === _favFilter)
+        .filter(it => _favCatFilter === 'all' || it.category === _favCatFilter)
         .sort((a, b) => (b.savedAt || 0) - (a.savedAt || 0));
       $('favCountLabel').textContent = `${Object.keys(_favorites).length} 条`;
       if (!items.length) {
-        body.innerHTML = `<div class="fav-empty">${
-          _favFilter === 'all' ? '还没有收藏,去 Updates 或 Papers 卡片右上角点 ⭐ 收藏你感兴趣的内容。' :
-          `还没有${_favFilter === 'paper' ? '论文' : '推文'}收藏`
-        }</div>`;
+        const emptyMsg = _favFilter === 'all' && _favCatFilter === 'all'
+          ? '还没有收藏,去 Updates 或 Papers 卡片右上角点 ⭐ 收藏你感兴趣的内容。'
+          : '当前筛选下没有内容。';
+        body.innerHTML = `<div class="fav-empty">${emptyMsg}</div>`;
         return;
       }
       body.innerHTML = items.map(it => renderFavItem(it)).join('');
@@ -1961,6 +2107,7 @@
           summaryChatHistory.push({role: 'user', content: q});
           summaryChatHistory.push({role: 'assistant', content: d.answer});
           saveSummaryChat();
+          renderSummaryChat();  // 应用折叠逻辑
         } else {
           thinking.innerHTML = `<p>⚠️ 出错了: ${d.error || '未知错误'}</p>`;
         }
