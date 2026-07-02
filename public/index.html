@@ -697,7 +697,7 @@
         if (d2.ok) results.papers = d2.count || 0;
         else console.warn('papers refresh failed:', d2.error);
       } catch(e) { console.warn('papers fetch failed:', e); }
-      await loadAll();
+      await loadAll(true); // 强制刷新,绕过缓存
       toast(`刷新完成: 推文 ${results.tweets} 条 · 论文 ${results.papers} 篇`);
       btn.disabled = false; icon.classList.remove('spin');
     }
@@ -779,31 +779,73 @@
     }
 
     /* ── 统一从 /api/data 加载所有数据 ── */
+    // localStorage 缓存:60s 内不重复请求,避免每次打开 modal 都重渲染导致 AI 总结被刷新
+    const DATA_CACHE_KEY = 'nexa_data_cache';
+    const DATA_CACHE_TTL = 60_000; // 60 秒
     let _dataCache = null;
-    async function loadAll() {
+
+    function getCachedData() {
+      try {
+        const raw = localStorage.getItem(DATA_CACHE_KEY);
+        if (!raw) return null;
+        const { ts, data } = JSON.parse(raw);
+        if (Date.now() - ts > DATA_CACHE_TTL) return null;
+        return data;
+      } catch (e) { return null; }
+    }
+    function setCachedData(data) {
+      try { localStorage.setItem(DATA_CACHE_KEY, JSON.stringify({ ts: Date.now(), data })); } catch (e) {}
+    }
+
+    async function loadAll(force = false) {
+      // 1) 先用内存 + localStorage 缓存(瞬间完成)
+      const cached = _dataCache || getCachedData();
+      if (cached && !force) {
+        renderFromData(cached);
+        return;
+      }
+      // 2) 缓存过期或强制刷新:后台请求(不阻塞 UI),请求完成再渲染
       try {
         const r = await fetch('/api/data?_t=' + Date.now(), { cache: 'no-store' });
         if (!r.ok) throw new Error('HTTP ' + r.status);
         const data = await r.json();
         _dataCache = data;
-        renderFocus(data.people || []);
-        renderUpdates(data.updates || []);
-        renderPapers(data.papers || []);
-        const ut = $('updateTime');
-        if (ut && data.updates_meta?.generated_at) ut.textContent = '更新于 ' + tsFmt(data.updates_meta.generated_at);
-        const pt = $('papersTime');
-        if (pt && data.papers_meta?.generated_at) pt.textContent = '更新于 ' + tsFmt(data.papers_meta.generated_at);
-        const st = $('summaryTimeModal');
-        if (st && data.summary_meta?.generated_at) st.textContent = '更新于 ' + tsFmt(data.summary_meta.generated_at);
-        renderSummary({ summary: data.summary || '' });
+        setCachedData(data);
+        renderFromData(data);
       } catch (e) {
         console.warn('loadAll failed:', e);
       }
     }
 
+    function renderFromData(data) {
+      renderFocus(data.people || []);
+      renderUpdates(data.updates || []);
+      renderPapers(data.papers || []);
+      const ut = $('updateTime');
+      if (ut && data.updates_meta?.generated_at) ut.textContent = '更新于 ' + tsFmt(data.updates_meta.generated_at);
+      const pt = $('papersTime');
+      if (pt && data.papers_meta?.generated_at) pt.textContent = '更新于 ' + tsFmt(data.papers_meta.generated_at);
+      const st = $('summaryTimeModal');
+      if (st && data.summary_meta?.generated_at) st.textContent = '更新于 ' + tsFmt(data.summary_meta.generated_at);
+      renderSummary({ summary: data.summary || '' });
+    }
+
     /* ── AI 总结 ── */
     async function doSummarize() {
       const btn = $('btnSummarize');
+      // 如果已有今日 summary,直接打开 modal 显示,不重新跑 AI
+      const cached = _dataCache || getCachedData();
+      if (cached?.summary && cached.summary_meta?.generated_at) {
+        const age = Date.now() - new Date(cached.summary_meta.generated_at).getTime();
+        if (age < 24 * 3600 * 1000) {
+          openSummary();
+          renderSummary({ summary: cached.summary });
+          const st = $('summaryTimeModal');
+          if (st && cached.summary_meta?.generated_at) st.textContent = '更新于 ' + tsFmt(cached.summary_meta.generated_at);
+          return;
+        }
+      }
+      // 否则才调用 AI 生成
       btn.disabled = true;
       btn.innerHTML = '<span class="spin">✨</span> AI 思考中…';
       toast('AI 正在分析今日动态和论文…', 10000);
@@ -813,8 +855,8 @@
         if (d.ok) {
           toast('总结生成完成!');
           openSummary();
-          // 再拉一次拿最新 summary
-          await loadAll();
+          // 强制刷新,拿最新 summary
+          await loadAll(true);
         } else {
           toast('生成失败: ' + (d.error||'未知错误').slice(0,200), 5000);
         }
