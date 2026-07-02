@@ -571,6 +571,23 @@
     }
     .chat-chip:hover { background: #fff; border-color: var(--accent); color: var(--accent); }
 
+    /* 折叠/展开历史按钮 */
+    .chat-history-toggle {
+      display: block; width: 100%;
+      padding: 7px 12px; margin-bottom: 4px;
+      background: transparent;
+      border: 1px dashed var(--line);
+      border-radius: 8px;
+      font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em;
+      color: var(--ink-mute);
+      cursor: pointer; text-align: center;
+      transition: all .2s ease;
+    }
+    .chat-history-toggle:hover {
+      color: var(--accent); border-color: var(--accent);
+      border-style: solid; background: #fff5f0;
+    }
+
     .msg {
       max-width: 85%;
       padding: 10px 14px;
@@ -1959,7 +1976,9 @@
 
     /* ── AI 问答浮层 ── */
     let chatHistory = [];
+    let chatExpanded = false;  // 历史是否展开(默认折叠)
     const CHAT_KEY = 'nexa_chat_history';
+    const CHAT_DEFAULT_VISIBLE = 2;  // 折叠时默认显示最后 1 轮问答
     function loadChatHistory() { try { chatHistory = JSON.parse(localStorage.getItem(CHAT_KEY) || '[]'); } catch(e) { chatHistory = []; } }
     function saveChatHistory() { try { localStorage.setItem(CHAT_KEY, JSON.stringify(chatHistory.slice(-20))); } catch(e) {} }
     function toggleChat() {
@@ -1970,13 +1989,59 @@
         $('chatInput').focus();
       }
     }
+    function chatWelcomeHtml() {
+      return `<div class="chat-welcome">
+        <p>👋 你好!我是 NEXA AI 助手。</p>
+        <p>我可以基于今日的推文、论文和 AI 总结回答你的问题。比如:</p>
+        <div class="chat-chips">
+          <button class="chat-chip" onclick="askChip(this)">解释 Ilya 关于 Scaling 的推文</button>
+          <button class="chat-chip" onclick="askChip(this)">今日最值得读的 3 篇论文是哪些</button>
+          <button class="chat-chip" onclick="askChip(this)">我是初学者,今天该学什么</button>
+          <button class="chat-chip" onclick="askChip(this)">今日提到的关键概念有哪些</button>
+        </div>
+      </div>`;
+    }
     function renderChatHistory() {
       const box = $('chatMessages');
-      if (!chatHistory.length) return;
+      // 清掉所有动态元素(msg + toggle),保留 welcome(若有)
+      box.querySelectorAll('.msg, .chat-history-toggle').forEach(el => el.remove());
+
+      if (!chatHistory.length) {
+        // 没历史 → 恢复 welcome
+        if (!box.querySelector('.chat-welcome')) box.innerHTML = chatWelcomeHtml();
+        box.scrollTop = 0;
+        return;
+      }
+      // 有历史 → 移除 welcome
       const welcome = box.querySelector('.chat-welcome');
       if (welcome) welcome.remove();
-      box.innerHTML = '';
-      for (const m of chatHistory) appendMsg(m.role, m.content, false);
+
+      // 决定显示哪些消息
+      const visible = chatExpanded ? chatHistory : chatHistory.slice(-CHAT_DEFAULT_VISIBLE);
+      const hidden = chatHistory.length - visible.length;
+
+      // 有隐藏消息 → 在顶部加折叠/展开按钮
+      if (hidden > 0) {
+        const toggle = document.createElement('button');
+        toggle.className = 'chat-history-toggle';
+        toggle.textContent = chatExpanded
+          ? '↓ 收起历史'
+          : `↑ 还有 ${hidden} 条更早的对话`;
+        toggle.onclick = () => {
+          chatExpanded = !chatExpanded;
+          renderChatHistory();
+        };
+        box.appendChild(toggle);
+      }
+
+      // 渲染可见消息
+      for (const m of visible) {
+        const div = document.createElement('div');
+        div.className = 'msg ' + (m.role === 'user' ? 'msg-user' : 'msg-ai');
+        div.innerHTML = isHtmlFragment(m.content) ? m.content : renderMd(m.content);
+        box.appendChild(div);
+      }
+
       box.scrollTop = box.scrollHeight;
     }
     function appendMsg(role, content, scroll=true) {
@@ -2042,18 +2107,9 @@
     }
     function clearChat() {
       chatHistory = [];
+      chatExpanded = false;
       try { localStorage.removeItem(CHAT_KEY); } catch(e) {}
-      const box = $('chatMessages');
-      box.innerHTML = `<div class="chat-welcome">
-        <p>👋 你好!我是 NEXA AI 助手。</p>
-        <p>我可以基于今日的推文、论文和 AI 总结回答你的问题。比如:</p>
-        <div class="chat-chips">
-          <button class="chat-chip" onclick="askChip(this)">解释 Ilya 关于 Scaling 的推文</button>
-          <button class="chat-chip" onclick="askChip(this)">今日最值得读的 3 篇论文是哪些</button>
-          <button class="chat-chip" onclick="askChip(this)">我是初学者,今天该学什么</button>
-          <button class="chat-chip" onclick="askChip(this)">今日提到的关键概念有哪些</button>
-        </div>
-      </div>`;
+      renderChatHistory();  // 重新渲染,自动恢复 welcome
     }
 
     /* ── 启动 ── */
