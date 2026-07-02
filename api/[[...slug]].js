@@ -90,8 +90,12 @@ async function handleRefresh(req, res) {
       errors: result.errors || [],
       probe: probe?.map(p => ({
         user: p.user,
-        source: p.source,
+        name: p.name,
         count: p.count,
+        sample_text: p.sample_text,
+        html_len: p.html_len,
+        html_first: p.html_first,
+        fetch_err: p.fetch_err,
         // 过滤敏感信息,只保留前 80 字符
         err: p.err ? p.err.replace(/token=[a-z0-9]+/i, 'token=***').slice(0, 120) : undefined,
       })),
