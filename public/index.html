@@ -934,10 +934,14 @@
       if (welcome) welcome.remove();
       const div = document.createElement('div');
       div.className = 'msg ' + (role === 'user' ? 'msg-user' : 'msg-ai');
-      div.innerHTML = renderMd(content);
+      // 如果是 HTML 字符串(typing dots 等),直接赋值;否则渲染 markdown
+      div.innerHTML = isHtmlFragment(content) ? content : renderMd(content);
       box.appendChild(div);
       if (scroll) box.scrollTop = box.scrollHeight;
       return div;
+    }
+    function isHtmlFragment(s) {
+      return typeof s === 'string' && /^\s*<[a-zA-Z]/.test(s);
     }
     function renderMd(text) {
       const esc2 = (s) => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
