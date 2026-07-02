@@ -113,6 +113,30 @@
     .btn-translate:hover { color: var(--accent); border-color: var(--accent); }
     .btn-translate.translated { color: var(--accent); border-color: var(--accent); background: #fff5f0; }
 
+    /* 收藏按钮(⭐) */
+    .btn-fav {
+      background: none; border: 1px solid var(--line);
+      border-radius: 6px;
+      width: 28px; height: 28px;
+      display: inline-flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      color: var(--ink-mute);
+      font-size: 14px;
+      line-height: 1;
+      transition: all .2s ease;
+      padding: 0;
+    }
+    .btn-fav:hover { color: #ff8a3d; border-color: #ff8a3d; }
+    .btn-fav.is-fav { color: #ff8a3d; border-color: #ff8a3d; background: #fff5f0; }
+    .update-item .btn-fav { position: absolute; top: 12px; right: 12px; }
+    .update-item { position: relative; }
+    .paper-card { position: relative; }
+    .paper-card .btn-fav.paper-fav {
+      position: absolute;
+      top: 14px; right: 14px;
+      z-index: 2;
+    }
+
     .focus-grid {
       display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;
     }
@@ -157,6 +181,171 @@
     .paper-card p { font-size: 14px; color: var(--ink-soft); line-height: 1.6; margin-bottom: 18px; }
     .paper-card .arrow { font-family: var(--mono); font-size: 12px; color: var(--ink-mute); }
     .paper-card:hover .arrow { color: var(--accent); }
+
+    /* 收藏按钮(顶栏) 上的徽标 */
+    .fav-badge {
+      display: inline-block;
+      margin-left: 4px;
+      background: #ff8a3d;
+      color: #fff;
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 600;
+      line-height: 16px;
+      min-width: 18px;
+      height: 18px;
+      border-radius: 9px;
+      padding: 0 5px;
+      vertical-align: 1px;
+    }
+    .btn-fav-trigger { position: relative; }
+
+    /* 收藏 modal */
+    .fav-modal {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.35);
+      z-index: 2100;
+      display: none;
+      align-items: center; justify-content: center;
+      padding: 20px;
+      animation: overlayFade .2s ease;
+    }
+    .fav-modal.is-open { display: flex; }
+    .fav-modal-inner {
+      width: min(720px, 100%);
+      max-height: 86vh;
+      background: var(--bg);
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      box-shadow: 0 30px 80px rgba(0,0,0,.2);
+      display: flex; flex-direction: column;
+      animation: cardSlide .3s cubic-bezier(.2,.8,.4,1);
+      overflow: hidden;
+    }
+    .fav-modal-head {
+      display: flex; align-items: center; gap: 12px;
+      padding: 18px 22px;
+      border-bottom: 1px solid var(--line);
+    }
+    .fav-modal-title {
+      font-family: var(--serif);
+      font-size: 18px; font-weight: 500;
+      color: var(--ink);
+      letter-spacing: -0.01em;
+    }
+    .fav-modal-meta {
+      flex: 1;
+      font-family: var(--mono); font-size: 11px;
+      color: var(--ink-mute);
+      letter-spacing: 0.04em;
+    }
+    .fav-modal-close {
+      background: none; border: 1px solid var(--line);
+      width: 26px; height: 26px; border-radius: 50%;
+      font-size: 12px; color: var(--ink-mute); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .fav-modal-close:hover { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+
+    .fav-modal-tabs {
+      display: flex; align-items: center; gap: 4px;
+      padding: 8px 22px;
+      border-bottom: 1px solid var(--line);
+      background: var(--bg-soft);
+    }
+    .fav-tab {
+      background: none; border: none;
+      font-family: var(--mono); font-size: 11px;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--ink-mute);
+      padding: 6px 12px;
+      border-radius: 100px;
+      cursor: pointer;
+    }
+    .fav-tab:hover { color: var(--ink); }
+    .fav-tab.is-active { background: var(--ink); color: var(--bg); }
+    .fav-clear {
+      margin-left: auto;
+      background: none; border: 1px solid var(--line);
+      font-family: var(--mono); font-size: 10px;
+      color: var(--ink-mute);
+      padding: 4px 10px;
+      border-radius: 100px;
+      cursor: pointer;
+    }
+    .fav-clear:hover { color: #d44; border-color: #d44; }
+
+    .fav-modal-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px 22px 22px;
+    }
+    .fav-empty {
+      text-align: center;
+      color: var(--ink-mute);
+      font-size: 14px;
+      padding: 60px 20px;
+      font-style: italic;
+    }
+    .fav-item {
+      display: flex; gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px dashed var(--line);
+    }
+    .fav-item:last-child { border-bottom: none; }
+    .fav-type {
+      flex: 0 0 auto;
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      background: var(--bg-soft);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px;
+      color: var(--ink);
+    }
+    .fav-type.paper { background: #e8e9ff; color: #4a5ad7; }
+    .fav-type.tweet { background: #fff5f0; color: #ff8a3d; }
+    .fav-content {
+      flex: 1;
+      min-width: 0;
+    }
+    .fav-content .name {
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+    .fav-content .body {
+      font-family: var(--sans);
+      font-size: 13px;
+      color: var(--ink-soft);
+      line-height: 1.55;
+      margin-bottom: 6px;
+      word-wrap: break-word;
+    }
+    .fav-content .meta {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--ink-mute);
+      letter-spacing: 0.04em;
+    }
+    .fav-content .meta a {
+      color: var(--accent);
+      text-decoration: none;
+      margin-right: 10px;
+    }
+    .fav-content .meta a:hover { text-decoration: underline; }
+    .fav-remove {
+      flex: 0 0 auto;
+      align-self: center;
+      background: none; border: 1px solid var(--line);
+      border-radius: 6px;
+      width: 28px; height: 28px;
+      cursor: pointer;
+      color: var(--ink-mute);
+      font-size: 13px;
+    }
+    .fav-remove:hover { color: #d44; border-color: #d44; }
 
     .summary-modal {
       position: fixed; inset: 0;
@@ -713,6 +902,9 @@
         <button class="btn-sm" id="btnOpenChat" title="向 NEXA 问问关于今日内容的问题" onclick="toggleChat()">
           💬 NEXA 问问
         </button>
+        <button class="btn-sm btn-fav-trigger" id="btnOpenFav" title="查看收藏夹" onclick="openFavorites()">
+          ⭐ 收藏 <span class="fav-badge" id="favBadge" style="display:none;">0</span>
+        </button>
         <nav class="topbar-icons">
           <a href="#updates">Updates</a>
           <a href="#focus">Focus</a>
@@ -798,6 +990,26 @@
           <input class="chat-input" id="summaryChatInput" type="text" placeholder="在 NEXA 问问里继续提问…" autocomplete="off" />
           <button class="chat-send" id="summaryChatSend" onclick="sendSummaryChat()">→</button>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 收藏夹 modal -->
+  <div class="fav-modal" id="favModal" onclick="if(event.target===this)closeFavorites()">
+    <div class="fav-modal-inner">
+      <div class="fav-modal-head">
+        <span class="fav-modal-title">⭐ 我的收藏</span>
+        <span class="fav-modal-meta" id="favCountLabel">0 条</span>
+        <button class="fav-modal-close" onclick="closeFavorites()" title="关闭 (Esc)">✕</button>
+      </div>
+      <div class="fav-modal-tabs">
+        <button class="fav-tab is-active" data-filter="all" onclick="filterFav(this)">全部</button>
+        <button class="fav-tab" data-filter="paper" onclick="filterFav(this)">论文</button>
+        <button class="fav-tab" data-filter="tweet" onclick="filterFav(this)">推文</button>
+        <button class="fav-clear" onclick="clearAllFav()" title="清空所有收藏">清空</button>
+      </div>
+      <div class="fav-modal-body" id="favBody">
+        <div class="fav-empty">还没有收藏,去 Updates 或 Papers 卡片右上角点 ⭐ 收藏你感兴趣的内容。</div>
       </div>
     </div>
   </div>
@@ -1199,8 +1411,22 @@
           </div>
           <a class="go" href="${esc(u.link||u.url)}" target="_blank" rel="noopener">SOURCE →</a>
           <button class="btn-translate" onclick="toggleTranslate(this, this.parentElement.querySelector('.text'), this.parentElement.querySelector('.text').textContent)">译</button>
+          <button class="btn-fav ${isFavorited(u, 'tweet') ? 'is-fav' : ''}" data-i="${i}" data-type="tweet" data-username="${esc(u.username||'')}" title="收藏">★</button>
         </li>
       `).join('');
+      // 绑定收藏按钮
+      list.querySelectorAll('.btn-fav').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          const i = +btn.dataset.i;
+          const type = btn.dataset.type;
+          const item = updates[i];
+          if (!item) return;
+          const action = toggleFavorite(item, type);
+          btn.classList.toggle('is-fav', action === 'added');
+          toast(action === 'added' ? '已收藏 ⭐' : '已取消收藏');
+        });
+      });
     }
 
     function renderPapers(papers) {
@@ -1212,6 +1438,7 @@
       }
       grid.innerHTML = papers.map((p,i) => `
         <div class="paper-card">
+          <button class="btn-fav paper-fav ${isFavorited(p, 'paper') ? 'is-fav' : ''}" data-i="${i}" data-type="paper" title="收藏">★</button>
           <a href="${esc(p.url)}" target="_blank" rel="noopener" style="display:block;">
             <span class="tag">arXiv / ${esc(p.date||'')}</span>
             <h3>${esc(p.title)}</h3>
@@ -1221,6 +1448,19 @@
           <button class="btn-translate paper-tl" style="margin-top:12px;" onclick="event.preventDefault(); toggleTranslate(this, this.parentElement.querySelector('.paper-desc'), this.parentElement.querySelector('.paper-desc').textContent)">译</button>
         </div>
       `).join('');
+      // 绑定论文收藏按钮
+      grid.querySelectorAll('.btn-fav').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const i = +btn.dataset.i;
+          const item = papers[i];
+          if (!item) return;
+          const action = toggleFavorite(item, 'paper');
+          btn.classList.toggle('is-fav', action === 'added');
+          toast(action === 'added' ? '已收藏 ⭐' : '已取消收藏');
+        });
+      });
     }
 
     function renderSummary(data) {
@@ -1231,7 +1471,6 @@
         const sources = data.sources || _currentSources || { updates: [], papers: [] };
         const updates = sources.updates || [];
         const papers = sources.papers || [];
-        console.log('[renderSummary] sources:', updates.length, 'updates,', papers.length, 'papers');
         let html = '', seenH1 = false;
         let inTweetsList = false, inPapersList = false;
         for (let i = 0; i < lines.length; i++) {
@@ -1354,8 +1593,45 @@
     // localStorage 缓存:60s 内不重复请求,避免每次打开 modal 都重渲染导致 AI 总结被刷新
     const DATA_CACHE_KEY = 'nexa_data_cache';
     const DATA_CACHE_TTL = 60_000; // 60 秒
+    const FAV_KEY = 'nexa_favorites';
     let _dataCache = null;
     let _currentSources = { updates: [], papers: [] }; // 当前推文+论文,让 summary 里每条可跳转
+
+    /* ── 收藏夹 ── */
+    // 结构: { [id]: { type: 'tweet'|'paper', savedAt: number, ...item } }
+    // id 规则: tweet => `t:${username}:${text.slice(0,30)}`; paper => `p:${url}`
+    let _favorites = {};
+    function loadFavorites() {
+      try { _favorites = JSON.parse(localStorage.getItem(FAV_KEY) || '{}'); } catch (e) { _favorites = {}; }
+    }
+    function saveFavorites() {
+      try { localStorage.setItem(FAV_KEY, JSON.stringify(_favorites)); } catch (e) {}
+    }
+    function favId(item, type) {
+      if (type === 'paper') return 'p:' + (item.url || item.title);
+      return 't:' + (item.username || item.author || '') + ':' + (item.text || '').slice(0, 40);
+    }
+    function isFavorited(item, type) { return !!_favorites[favId(item, type)]; }
+    function toggleFavorite(item, type) {
+      const id = favId(item, type);
+      if (_favorites[id]) {
+        delete _favorites[id];
+      } else {
+        _favorites[id] = { type, savedAt: Date.now(), ...item };
+      }
+      saveFavorites();
+      updateFavBadge();
+      return !_favorites[id] ? 'removed' : 'added';
+    }
+    function updateFavBadge() {
+      const n = Object.keys(_favorites).length;
+      const badge = $('favBadge');
+      if (badge) {
+        badge.textContent = n;
+        badge.style.display = n ? 'inline-block' : 'none';
+      }
+    }
+    loadFavorites();
 
     function getCachedData() {
       try {
@@ -1455,6 +1731,122 @@
       $('summaryModal').classList.remove('is-open');
       document.body.style.overflow = '';
     }
+
+    /* ── 收藏夹 ── */
+    let _favFilter = 'all';
+    function openFavorites() {
+      $('favModal').classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+      renderFavorites();
+    }
+    function closeFavorites() {
+      $('favModal').classList.remove('is-open');
+      document.body.style.overflow = '';
+    }
+    function filterFav(btn) {
+      document.querySelectorAll('.fav-tab').forEach(t => t.classList.remove('is-active'));
+      btn.classList.add('is-active');
+      _favFilter = btn.dataset.filter;
+      renderFavorites();
+    }
+    function clearAllFav() {
+      const n = Object.keys(_favorites).length;
+      if (!n) return;
+      if (!confirm(`确定清空全部 ${n} 条收藏?`)) return;
+      _favorites = {};
+      saveFavorites();
+      updateFavBadge();
+      renderFavorites();
+      // 同时取消页面上的 ⭐ 状态
+      document.querySelectorAll('.btn-fav.is-fav').forEach(b => b.classList.remove('is-fav'));
+      toast('已清空收藏');
+    }
+    function renderFavorites() {
+      const body = $('favBody');
+      const items = Object.values(_favorites)
+        .filter(it => _favFilter === 'all' || it.type === _favFilter)
+        .sort((a, b) => (b.savedAt || 0) - (a.savedAt || 0));
+      $('favCountLabel').textContent = `${Object.keys(_favorites).length} 条`;
+      if (!items.length) {
+        body.innerHTML = `<div class="fav-empty">${
+          _favFilter === 'all' ? '还没有收藏,去 Updates 或 Papers 卡片右上角点 ⭐ 收藏你感兴趣的内容。' :
+          `还没有${_favFilter === 'paper' ? '论文' : '推文'}收藏`
+        }</div>`;
+        return;
+      }
+      body.innerHTML = items.map(it => renderFavItem(it)).join('');
+      // 绑定删除
+      body.querySelectorAll('.fav-remove').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = btn.dataset.id;
+          delete _favorites[id];
+          saveFavorites();
+          updateFavBadge();
+          // 取消页面上的 ⭐ 状态(如果还在视口)
+          const btnOnPage = document.querySelector(`.btn-fav[data-type="${btn.dataset.type}"]`);
+          // 简化:不强求匹配,直接重渲染
+          renderFavorites();
+          // 同步页面 ⭐ 状态
+          if (btnOnPage) {
+            const item = items.find(x => favId(x, x.type) === id);
+            // 重新比对所有按钮
+            syncFavButtons();
+          }
+          toast('已取消收藏');
+        });
+      });
+    }
+    function renderFavItem(it) {
+      const isPaper = it.type === 'paper';
+      const date = new Date(it.savedAt || Date.now()).toLocaleString('zh-CN', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
+      if (isPaper) {
+        return `<div class="fav-item">
+          <div class="fav-type paper">📄</div>
+          <div class="fav-content">
+            <div class="name">${esc(it.title || '(无标题)')}</div>
+            <div class="body">${esc((it.subtitle || '').slice(0, 240))}</div>
+            <div class="meta">
+              <a href="${esc(it.url)}" target="_blank" rel="noopener">arXiv ↗</a>
+              <span>${esc(it.date || '')} · 收藏于 ${date}</span>
+            </div>
+          </div>
+          <button class="fav-remove" data-id="${esc(favId(it, 'paper'))}" data-type="paper" title="移除">✕</button>
+        </div>`;
+      } else {
+        const link = it.link || it.url || '#';
+        return `<div class="fav-item">
+          <div class="fav-type tweet">𝕏</div>
+          <div class="fav-content">
+            <div class="name">${esc(it.author || it.username || '')} <span style="color:var(--ink-mute);font-weight:400;font-size:12px;">@${esc(it.username || '')}</span></div>
+            <div class="body">${esc((it.text || '').slice(0, 280))}</div>
+            <div class="meta">
+              <a href="${esc(link)}" target="_blank" rel="noopener">查看原文 ↗</a>
+              <span>${esc(it.time || '')} · 收藏于 ${date}</span>
+            </div>
+          </div>
+          <button class="fav-remove" data-id="${esc(favId(it, 'tweet'))}" data-type="tweet" title="移除">✕</button>
+        </div>`;
+      }
+    }
+    // 同步页面上的 ⭐ 状态(收藏夹里取消时)
+    function syncFavButtons() {
+      document.querySelectorAll('.update-item').forEach((el, i) => {
+        const btn = el.querySelector('.btn-fav');
+        if (!btn) return;
+        const text = el.querySelector('.text')?.textContent || '';
+        const id = 't:' + (btn.dataset.username || '') + ':' + text.slice(0, 40);
+        btn.classList.toggle('is-fav', !!_favorites[id]);
+      });
+    }
+    // Esc 关闭 modal
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        if ($('favModal').classList.contains('is-open')) closeFavorites();
+        else if ($('summaryModal').classList.contains('is-open')) closeSummary();
+      }
+    });
+    // 启动时刷新徽标
+    updateFavBadge();
 
     /* ── Modal 内嵌问答 ── */
     let summaryChatHistory = [];
