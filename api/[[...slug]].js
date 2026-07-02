@@ -84,6 +84,7 @@ async function handleRefresh(req, res) {
     ok: true,
     count: saved.count,
     generated_at: saved.generated_at,
+    version_marker: 'NEXA_V42_DEBUG_HTML_LEN',
     ...(debug ? {
       sample: result.updates.slice(0, 3),
       errors: result.errors || [],
