@@ -819,99 +819,279 @@
       100% { width: 60px; height: 60px; opacity: 0; }
     }
 
-    /* 小猫 */
-    .cat {
-      position: absolute;
-      width: 50px; height: 38px;
-      left: 50%; top: 50%;
-      transform-origin: center;
-      transition: left .35s cubic-bezier(.4,.2,.2,1),
-                  top  .35s cubic-bezier(.4,.2,.2,1),
-                  transform .2s ease-out;
-      will-change: left, top, transform;
-      z-index: 2;
-    }
-    .cat.is-jumping { animation: catJump .5s ease-out; }
-    @keyframes catJump {
-      0%   { transform: translate(var(--cat-flip, scaleX(1)), 0); }
-      30%  { transform: translate(var(--cat-flip, scaleX(1)), -28px) scale(1.05); }
-      60%  { transform: translate(var(--cat-flip, scaleX(1)), -8px)  scale(1.02); }
-      100% { transform: translate(var(--cat-flip, scaleX(1)), 0); }
+    /* 起司猫色系 */
+    :root {
+      --cat-base: #e8c79a;       /* 暖米黄底色 */
+      --cat-stripe: #4a2818;     /* 深棕虎斑 */
+      --cat-stripe-soft: #6b3a22;/* 浅一点虎斑 */
+      --cat-white: #faf6ed;      /* 奶白胸腹/脚 */
+      --cat-pink: #f0a8a8;       /* 粉鼻/耳窝 */
+      --cat-pink-deep: #d97a7a;  /* 腮红 */
+      --cat-green: #6db96d;      /* 绿眼睛 */
+      --cat-cheese: #f5c542;     /* 奶酪黄 */
+      --cat-cheese-dark: #c8941a;/* 奶酪边 */
     }
 
-    /* 猫咪身体部件 - 用 CSS 画 */
+    /* 起司猫 */
+    .cat {
+      position: absolute;
+      width: 58px; height: 44px;
+      left: 50%; top: 50%;
+      transform-origin: center;
+      transition: left .45s cubic-bezier(.4,.2,.2,1),
+                  top  .45s cubic-bezier(.4,.2,.2,1),
+                  transform .25s ease-out;
+      will-change: left, top, transform;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .cat.is-eating .cat-mouth { width: 5px; height: 3px; }
+    .cat.is-eating .cat-eye { height: 1.5px; }
+    .cat.is-sleeping { transform: scaleY(0.55) translateY(8px) var(--cat-flip, scaleX(1)) !important; }
+    .cat.is-sleeping .cat-eye { height: 1px; }
+    .cat.is-sleeping .cat-tail { animation-duration: 3s; }
+
+    /* 尾巴 */
+    .cat-tail {
+      position: absolute;
+      left: -2px; bottom: 16px;
+      width: 16px; height: 5px;
+      background: var(--cat-base);
+      border-top: 1.5px solid var(--cat-stripe);
+      border-radius: 6px 2px 2px 6px / 6px 4px 4px 6px;
+      transform-origin: right center;
+      animation: catTail 1s ease-in-out infinite;
+      z-index: 1;
+    }
+    @keyframes catTail {
+      0%, 100% { transform: rotate(20deg); }
+      50%      { transform: rotate(-20deg); }
+    }
+
+    /* 腿 (4 条,前 2 后 2) */
+    .cat-leg {
+      position: absolute;
+      width: 4px; height: 9px;
+      background: var(--cat-base);
+      border-bottom: 2.5px solid var(--cat-white);
+      border-radius: 0 0 3px 3px;
+      transform-origin: top center;
+      bottom: 0;
+      z-index: 0;
+    }
+    .cat-leg.f1 { left: 14px; animation: catLegA .4s ease-in-out infinite; }
+    .cat-leg.f2 { left: 20px; animation: catLegB .4s ease-in-out infinite; }
+    .cat-leg.b1 { left: 32px; animation: catLegB .4s ease-in-out infinite; }
+    .cat-leg.b2 { left: 38px; animation: catLegA .4s ease-in-out infinite; }
+    @keyframes catLegA { 0%, 100% { transform: rotate(20deg); } 50% { transform: rotate(-20deg); } }
+    @keyframes catLegB { 0%, 100% { transform: rotate(-20deg); } 50% { transform: rotate(20deg); } }
+    /* 睡觉/吃东西时腿不抖 */
+    .cat.is-eating .cat-leg,
+    .cat.is-sleeping .cat-leg { animation: none; }
+
+    /* 身体(米黄底) */
     .cat-body {
       position: absolute;
-      left: 4px; bottom: 6px;
-      width: 28px; height: 16px;
-      background: var(--ink);
+      left: 4px; bottom: 8px;
+      width: 36px; height: 20px;
+      background: var(--cat-base);
       border-radius: 50% 50% 45% 45% / 60% 60% 40% 40%;
+      z-index: 1;
     }
+    /* 身上虎斑: 3 道深棕弧 */
+    .cat-body::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 6px; right: 6px; bottom: 0;
+      background:
+        radial-gradient(ellipse 3px 7px at 18% 20%, var(--cat-stripe) 60%, transparent 62%),
+        radial-gradient(ellipse 3px 7px at 50% 15%, var(--cat-stripe) 60%, transparent 62%),
+        radial-gradient(ellipse 3px 7px at 82% 20%, var(--cat-stripe) 60%, transparent 62%);
+      z-index: 2;
+      pointer-events: none;
+    }
+    /* 白色胸腹 */
+    .cat-belly {
+      position: absolute;
+      left: 18px; bottom: 6px;
+      width: 18px; height: 16px;
+      background: var(--cat-white);
+      border-radius: 50%;
+      z-index: 3;
+    }
+
+    /* 头 */
     .cat-head {
       position: absolute;
-      left: 28px; bottom: 12px;
-      width: 16px; height: 16px;
-      background: var(--ink);
+      left: 34px; bottom: 16px;
+      width: 20px; height: 20px;
+      background: var(--cat-base);
       border-radius: 50%;
+      z-index: 1;
     }
+    /* 头上 M 形虎斑 */
+    .cat-head::before {
+      content: '';
+      position: absolute;
+      left: 4px; top: 3px;
+      width: 12px; height: 6px;
+      background:
+        linear-gradient(90deg,
+          var(--cat-stripe) 0 20%, transparent 20% 35%,
+          var(--cat-stripe) 35% 65%, transparent 65% 80%,
+          var(--cat-stripe) 80% 100%);
+      clip-path: polygon(0 100%, 20% 30%, 50% 80%, 80% 30%, 100% 100%);
+      z-index: 2;
+    }
+
+    /* 耳朵 (三角形) */
     .cat-ear {
       position: absolute;
       width: 0; height: 0;
-      border-left: 4px solid transparent;
-      border-right: 4px solid transparent;
-      border-bottom: 7px solid var(--ink);
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-bottom: 9px solid var(--cat-base);
+      z-index: 1;
     }
-    .cat-ear.l { left: 28px; bottom: 24px; transform: rotate(-15deg); }
-    .cat-ear.r { left: 38px; bottom: 24px; transform: rotate(15deg); }
+    .cat-ear.l { left: 32px; bottom: 32px; transform: rotate(-20deg); }
+    .cat-ear.r { left: 46px; bottom: 32px; transform: rotate(20deg); }
+    /* 耳窝 */
+    .cat-ear-inner {
+      position: absolute;
+      width: 0; height: 0;
+      border-left: 2.5px solid transparent;
+      border-right: 2.5px solid transparent;
+      border-bottom: 5px solid var(--cat-pink);
+      z-index: 2;
+    }
+    .cat-ear-inner.l { left: 34.5px; bottom: 31px; transform: rotate(-20deg); }
+    .cat-ear-inner.r { left: 48.5px; bottom: 31px; transform: rotate(20deg); }
+
+    /* 眼睛(绿色,带竖瞳) */
     .cat-eye {
       position: absolute;
-      width: 2px; height: 2px;
-      background: var(--accent);
+      width: 3.5px; height: 5px;
+      background: var(--cat-green);
       border-radius: 50%;
+      z-index: 3;
+      transition: height .2s ease;
     }
-    .cat-eye.l { left: 33px; top: 18px; }
-    .cat-eye.r { left: 38px; top: 18px; }
+    .cat-eye.l { left: 38px; top: 19px; }
+    .cat-eye.r { left: 46px; top: 19px; }
+    .cat-eye::after {
+      content: '';
+      position: absolute;
+      width: 1px; height: 4px;
+      background: #111;
+      left: 1.25px; top: 0.5px;
+      border-radius: 1px;
+    }
+
+    /* 鼻子(粉心形) */
     .cat-nose {
       position: absolute;
-      left: 36px; top: 22px;
-      width: 0; height: 0;
-      border-left: 2px solid transparent;
-      border-right: 2px solid transparent;
-      border-top: 2px solid #ff8a6b;
+      left: 41px; top: 24.5px;
+      width: 4px; height: 2.5px;
+      background: var(--cat-pink);
+      border-radius: 50% 50% 40% 40%;
+      z-index: 3;
     }
-    .cat-tail {
+    /* 嘴(吃东西时变大) */
+    .cat-mouth {
       position: absolute;
-      left: 0; bottom: 12px;
-      width: 12px; height: 4px;
-      background: var(--ink);
-      border-radius: 4px;
-      transform-origin: right center;
-      animation: catTail .8s ease-in-out infinite;
+      left: 42.5px; top: 27px;
+      width: 2px; height: 1.5px;
+      background: #4a2818;
+      border-radius: 0 0 50% 50%;
+      z-index: 3;
+      transition: all .15s ease;
     }
-    @keyframes catTail {
-      0%, 100% { transform: rotate(15deg); }
-      50%      { transform: rotate(-15deg); }
-    }
-    .cat-leg {
+    /* 腮红 */
+    .cat-cheek {
       position: absolute;
-      width: 3px; height: 8px;
-      background: var(--ink);
-      border-radius: 2px;
-      transform-origin: top center;
-      bottom: 0;
+      width: 4px; height: 2.5px;
+      background: var(--cat-pink-deep);
+      border-radius: 50%;
+      z-index: 3;
+      opacity: 0.45;
     }
-    .cat-leg.f1 { left: 10px; animation: catLegA .4s ease-in-out infinite; }
-    .cat-leg.f2 { left: 16px; animation: catLegB .4s ease-in-out infinite; }
-    .cat-leg.b1 { left: 24px; animation: catLegB .4s ease-in-out infinite; }
-    .cat-leg.b2 { left: 30px; animation: catLegA .4s ease-in-out infinite; }
-    @keyframes catLegA { 0%, 100% { transform: rotate(20deg); } 50% { transform: rotate(-20deg); } }
-    @keyframes catLegB { 0%, 100% { transform: rotate(-20deg); } 50% { transform: rotate(20deg); } }
+    .cat-cheek.l { left: 35px; top: 24px; }
+    .cat-cheek.r { left: 49px; top: 24px; }
+    /* 胡须 */
+    .cat-whisker {
+      position: absolute;
+      width: 6px; height: 1px;
+      background: #6b3a22;
+      z-index: 3;
+      opacity: 0.55;
+    }
+    .cat-whisker.l1 { left: 36px; top: 26px; transform: rotate(-8deg); }
+    .cat-whisker.l2 { left: 36px; top: 27.5px; transform: rotate(4deg); }
+    .cat-whisker.r1 { left: 48px; top: 26px; transform: rotate(8deg); }
+    .cat-whisker.r2 { left: 48px; top: 27.5px; transform: rotate(-4deg); }
+
+    /* 奶酪 */
+    .cheese {
+      position: absolute;
+      width: 14px; height: 12px;
+      transform: translate(-50%, -50%) rotate(-12deg);
+      pointer-events: none;
+      z-index: 4;
+      animation: cheeseIn .25s cubic-bezier(.2,.8,.4,1.4);
+    }
+    .cheese svg { display: block; width: 100%; height: 100%; filter: drop-shadow(0 2px 2px rgba(0,0,0,.12)); }
+    .cheese.eaten { animation: cheeseOut .3s ease-out forwards; }
+    .cheese.dropped { animation: cheeseDrop .5s ease-out forwards; }
+    .cheese.cat-carrying { animation: cheeseCarry .4s ease-out; transition: left .4s cubic-bezier(.4,.2,.2,1), top .4s cubic-bezier(.4,.2,.2,1); }
+    @keyframes cheeseIn {
+      0%   { transform: translate(-50%, -50%) rotate(-12deg) scale(0.3); opacity: 0; }
+      100% { transform: translate(-50%, -50%) rotate(-12deg) scale(1); opacity: 1; }
+    }
+    @keyframes cheeseOut {
+      0%   { transform: translate(-50%, -50%) rotate(-12deg) scale(1); opacity: 1; }
+      100% { transform: translate(-50%, -50%) rotate(-12deg) scale(0); opacity: 0; }
+    }
+    @keyframes cheeseDrop {
+      0%   { transform: translate(-50%, -100%) rotate(-12deg) scale(1); }
+      60%  { transform: translate(-50%, -45%) rotate(-6deg) scale(1.05); }
+      100% { transform: translate(-50%, -50%) rotate(-4deg) scale(.9); opacity: .9; }
+    }
+    @keyframes cheeseCarry {
+      0%   { transform: translate(-50%, -50%) rotate(-12deg) scale(1); }
+      100% { transform: translate(-50%, -130%) rotate(-8deg) scale(.85); }
+    }
+    /* 「嗯～」吃到的状态文字 */
+    .cat-emoji {
+      position: absolute;
+      left: 28px; top: -10px;
+      font-family: var(--sans);
+      font-size: 10px;
+      color: var(--cat-stripe);
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 1px 6px;
+      white-space: nowrap;
+      z-index: 10;
+      opacity: 0;
+      transform: translateY(4px);
+      pointer-events: none;
+    }
+    .cat-emoji.show {
+      animation: emojiPop 1.2s ease-out forwards;
+    }
+    @keyframes emojiPop {
+      0%   { opacity: 0; transform: translateY(8px); }
+      15%  { opacity: 1; transform: translateY(0); }
+      80%  { opacity: 1; transform: translateY(-6px); }
+      100% { opacity: 0; transform: translateY(-12px); }
+    }
 
     /* 鼠标周围的「奶酪碎屑」粒子 */
     .particle {
       position: absolute;
       width: 4px; height: 4px;
-      background: var(--accent);
+      background: var(--cat-cheese);
       border-radius: 50%;
       pointer-events: none;
       opacity: 0;
@@ -1182,20 +1362,31 @@
                 fill="#111" stroke="#fff" stroke-width="1.2" stroke-linejoin="round"/>
         </svg>
       </div>
-      <!-- 小猫 -->
+      <!-- 起司猫(美短) -->
       <div class="cat" id="cat">
         <div class="cat-tail"></div>
         <div class="cat-leg f1"></div>
         <div class="cat-leg f2"></div>
         <div class="cat-body"></div>
+        <div class="cat-belly"></div>
         <div class="cat-leg b1"></div>
         <div class="cat-leg b2"></div>
         <div class="cat-ear l"></div>
+        <div class="cat-ear-inner l"></div>
         <div class="cat-ear r"></div>
+        <div class="cat-ear-inner r"></div>
         <div class="cat-head"></div>
         <div class="cat-eye l"></div>
         <div class="cat-eye r"></div>
         <div class="cat-nose"></div>
+        <div class="cat-mouth"></div>
+        <div class="cat-cheek l"></div>
+        <div class="cat-cheek r"></div>
+        <div class="cat-whisker l1"></div>
+        <div class="cat-whisker l2"></div>
+        <div class="cat-whisker r1"></div>
+        <div class="cat-whisker r2"></div>
+        <div class="cat-emoji" id="catEmoji">嗯～</div>
       </div>
     </div>
     <div class="loading-status" id="loadingStatus">等待开始…</div>
@@ -1230,11 +1421,15 @@
       $('loadingPercent').textContent = '0%';
       $('loadingStatus').textContent = '准备中…';
       $('loadingCardStep').textContent = 'CONNECTING';
-      // 重置猫位置(中心)
-      _moveCat(50, 50, false);
+      // 重置猫状态 + 位置
+      _catEl.classList.remove('is-eating', 'is-sleeping');
+      _catState = 'idle';
       _catFacingRight = true;
-      _catEl.style.transform = 'scaleX(1)';
-      _catEl.classList.remove('is-jumping');
+      _catEl.style.setProperty('--cat-flip', 'scaleX(1)');
+      _moveCat(50, 50);
+      // 重新调度送礼
+      if (_giftTimer) clearTimeout(_giftTimer);
+      _scheduleNextGift();
     }
     function updateLoading(text, step, pct) {
       if (text) $('loadingStatus').textContent = text;
@@ -1254,38 +1449,66 @@
       $('loadingCardStep').textContent = 'DONE';
       $('loadingProgressFill').style.width = '100%';
       $('loadingPercent').textContent = '100%';
-      // 让猫追到鼠标当前位置(庆祝一下)
+      // 庆祝:在鼠标位置放一块奶酪让猫庆祝一下
       const stage = $('loadingStage').getBoundingClientRect();
       const cursor = $('cursorPointer').getBoundingClientRect();
-      const x = ((cursor.left + cursor.width / 2 - stage.left) / stage.width) * 100;
-      const y = ((cursor.top  + cursor.height / 2 - stage.top)  / stage.height) * 100;
-      _moveCat(x, y, true);
+      const x = cursor.left + cursor.width / 2 - stage.left;
+      const y = cursor.top + cursor.height / 2 - stage.top;
+      // 1) 猫跑去吃
+      if (typeof _dropCheese === 'function') {
+        _dropCheese(x, y);
+      }
+      // 2) 2 秒后再来一次(庆祝加倍)
+      setTimeout(() => {
+        const s2 = $('loadingStage').getBoundingClientRect();
+        const c2 = $('cursorPointer').getBoundingClientRect();
+        const x2 = c2.left + c2.width / 2 - s2.left;
+        const y2 = c2.top + c2.height / 2 - s2.top + 30;
+        if (typeof _dropCheese === 'function' && _catState === 'idle') _dropCheese(x2, y2);
+      }, 2000);
     }
 
-    /* ── 猫追逐鼠标 ── */
+    /* ── 起司猫互动游戏:点击投食 + 主动送礼 ── */
     const _stageEl = $('loadingStage');
     const _cursorEl = $('cursorPointer');
     const _catEl = $('cat');
+    const _catEmojiEl = $('catEmoji');
     let _catFacingRight = true;
+    let _catState = 'idle';      // 'idle' | 'walking' | 'eating' | 'gifting' | 'sleeping'
+    let _giftTimer = null;
+    const CAT_W = 58, CAT_H = 44;
 
-    function _moveCat(xPct, yPct, instant) {
-      // 把猫的中心放在 (xPct, yPct),留出猫的宽度偏移
-      const catW = 50, catH = 38;
+    // 奶酪 SVG 字符串(暖黄三角带小孔)
+    const CHEESE_SVG = `
+      <svg viewBox="0 0 14 12" xmlns="http://www.w3.org/2000/svg">
+        <path d="M1 11 L13 11 L7 1 Z" fill="#f5c542" stroke="#c8941a" stroke-width="0.8" stroke-linejoin="round"/>
+        <circle cx="6" cy="7" r="0.9" fill="#c8941a"/>
+        <circle cx="8.5" cy="8.5" r="0.7" fill="#c8941a"/>
+        <circle cx="5" cy="9" r="0.6" fill="#c8941a"/>
+      </svg>`;
+
+    function _moveCat(xPct, yPct) {
       const stage = _stageEl.getBoundingClientRect();
-      const maxX = stage.width - catW;
-      const maxY = stage.height - catH;
-      const x = Math.max(0, Math.min(maxX, (xPct / 100) * stage.width - catW / 2));
-      const y = Math.max(0, Math.min(maxY, (yPct / 100) * stage.height - catH / 2));
+      const maxX = stage.width - CAT_W;
+      const maxY = stage.height - CAT_H;
+      const x = Math.max(0, Math.min(maxX, (xPct / 100) * stage.width - CAT_W / 2));
+      const y = Math.max(0, Math.min(maxY, (yPct / 100) * stage.height - CAT_H / 2));
       _catEl.style.left = x + 'px';
       _catEl.style.top = y + 'px';
-      // 朝向:根据猫相对鼠标的水平方向翻转
-      const cursorX = (xPct / 100) * stage.width;
-      const catCenterX = x + catW / 2;
-      const shouldFaceRight = cursorX >= catCenterX;
+      // 朝向:根据水平方向翻转
+      const catCenterX = x + CAT_W / 2;
+      const shouldFaceRight = (xPct / 100) * stage.width >= catCenterX;
       if (shouldFaceRight !== _catFacingRight) {
         _catFacingRight = shouldFaceRight;
         _catEl.style.setProperty('--cat-flip', shouldFaceRight ? 'scaleX(1)' : 'scaleX(-1)');
       }
+    }
+
+    function _showEmoji(text) {
+      _catEmojiEl.textContent = text;
+      _catEmojiEl.classList.remove('show');
+      void _catEmojiEl.offsetWidth;
+      _catEmojiEl.classList.add('show');
     }
 
     function _spawnRipple(x, y) {
@@ -1297,57 +1520,156 @@
       setTimeout(() => r.remove(), 600);
     }
 
-    function _spawnParticle(x, y) {
+    function _spawnParticle(x, y, color) {
       const angle = Math.random() * Math.PI * 2;
       const dist = 25 + Math.random() * 20;
       const p = document.createElement('div');
       p.className = 'particle active';
       p.style.left = x + 'px';
       p.style.top = y + 'px';
+      p.style.background = color || 'var(--cat-cheese)';
       p.style.setProperty('--dx', Math.cos(angle) * dist + 'px');
       p.style.setProperty('--dy', Math.sin(angle) * dist + 'px');
       _stageEl.appendChild(p);
       setTimeout(() => p.remove(), 1200);
     }
 
-    // 鼠标在 stage 内移动 → 移动鼠标指针和猫
+    // 点一下 = 投一块奶酪 → 猫跑去吃
+    function _dropCheese(x, y) {
+      // 限制一次最多 1 块(避免堆),空闲时才接受
+      if (_catState !== 'idle' && _catState !== 'sleeping') {
+        _showEmoji('等一下～');
+        return;
+      }
+      // 生成奶酪
+      const c = document.createElement('div');
+      c.className = 'cheese';
+      c.innerHTML = CHEESE_SVG;
+      c.style.left = x + 'px';
+      c.style.top = y + 'px';
+      _stageEl.appendChild(c);
+      _spawnRipple(x, y);
+      for (let i = 0; i < 4; i++) _spawnParticle(x, y, 'var(--cat-cheese)');
+
+      // 猫跑去吃
+      const stage = _stageEl.getBoundingClientRect();
+      const xPct = (x / stage.width) * 100;
+      const yPct = (y / stage.height) * 100;
+      _catEl.classList.remove('is-sleeping');
+      _catEl.classList.remove('is-eating');
+      _catState = 'walking';
+      _moveCat(xPct, yPct);
+      // 走到后开始吃
+      setTimeout(() => {
+        _catEl.classList.add('is-eating');
+        _catState = 'eating';
+        const eatMs = 900;
+        // 吃的时候奶酪缩小消失
+        setTimeout(() => {
+          c.classList.add('eaten');
+          setTimeout(() => c.remove(), 350);
+        }, eatMs - 300);
+        // 吃完的反馈
+        setTimeout(() => {
+          _showEmoji(['嗯～', '好香', '再来!', '喵～'][Math.floor(Math.random() * 4)]);
+          _catEl.classList.remove('is-eating');
+          _catState = 'sleeping';
+          _catEl.classList.add('is-sleeping');
+          // 伸完懒腰进入 idle
+          setTimeout(() => {
+            _catEl.classList.remove('is-sleeping');
+            _catState = 'idle';
+            _scheduleNextGift();
+          }, 1400);
+        }, eatMs);
+      }, 480);
+    }
+
+    // 猫主动叼一块奶酪,送过来给鼠标位置
+    function _catBringGift() {
+      if (_catState !== 'idle') { _scheduleNextGift(); return; }
+      _catState = 'gifting';
+      // 1. 猫先走到一个随机角落"找奶酪"
+      const stage = _stageEl.getBoundingClientRect();
+      const corners = [
+        { x: 12, y: 20 },
+        { x: 88, y: 20 },
+        { x: 12, y: 80 },
+        { x: 88, y: 80 },
+      ];
+      const corner = corners[Math.floor(Math.random() * corners.length)];
+      _catEl.classList.remove('is-sleeping');
+      _catState = 'walking';
+      _moveCat(corner.x, corner.y);
+      // 2. 到达后生成一块奶酪"叼起"
+      setTimeout(() => {
+        const c = document.createElement('div');
+        c.className = 'cheese cat-carrying';
+        c.innerHTML = CHEESE_SVG;
+        c.style.left = '50%';
+        c.style.top = '50%';
+        _stageEl.appendChild(c);
+        // 奶酪跟着猫走
+        const follow = () => {
+          if (!c.parentNode) return;
+          const cr = _catEl.getBoundingClientRect();
+          const sr = _stageEl.getBoundingClientRect();
+          c.style.left = (cr.left - sr.left + cr.width / 2) + 'px';
+          c.style.top  = (cr.top  - sr.top  + cr.height / 2 - 4) + 'px';
+          requestAnimationFrame(follow);
+        };
+        follow();
+        // 3. 走向鼠标位置
+        const cursorRect = _cursorEl.getBoundingClientRect();
+        const mx = ((cursorRect.left + cursorRect.width / 2 - stage.left) / stage.width) * 100;
+        const my = ((cursorRect.top  + cursorRect.height / 2 - stage.top)  / stage.height) * 100;
+        _moveCat(mx, my);
+        // 4. 到达后放下
+        setTimeout(() => {
+          c.classList.remove('cat-carrying');
+          c.classList.add('dropped');
+          _showEmoji('给你!');
+          // 5. 躺下
+          _catState = 'sleeping';
+          _catEl.classList.add('is-sleeping');
+          // 6. 奶酪留 5s 后消失(让人点)
+          setTimeout(() => c.remove(), 5000);
+          setTimeout(() => {
+            _catEl.classList.remove('is-sleeping');
+            _catState = 'idle';
+            _scheduleNextGift();
+          }, 1600);
+        }, 500);
+      }, 500);
+    }
+    function _scheduleNextGift() {
+      if (_giftTimer) clearTimeout(_giftTimer);
+      const delay = 14000 + Math.random() * 10000; // 14-24s
+      _giftTimer = setTimeout(_catBringGift, delay);
+    }
+
+    // 鼠标移动 → 只移动鼠标指针,猫**不**再跟随
     _stageEl.addEventListener('mousemove', (e) => {
       const rect = _stageEl.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      const xPct = (x / rect.width) * 100;
-      const yPct = (y / rect.height) * 100;
-      // 移动鼠标指针
+      const xPct = ((e.clientX - rect.left) / rect.width) * 100;
+      const yPct = ((e.clientY - rect.top)  / rect.height) * 100;
       _cursorEl.style.left = xPct + '%';
-      _cursorEl.style.top = yPct + '%';
-      // 猫追着鼠标
-      _moveCat(xPct, yPct, false);
+      _cursorEl.style.top  = yPct + '%';
     });
     // 鼠标进入/离开
-    _stageEl.addEventListener('mouseenter', () => {
-      _cursorEl.style.opacity = '1';
-    });
-    _stageEl.addEventListener('mouseleave', () => {
-      _cursorEl.style.opacity = '0.2';
-    });
-    // 点击 → 猫跳起 + 波纹 + 粒子
+    _stageEl.addEventListener('mouseenter', () => { _cursorEl.style.opacity = '1'; });
+    _stageEl.addEventListener('mouseleave', () => { _cursorEl.style.opacity = '0.2'; });
+
+    // 点击 → 投奶酪
     _stageEl.addEventListener('click', (e) => {
       const rect = _stageEl.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
-      _spawnRipple(x, y);
-      _spawnParticle(x, y);
-      _spawnParticle(x, y);
-      _spawnParticle(x, y);
-      // 让猫跳到点击位置
-      const xPct = (x / rect.width) * 100;
-      const yPct = (y / rect.height) * 100;
-      _moveCat(xPct, yPct, false);
-      _catEl.classList.remove('is-jumping');
-      void _catEl.offsetWidth;
-      _catEl.classList.add('is-jumping');
-      setTimeout(() => _catEl.classList.remove('is-jumping'), 500);
+      _dropCheese(x, y);
     });
+
+    // 启动送礼调度
+    _scheduleNextGift();
 
     // 关闭按钮
     $('loadingCardClose').addEventListener('click', hideLoading);
