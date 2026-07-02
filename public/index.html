@@ -87,16 +87,16 @@
 
     .focus-list { list-style: none; }
     .update-item {
-      display: grid; grid-template-columns: 88px 56px 1fr auto 44px;
+      display: grid; grid-template-columns: 88px 56px auto 1fr auto;
       align-items: start; gap: 18px; padding: 20px 4px;
       border-bottom: 1px solid var(--line);
       transition: background .2s ease, padding .2s ease;
     }
     .update-actions {
       display: flex; flex-direction: column; gap: 0;
-      padding-top: 2px;
+      padding-top: 0;
       align-items: stretch;
-      min-width: 90px;
+      min-width: 96px;
     }
     .update-actions .go,
     .update-actions .btn-translate {
@@ -148,25 +148,21 @@
     /* 收藏按钮(⭐) */
     .btn-fav {
       background: var(--bg); border: 1px solid var(--line);
-      border-radius: 6px;
-      width: 88px; height: 32px;
+      border-radius: 8px;
+      width: 36px; height: 36px;
       display: inline-flex; align-items: center; justify-content: center;
       cursor: pointer;
       color: var(--ink-mute);
-      font-size: 13px;
+      font-size: 16px;
       line-height: 1;
       transition: all .2s ease;
       padding: 0;
-      margin-top: 6px;
       align-self: start;
-      gap: 4px;
-      font-family: var(--mono);
-      letter-spacing: 0.04em;
+      margin-top: 2px;
     }
     .btn-fav:hover { color: #ff8a3d; border-color: #ff8a3d; background: #fff5f0; }
     .btn-fav.is-fav { color: #ff8a3d; border-color: #ff8a3d; background: #fff5f0; }
-    .btn-fav .star { font-size: 14px; line-height: 1; }
-    .btn-fav .label { font-size: 10px; }
+    .btn-fav .star { font-size: 16px; line-height: 1; }
     /* 论文卡片里 ⭐ 浮在右上角(不影响其它布局) */
     .paper-card { position: relative; }
     .paper-card .btn-fav.paper-fav {
@@ -1444,6 +1440,7 @@
         <li class="update-item">
           <span class="date">${esc(u.time)||'—'}</span>
           <span class="num">${pad2(i+1)}</span>
+          <button class="btn-fav ${isFavorited(u, 'tweet') ? 'is-fav' : ''}" data-i="${i}" data-type="tweet" data-username="${esc(u.username||'')}" title="收藏"><span class="star">★</span></button>
           <div class="meta">
             <div class="name">${esc(u.author)}</div>
             <div class="text">${esc(u.text)}</div>
@@ -1453,7 +1450,6 @@
              <a class="go" href="${esc(u.link||u.url)}" target="_blank" rel="noopener">SOURCE →</a>
              <button class="btn-translate" onclick="toggleTranslate(this, this.parentElement.parentElement.querySelector('.text'), this.parentElement.parentElement.querySelector('.text').textContent)">译</button>
            </div>
-           <button class="btn-fav ${isFavorited(u, 'tweet') ? 'is-fav' : ''}" data-i="${i}" data-type="tweet" data-username="${esc(u.username||'')}" title="收藏"><span class="star">★</span><span class="label">收藏</span></button>
         </li>
       `).join('');
       // 绑定收藏按钮
