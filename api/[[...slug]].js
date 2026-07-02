@@ -43,10 +43,46 @@ async function handleData(req, res) {
 async function handleRefresh(req, res) {
   const people = readJson('people.json').people;
   console.log(`[refresh] 抓取 ${people.length} 位专家…`);
+  const debug = req.url?.includes('debug=1');
   const result = await sources.fetchAllUpdates(people);
+  console.log(`[refresh] 抓取结果: count=${result.count}, updates=${result.updates.length}, errors=${result.errors?.length || 0}`);
+  for (const e of (result.errors || [])) {
+    console.log(`[refresh] err @${e.username}: ${e.err}`);
+  }
   const saved = await store.setUpdates(result);
   console.log(`[refresh] 完成,共 ${saved.count} 条`);
-  res.json({ ok: true, count: saved.count, generated_at: saved.generated_at });
+  // debug: 还探测每个用户当前的抓取状态
+  let probe = null;
+  if (debug) {
+    probe = [];
+    const s = require('../lib/sources');
+    for (const p of people.slice(0, 3)) {
+      const u = (p.url||'').match(/(?:xcancel|x|twitter|nitter)\.com\/([^/?#]+)/i)?.[1];
+      if (!u) continue;
+      try {
+        const r = await s.fetchUserTweets(u);
+        probe.push({ user: u, count: r.length });
+      } catch (e) {
+        probe.push({ user: u, err: e.message.slice(0, 150).replace(/token=[a-z0-9]+/i, 'token=***') });
+      }
+    }
+  }
+  res.json({
+    ok: true,
+    count: saved.count,
+    generated_at: saved.generated_at,
+    ...(debug ? {
+      sample: result.updates.slice(0, 3),
+      errors: result.errors || [],
+      probe: probe?.map(p => ({
+        user: p.user,
+        source: p.source,
+        count: p.count,
+        // 过滤敏感信息,只保留前 80 字符
+        err: p.err ? p.err.replace(/token=[a-z0-9]+/i, 'token=***').slice(0, 120) : undefined,
+      })),
+    } : {}),
+  });
 }
 
 // ── GET /api/refresh-papers ────────────────────────────────
@@ -68,9 +104,9 @@ async function handleSummarize(req, res) {
   }
   console.log(`[summarize] 基于 ${u.length} 条推文 + ${p.length} 篇论文生成总结…`);
   const prompt = buildSummaryPrompt(u, p);
-  const raw = await callMinimax([{ role: 'user', content: prompt }], { maxTokens: 1500, temperature: 0.3 });
+  const raw = await callMinimax([{ role: 'user', content: prompt }], { maxTokens: 4000, temperature: 0.3 });
   const summary = stripThinking(raw);
-  console.log('[summarize] raw length:', (raw||'').length, '-> stripped:', summary.length);
+  console.log('[summarize] raw length:', (raw||'').length, '-> stripped:', summary.length, 'raw_end:', (raw||'').slice(-80));
   if (!summary) {
     return res.status(500).json({ ok: false, error: 'AI 返回为空', raw_preview: (raw||'').slice(0,500) });
   }
