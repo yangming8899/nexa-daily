@@ -18,6 +18,18 @@ function setCors(res) {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 }
 
+// ── 刷新锁:30 秒内多次点刷新只跑 1 次,避免 scrape.do 限流 ──
+const _refreshLocks = new Map();
+function acquireRefreshLock(key, ttlMs = 30_000) {
+  const now = Date.now();
+  const last = _refreshLocks.get(key) || 0;
+  if (now - last < ttlMs) {
+    return { acquired: false, waitLeftMs: ttlMs - (now - last) };
+  }
+  _refreshLocks.set(key, now);
+  return { acquired: true };
+}
+
 // ── GET /api/data ──────────────────────────────────────────
 async function handleData(req, res) {
   const people = readJson('people.json').people;
@@ -41,6 +53,15 @@ async function handleData(req, res) {
 
 // ── GET /api/refresh ───────────────────────────────────────
 async function handleRefresh(req, res) {
+  // 防刷锁:30s 内只跑一次,避免 scrape.do 限流
+  const lock = acquireRefreshLock('refresh', 30_000);
+  if (!lock.acquired) {
+    return res.status(429).json({
+      ok: false,
+      error: `刷新太频繁,还有 ${Math.ceil(lock.waitLeftMs / 1000)}s 才能再点`,
+      waitMs: lock.waitLeftMs,
+    });
+  }
   const people = readJson('people.json').people;
   console.log(`[refresh] 抓取 ${people.length} 位专家…`);
   const debug = req.url?.includes('debug=1');
