@@ -53,8 +53,8 @@ async function handleData(req, res) {
 
 // ── GET /api/refresh ───────────────────────────────────────
 async function handleRefresh(req, res) {
-  // 防刷锁:30s 内只跑一次,避免 scrape.do 限流
-  const lock = acquireRefreshLock('refresh', 30_000);
+  // 防刷锁:60s 内只跑一次,避免 scrape.do 限流
+  const lock = acquireRefreshLock('refresh', 60_000);
   if (!lock.acquired) {
     return res.status(429).json({
       ok: false,
@@ -70,7 +70,19 @@ async function handleRefresh(req, res) {
   for (const e of (result.errors || [])) {
     console.log(`[refresh] err @${e.username}: ${e.err}`);
   }
-  const saved = await store.setUpdates(result);
+  // 保护:如果抓了 0 条且 KV 里有老数据,保留老数据(避免 scrape.do 限流覆盖掉)
+  let saved;
+  if (result.count === 0) {
+    const old = await store.getUpdates();
+    if ((old.updates || []).length > 0) {
+      console.log(`[refresh] 抓到 0 条,保留 KV 里 ${old.updates.length} 条老数据`);
+      saved = { count: old.updates.length, updates: old.updates, generated_at: old.generated_at, kept_old: true };
+    } else {
+      saved = await store.setUpdates(result);
+    }
+  } else {
+    saved = await store.setUpdates(result);
+  }
   console.log(`[refresh] 完成,共 ${saved.count} 条`);
   // debug: 还探测每个用户当前的抓取状态
   let probe = null;
