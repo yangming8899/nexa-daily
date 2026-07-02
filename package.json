@@ -1,0 +1,10 @@
+{
+  "name": "nexa-daily",
+  "version": "3.0.0",
+  "private": true,
+  "description": "NEXA Daily · AI Pulse, Filtered for You — Vercel 部署版",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
+  }
+}

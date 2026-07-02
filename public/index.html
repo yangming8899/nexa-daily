@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>NEXA Daily · AI Pulse, Filtered for You</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f6f5f1;
+      --bg-soft: #efeee8;
+      --ink: #111111;
+      --ink-soft: #4a4a48;
+      --ink-mute: #8a8a86;
+      --line: #e3e2dc;
+      --accent: #ff5b1f;
+      --serif: 'Fraunces', 'Times New Roman', Georgia, serif;
+      --sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --mono: 'JetBrains Mono', 'SF Mono', Menlo, monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-size: 17px;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    a:hover { color: var(--accent); }
+
+    .page { max-width: 1180px; margin: 0 auto; padding: 32px 48px 96px; position: relative; }
+
+    .topbar { display: flex; align-items: center; justify-content: space-between; padding-bottom: 8px; }
+    .logo { display: flex; align-items: baseline; gap: 6px; font-family: var(--serif); font-weight: 600; letter-spacing: -0.01em; }
+    .logo .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); display: inline-block; transform: translateY(-1px); }
+    .logo .word { font-size: 18px; }
+    .logo .sub { font-size: 12px; color: var(--ink-mute); font-family: var(--sans); font-weight: 400; letter-spacing: 0.02em; }
+    .topbar-right { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+
+    .btn-sm {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em;
+      color: var(--ink-soft); background: none; border: 1px solid var(--line);
+      border-radius: 999px; padding: 5px 14px; cursor: pointer; transition: all .2s ease;
+    }
+    .btn-sm:hover { color: var(--accent); border-color: var(--accent); }
+    .btn-sm:disabled { opacity: 0.4; cursor: wait; }
+    .btn-sm .spin { display: inline-block; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .topbar-icons { display: flex; gap: 14px; color: var(--ink-soft); }
+    .topbar-icons a { font-size: 13px; }
+
+    .side-brand {
+      position: absolute; left: 12px; bottom: 80px;
+      writing-mode: vertical-rl; transform: rotate(180deg);
+      font-family: var(--mono); font-size: 11px; letter-spacing: 0.3em; color: var(--ink-mute);
+    }
+
+    .hero {
+      display: flex; align-items: flex-end; justify-content: space-between; gap: 40px;
+      padding: 56px 0 32px; border-bottom: 1px solid var(--line);
+    }
+    .hero .tagline { font-family: var(--sans); font-size: 14px; color: var(--ink-soft); max-width: 320px; }
+    .hero h1 {
+      font-family: var(--serif); font-weight: 600;
+      font-size: clamp(64px, 10vw, 132px); line-height: 0.95; letter-spacing: -0.03em; text-align: right;
+    }
+
+    .section { padding: 48px 0 12px; }
+    .section-head {
+      display: flex; align-items: baseline; justify-content: space-between; gap: 24px;
+      padding-bottom: 16px; border-bottom: 1px solid var(--line); margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+    .section-head h2 { font-family: var(--serif); font-weight: 600; font-size: clamp(28px, 3.2vw, 42px); line-height: 1; letter-spacing: -0.02em; }
+    .section-head .zh { font-family: var(--sans); font-size: 14px; color: var(--ink-soft); letter-spacing: 0.02em; }
+    .section-head .zh::before { content: "·"; margin-right: 8px; color: var(--ink-mute); }
+    .section-head .generated { font-family: var(--mono); font-size: 11px; color: var(--ink-mute); }
+
+    .focus-list { list-style: none; }
+    .update-item {
+      display: grid; grid-template-columns: 88px 56px 1fr auto 56px;
+      align-items: start; gap: 20px; padding: 18px 4px;
+      border-bottom: 1px solid var(--line);
+      transition: background .2s ease, padding .2s ease;
+    }
+    .update-item:hover { background: var(--bg-soft); padding-left: 12px; padding-right: 12px; }
+    .update-item .date { font-family: var(--mono); font-size: 13px; color: var(--ink-mute); letter-spacing: 0.04em; padding-top: 2px; }
+    .update-item .num { font-family: var(--serif); font-weight: 500; font-size: 32px; color: var(--ink); text-align: right; line-height: 1; }
+    .update-item .meta .name { font-family: var(--serif); font-weight: 500; font-size: 18px; letter-spacing: -0.01em; margin-bottom: 3px; }
+    .update-item .meta .text { font-size: 14px; color: var(--ink); line-height: 1.5; max-width: 640px; }
+    .update-item .meta .meta-sub { font-size: 12px; color: var(--ink-mute); margin-top: 4px; }
+    .update-item .go {
+      font-family: var(--mono); font-size: 12px; color: var(--ink-mute); letter-spacing: 0.05em;
+      white-space: nowrap; padding-top: 2px;
+    }
+    .update-item:hover .go { color: var(--accent); }
+
+    .btn-translate {
+      font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em;
+      color: var(--ink-mute); background: none; border: 1px solid var(--line);
+      border-radius: 6px; padding: 3px 8px; cursor: pointer;
+      transition: all .2s ease; white-space: nowrap;
+    }
+    .btn-translate:hover { color: var(--accent); border-color: var(--accent); }
+    .btn-translate.translated { color: var(--accent); border-color: var(--accent); background: #fff5f0; }
+
+    .focus-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;
+    }
+    .focus-card {
+      display: block; padding: 24px; background: #fff; border: 1px solid var(--line);
+      border-radius: 14px; transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+      position: relative; overflow: hidden;
+    }
+    .focus-card:hover {
+      transform: translateY(-3px); border-color: #d6d5ce;
+      box-shadow: 0 8px 24px -16px rgba(0,0,0,0.15); color: inherit;
+    }
+    .focus-card .num-sm {
+      font-family: var(--serif); font-weight: 500; font-size: 48px; color: var(--line);
+      position: absolute; right: 14px; top: 8px; line-height: 1;
+    }
+    .focus-card h3 {
+      font-family: var(--serif); font-weight: 600; font-size: 20px;
+      letter-spacing: -0.01em; margin-bottom: 8px; position: relative; z-index: 1;
+    }
+    .focus-card .card-title { font-size: 13px; color: var(--ink-soft); line-height: 1.5; margin-bottom: 12px; }
+    .focus-card .card-go {
+      font-family: var(--mono); font-size: 11px; color: var(--ink-mute); letter-spacing: 0.04em;
+    }
+    .focus-card:hover .card-go { color: var(--accent); }
+
+    .papers-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+    .paper-card {
+      display: block; padding: 28px; background: #fff; border: 1px solid var(--line);
+      border-radius: 14px; transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+    }
+    .paper-card:hover {
+      transform: translateY(-3px); border-color: #d6d5ce;
+      box-shadow: 0 8px 24px -16px rgba(0,0,0,0.15); color: inherit;
+    }
+    .paper-card .tag {
+      display: inline-block; font-family: var(--mono); font-size: 11px; color: var(--ink-mute);
+      letter-spacing: 0.06em; text-transform: uppercase; padding: 4px 10px;
+      border: 1px solid var(--line); border-radius: 999px; margin-bottom: 16px;
+    }
+    .paper-card h3 { font-family: var(--serif); font-weight: 600; font-size: 24px; line-height: 1.2; letter-spacing: -0.01em; margin-bottom: 10px; }
+    .paper-card p { font-size: 14px; color: var(--ink-soft); line-height: 1.6; margin-bottom: 18px; }
+    .paper-card .arrow { font-family: var(--mono); font-size: 12px; color: var(--ink-mute); }
+    .paper-card:hover .arrow { color: var(--accent); }
+
+    .summary-modal {
+      position: fixed; inset: 0;
+      background: rgba(20, 18, 14, 0.55);
+      backdrop-filter: blur(6px);
+      z-index: 1000;
+      display: none;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 6vh 24px 24px;
+      overflow-y: auto;
+      animation: modalFade .2s ease;
+    }
+    .summary-modal.is-open { display: flex; }
+    @keyframes modalFade { from { opacity: 0 } to { opacity: 1 } }
+    .summary-modal-inner {
+      background: var(--bg);
+      border-radius: 14px;
+      max-width: 720px;
+      width: 100%;
+      padding: 32px 40px 36px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.18);
+      animation: modalSlide .25s ease;
+    }
+    @keyframes modalSlide { from { transform: translateY(12px); opacity: 0 } to { transform: translateY(0); opacity: 1 } }
+    .summary-modal-head {
+      display: flex; align-items: baseline; gap: 16px;
+      padding-bottom: 16px; margin-bottom: 16px;
+      border-bottom: 1px solid var(--line);
+    }
+    .summary-modal-title {
+      font-family: var(--serif); font-size: 24px; font-weight: 500;
+      color: var(--ink); letter-spacing: -0.01em;
+    }
+    .summary-modal-meta { flex: 1; font-family: var(--mono); font-size: 11px; color: var(--ink-mute); }
+    .summary-modal-close {
+      background: none; border: 1px solid var(--line);
+      width: 28px; height: 28px; border-radius: 50%;
+      font-size: 13px; color: var(--ink-mute); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .summary-modal-close:hover { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+    .summary-modal-body { font-size: 15px; line-height: 1.75; color: var(--ink); }
+    .summary-modal-body p { margin: 0 0 14px; }
+    .summary-modal-body h2, .summary-modal-body h3 {
+      font-family: var(--serif); font-weight: 500; color: var(--ink);
+      margin: 22px 0 10px;
+    }
+    .summary-modal-body h3 { font-size: 16px; font-style: italic; color: var(--ink-mute); }
+    .summary-modal-body h2 { font-size: 18px; }
+    .summary-modal-body strong { color: var(--ink); font-weight: 600; }
+    .summary-modal-body .summary-empty {
+      color: var(--ink-mute); font-size: 14px; padding: 24px 0; font-style: italic; text-align: center;
+    }
+    .summary-ask-wrap {
+      margin-top: 24px;
+      border-top: 1px solid var(--line);
+      padding-top: 18px;
+    }
+    .summary-ask-divider {
+      text-align: center;
+      margin-bottom: 14px;
+      position: relative;
+    }
+    .summary-ask-divider span {
+      font-family: var(--mono); font-size: 10px;
+      letter-spacing: .14em; text-transform: uppercase;
+      color: var(--ink-mute);
+      background: var(--bg);
+      padding: 0 12px;
+      position: relative;
+      z-index: 1;
+    }
+    .summary-chat {
+      max-height: 360px;
+      overflow-y: auto;
+      padding: 4px 2px 8px;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .summary-chat-msgs:empty { display: none; }
+    .summary-chat .chat-chips { display: flex; flex-direction: column; gap: 6px; }
+    .summary-chat .chat-chip { font-size: 12px; padding: 6px 10px; }
+    .summary-chat .msg { max-width: 92%; font-size: 13px; padding: 8px 12px; }
+    .summary-chat .msg-ai p { margin: 0 0 4px; }
+
+    .chat-panel {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      width: 420px;
+      height: 620px;
+      max-height: 80vh;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.12);
+      display: none;
+      flex-direction: column;
+      z-index: 999;
+      overflow: hidden;
+      font-family: var(--sans);
+    }
+    .chat-panel.is-open { display: flex; animation: chatPop .25s ease; }
+    @keyframes chatPop {
+      from { transform: translateY(20px); opacity: 0 }
+      to { transform: translateY(0); opacity: 1 }
+    }
+    .chat-head {
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, #faf7ef 0%, transparent 100%);
+    }
+    .chat-orb {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: conic-gradient(from 0deg, #ff5b1f, #ffb86b, #ff5b1f);
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 14px;
+      box-shadow: 0 2px 8px rgba(255,91,31,.3);
+    }
+    .chat-head-text { flex: 1; display: flex; flex-direction: column; gap: 1px; }
+    .chat-title { font-family: var(--serif); font-size: 16px; font-weight: 500; color: var(--ink); line-height: 1.1; }
+    .chat-sub { font-family: var(--mono); font-size: 10px; color: var(--ink-mute); letter-spacing: .08em; }
+    .chat-icon-btn {
+      background: none; border: none; cursor: pointer;
+      width: 28px; height: 28px; border-radius: 50%;
+      color: var(--ink-mute); font-size: 14px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .chat-icon-btn:hover { background: var(--line); color: var(--ink); }
+
+    .chat-messages {
+      flex: 1; overflow-y: auto; padding: 16px;
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .chat-welcome p { font-size: 13px; color: var(--ink-soft); margin: 0 0 8px; line-height: 1.6; }
+    .chat-chips { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+    .chat-chip {
+      text-align: left; padding: 8px 12px;
+      background: #faf7ef; border: 1px solid var(--line); border-radius: 8px;
+      font-family: var(--sans); font-size: 13px; color: var(--ink);
+      cursor: pointer; transition: all .15s ease;
+    }
+    .chat-chip:hover { background: #fff; border-color: var(--accent); color: var(--accent); }
+
+    .msg {
+      max-width: 85%;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 14px;
+      line-height: 1.6;
+      word-wrap: break-word;
+    }
+    .msg-user {
+      align-self: flex-end;
+      background: var(--ink);
+      color: var(--bg);
+      border-bottom-right-radius: 2px;
+    }
+    .msg-ai {
+      align-self: flex-start;
+      background: #faf7ef;
+      color: var(--ink);
+      border: 1px solid var(--line);
+      border-bottom-left-radius: 2px;
+    }
+    .msg-ai.thinking { color: var(--ink-mute); font-style: italic; }
+    .msg-ai p { margin: 0 0 6px; }
+    .msg-ai p:last-child { margin-bottom: 0; }
+    .msg-ai strong { color: var(--ink); font-weight: 600; }
+    .msg-ai code {
+      font-family: var(--mono); font-size: 12px;
+      background: rgba(0,0,0,.04); padding: 1px 5px; border-radius: 3px;
+    }
+    .typing-dots { display: inline-flex; gap: 3px; align-items: center; }
+    .typing-dots span {
+      width: 5px; height: 5px; border-radius: 50%; background: var(--ink-mute);
+      animation: typingBounce 1.2s ease-in-out infinite;
+    }
+    .typing-dots span:nth-child(2) { animation-delay: .15s; }
+    .typing-dots span:nth-child(3) { animation-delay: .3s; }
+    @keyframes typingBounce {
+      0%, 60%, 100% { transform: translateY(0); opacity: .4; }
+      30% { transform: translateY(-4px); opacity: 1; }
+    }
+
+    .chat-input-wrap {
+      display: flex; align-items: center; gap: 8px;
+      padding: 12px;
+      border-top: 1px solid var(--line);
+      background: var(--bg);
+    }
+    .chat-input {
+      flex: 1; padding: 10px 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      font-family: var(--sans); font-size: 14px;
+      background: #faf7ef;
+      outline: none;
+      color: var(--ink);
+    }
+    .chat-input:focus { border-color: var(--accent); background: #fff; }
+    .chat-send {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--ink); color: var(--bg);
+      border: none; cursor: pointer; font-size: 16px;
+      display: flex; align-items: center; justify-content: center;
+      transition: all .15s ease;
+    }
+    .chat-send:hover { background: var(--accent); }
+    .chat-send:disabled { opacity: .4; cursor: not-allowed; }
+
+    @media (max-width: 600px) {
+      .chat-panel { right: 0; bottom: 0; width: 100vw; height: 100vh; max-height: 100vh; border-radius: 0; }
+    }
+
+    .toast {
+      position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%);
+      background: var(--ink); color: #fff; font-size: 13px; padding: 10px 24px;
+      border-radius: 999px; opacity: 0; pointer-events: none; transition: opacity .3s ease;
+      z-index: 999; font-family: var(--sans);
+    }
+    .toast.show { opacity: 1; }
+
+    footer {
+      margin-top: 80px; padding-top: 24px; border-top: 1px solid var(--line);
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 12px; color: var(--ink-mute); font-family: var(--mono); letter-spacing: 0.04em;
+    }
+
+    @media (max-width: 900px) {
+      .page { padding: 24px 20px 64px; }
+      .side-brand { display: none; }
+      .hero { flex-direction: column; align-items: flex-start; padding-top: 32px; }
+      .hero h1 { text-align: left; }
+      .focus-grid { grid-template-columns: repeat(2, 1fr); }
+      .update-item {
+        grid-template-columns: 1fr auto auto;
+        grid-template-areas: "date num" "meta meta" "go go";
+        gap: 6px 12px;
+      }
+      .papers-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 500px) {
+      .focus-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+
+    <header class="topbar">
+      <div class="logo">
+        <span class="dot"></span>
+        <span class="word">NEXA Daily</span>
+        <span class="sub">— AI Pulse</span>
+      </div>
+      <div class="topbar-right">
+        <button class="btn-sm" id="btnRefreshAll" title="刷新推文和论文" onclick="doRefreshAll()">
+          <span id="refreshIcon">↻</span> 刷新全部
+        </button>
+        <button class="btn-sm" id="btnSummarize" title="生成今日 AI 总结" onclick="doSummarize()">
+          ✨ AI 总结
+        </button>
+        <button class="btn-sm" id="btnOpenChat" title="向 NEXA 问问关于今日内容的问题" onclick="toggleChat()">
+          💬 NEXA 问问
+        </button>
+        <nav class="topbar-icons">
+          <a href="#updates">Updates</a>
+          <a href="#focus">Focus</a>
+          <a href="#papers">Papers</a>
+        </nav>
+      </div>
+    </header>
+
+    <div class="side-brand">NEXA DAILY</div>
+
+    <section class="hero">
+      <p class="tagline">The AI Pulse,<br />Filtered for You.</p>
+      <h1>NEXA Daily</h1>
+    </section>
+
+    <section id="updates" class="section">
+      <div class="section-head">
+        <h2>Updates</h2>
+        <div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;">
+          <button class="btn-sm" id="btnTranslateAll" onclick="translateAll()" style="display:none;">译 全部</button>
+          <span class="generated" id="updateTime"></span>
+          <span class="zh">最新动态</span>
+        </div>
+      </div>
+      <ul class="focus-list" id="updateList">
+        <li class="update-item" style="color:var(--ink-mute);font-size:14px;">
+          <span>暂无动态,点击右上角「刷新全部」按钮获取。</span>
+        </li>
+      </ul>
+    </section>
+
+    <section id="focus" class="section">
+      <div class="section-head">
+        <h2>Focus</h2>
+        <span class="zh">今日关注</span>
+      </div>
+      <div class="focus-grid" id="focusGrid"></div>
+    </section>
+
+    <section id="papers" class="section">
+      <div class="section-head">
+        <h2>Papers</h2>
+        <div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;">
+          <button class="btn-sm" id="btnRefreshPapers" onclick="doRefreshPapers()" title="从 arXiv 拉取最新 AI 论文">↻ 刷新论文</button>
+          <button class="btn-sm" id="btnTranslatePapers" onclick="translateAllPapers()" style="display:none;">译 全部</button>
+          <span class="generated" id="papersTime"></span>
+          <span class="zh">热门论文</span>
+        </div>
+      </div>
+      <div class="papers-grid" id="papersGrid"></div>
+    </section>
+
+    <footer>
+      <span>NEXA DAILY · v3 · Vercel</span>
+      <span id="today"></span>
+    </footer>
+  </main>
+
+  <div class="summary-modal" id="summaryModal" onclick="if(event.target===this)closeSummary()">
+    <div class="summary-modal-inner">
+      <div class="summary-modal-head">
+        <span class="summary-modal-title">AI 日报</span>
+        <span class="summary-modal-meta" id="summaryTimeModal"></span>
+        <button class="summary-modal-close" onclick="closeSummary()" title="关闭 (Esc)">✕</button>
+      </div>
+      <div class="summary-modal-body" id="summaryBodyModal">
+        <div class="summary-empty">点击右上「✨ AI 总结」让 AI 帮你梳理今日值得关注的内容。</div>
+      </div>
+      <div class="summary-ask-wrap" id="summaryAskWrap">
+        <div class="summary-ask-divider"><span>有疑问?问问 NEXA</span></div>
+        <div class="summary-chat" id="summaryChat">
+          <div class="summary-chat-welcome" id="summaryChatWelcome">
+            <div class="chat-chips" id="summaryChatChips">
+              <button class="chat-chip" data-q="总结里提到的 Ilya 那条 Scaling 推文是什么意思?">解释 Ilya 的 Scaling 推文</button>
+              <button class="chat-chip" data-q="今日最值得读的 3 篇论文是哪些,为什么?">今日必读 3 篇论文</button>
+              <button class="chat-chip" data-q="我是 AI 初学者,今天的内容我该从哪里开始了解?">初学者入门建议</button>
+              <button class="chat-chip" data-q="今天的内容里有哪些关键 AI 概念?请通俗解释一下">今日关键概念</button>
+            </div>
+          </div>
+          <div class="summary-chat-msgs" id="summaryChatMsgs"></div>
+        </div>
+        <div class="chat-input-wrap">
+          <input class="chat-input" id="summaryChatInput" type="text" placeholder="在 NEXA 问问里继续提问…" autocomplete="off" />
+          <button class="chat-send" id="summaryChatSend" onclick="sendSummaryChat()">→</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chat-panel" id="chatPanel">
+    <div class="chat-head">
+      <span class="chat-orb">✦</span>
+      <div class="chat-head-text">
+        <span class="chat-title">AI 问答</span>
+        <span class="chat-sub">基于今日推文 & 论文 · M3</span>
+      </div>
+      <button class="chat-icon-btn" onclick="clearChat()" title="清空对话">↺</button>
+      <button class="chat-icon-btn" onclick="toggleChat()" title="关闭">✕</button>
+    </div>
+    <div class="chat-messages" id="chatMessages">
+      <div class="chat-welcome">
+        <p>👋 你好!我是 NEXA AI 助手。</p>
+        <p>我可以基于今日的推文、论文和 AI 总结回答你的问题。比如:</p>
+        <div class="chat-chips">
+          <button class="chat-chip" onclick="askChip(this)">解释 Ilya 关于 Scaling 的推文</button>
+          <button class="chat-chip" onclick="askChip(this)">今日最值得读的 3 篇论文是哪些</button>
+          <button class="chat-chip" onclick="askChip(this)">我是初学者,今天该学什么</button>
+          <button class="chat-chip" onclick="askChip(this)">今日提到的关键概念有哪些</button>
+        </div>
+      </div>
+    </div>
+    <div class="chat-input-wrap">
+      <input class="chat-input" id="chatInput" type="text" placeholder="向 AI 提问…" autocomplete="off" />
+      <button class="chat-send" id="chatSend" onclick="sendChat()">→</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const $ = id => document.getElementById(id);
+    function pad2(n) { return String(n).padStart(2, '0'); }
+    function esc(s) { return String(s??'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+    function tsFmt(s) { return s ? s.replace('T',' ').slice(0,19) : ''; }
+
+    (() => {
+      const d = new Date();
+      $('today').textContent = `${d.getFullYear()}.${pad2(d.getMonth()+1)}.${pad2(d.getDate())}`;
+    })();
+
+    function toast(msg, ms=2500) {
+      const t = $('toast'); t.textContent = msg; t.classList.add('show');
+      clearTimeout(t._tid); t._tid = setTimeout(() => t.classList.remove('show'), ms);
+    }
+
+    /* ── 翻译缓存 & API (浏览器直接走免费 Google/MyMemory) ── */
+    const _tc = {};
+    async function translateText(text) {
+      if (_tc[text]) return _tc[text];
+      const apis = [
+        async () => {
+          const r = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=zh-CN&dt=t&q=${encodeURIComponent(text)}`);
+          const d = await r.json();
+          if (d && d[0]) return d[0].map(x => x[0]).join('');
+          throw new Error('empty');
+        },
+        async () => {
+          const r = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|zh`);
+          const d = await r.json();
+          return d.responseData?.translatedText || text;
+        },
+      ];
+      for (const fn of apis) {
+        try {
+          const tr = await fn();
+          if (tr && tr !== text) { _tc[text] = tr; return tr; }
+        } catch(e) { continue; }
+      }
+      return text;
+    }
+
+    function toggleTranslate(btn, textEl, original) {
+      if (btn.classList.contains('translated')) {
+        textEl.textContent = original;
+        btn.classList.remove('translated');
+        btn.textContent = '译';
+      } else {
+        btn.textContent = '…';
+        btn.classList.add('translated');
+        translateText(original).then(tr => {
+          textEl.textContent = tr;
+          btn.textContent = '原';
+        });
+      }
+    }
+
+    async function translateAll() {
+      const btn = $('btnTranslateAll');
+      const items = document.querySelectorAll('.update-item');
+      const translating = btn.textContent.includes('原');
+      btn.textContent = translating ? '译 全部' : '…';
+      btn.disabled = true;
+      if (translating) {
+        for (const item of items) {
+          const textEl = item.querySelector('.text');
+          const tb = item.querySelector('.btn-translate');
+          if (textEl && tb && tb._orig) {
+            textEl.textContent = tb._orig;
+            tb.classList.remove('translated');
+            tb.textContent = '译';
+          }
+        }
+      } else {
+        for (const item of items) {
+          const textEl = item.querySelector('.text');
+          const tb = item.querySelector('.btn-translate');
+          if (!textEl || !tb) continue;
+          const orig = tb._orig || textEl.textContent;
+          tb._orig = orig;
+          tb.classList.add('translated');
+          tb.textContent = '…';
+          translateText(orig).then(tr => { textEl.textContent = tr; tb.textContent = '原'; });
+        }
+      }
+      btn.textContent = translating ? '译 全部' : '原 全部';
+      btn.disabled = false;
+    }
+
+    /* ── 刷新论文 ── */
+    async function doRefreshPapers() {
+      const btn = $('btnRefreshPapers');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spin">↻</span> 刷新中…';
+      toast('正在从 arXiv 拉取最新论文…', 6000);
+      try {
+        const r = await fetch('/api/refresh-papers');
+        const d = await r.json();
+        if (d.ok) {
+          toast(`刷新完成! 共 ${d.count} 篇论文`);
+          await loadAll();
+        } else {
+          toast('刷新失败: ' + (d.error||'未知错误').slice(0,200), 5000);
+        }
+      } catch(e) {
+        toast('刷新失败: 无法连接 server', 5000);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '↻ 刷新论文';
+      }
+    }
+
+    async function translateAllPapers() {
+      const btn = $('btnTranslatePapers');
+      const items = document.querySelectorAll('.paper-card .paper-desc');
+      const tbs = document.querySelectorAll('.paper-card .paper-tl');
+      const translating = btn.textContent.includes('原');
+      btn.textContent = translating ? '译 全部' : '…';
+      btn.disabled = true;
+      if (translating) {
+        for (let i = 0; i < items.length; i++) {
+          const tb = tbs[i];
+          if (tb && tb._orig) { items[i].textContent = tb._orig; tb.classList.remove('translated'); tb.textContent = '译'; }
+        }
+      } else {
+        for (let i = 0; i < items.length; i++) {
+          const tb = tbs[i];
+          const orig = tb._orig || items[i].textContent;
+          tb._orig = orig; tb.classList.add('translated'); tb.textContent = '…';
+          translateText(orig).then(tr => { items[i].textContent = tr; tb.textContent = '原'; });
+        }
+      }
+      btn.textContent = translating ? '译 全部' : '原 全部';
+      btn.disabled = false;
+    }
+
+    /* ── 刷新全部 ── */
+    async function doRefreshAll() {
+      const btn = $('btnRefreshAll'), icon = $('refreshIcon');
+      btn.disabled = true; icon.classList.add('spin');
+      toast('正在抓取推文和论文…', 10000);
+      const results = { tweets: 0, papers: 0 };
+      try {
+        const r1 = await fetch('/api/refresh');
+        const d1 = await r1.json();
+        if (d1.ok) results.tweets = d1.count || 0;
+        else console.warn('tweets refresh failed:', d1.error);
+      } catch(e) { console.warn('tweets fetch failed:', e); }
+      try {
+        const r2 = await fetch('/api/refresh-papers');
+        const d2 = await r2.json();
+        if (d2.ok) results.papers = d2.count || 0;
+        else console.warn('papers refresh failed:', d2.error);
+      } catch(e) { console.warn('papers fetch failed:', e); }
+      await loadAll();
+      toast(`刷新完成: 推文 ${results.tweets} 条 · 论文 ${results.papers} 篇`);
+      btn.disabled = false; icon.classList.remove('spin');
+    }
+
+    /* ── 渲染函数 ── */
+    function renderFocus(people) {
+      $('focusGrid').innerHTML = people.map((p,i) => `
+        <a class="focus-card" href="${esc(p.url)}" target="_blank" rel="noopener">
+          <span class="num-sm">${pad2(i+1)}</span>
+          <h3>${esc(p.name)}</h3>
+          <div class="card-title">${esc(p.title)}</div>
+          <span class="card-go">VIEW →</span>
+        </a>
+      `).join('');
+    }
+
+    function renderUpdates(updates) {
+      const list = $('updateList');
+      $('btnTranslateAll').style.display = updates.length ? 'inline-flex' : 'none';
+      if (!updates.length) {
+        list.innerHTML = `<li class="update-item" style="color:var(--ink-mute);font-size:14px;">
+          <span>暂无动态,点击右上角「刷新全部」按钮获取。</span></li>`;
+        return;
+      }
+      list.innerHTML = updates.map((u,i) => `
+        <li class="update-item">
+          <span class="date">${esc(u.time)||'—'}</span>
+          <span class="num">${pad2(i+1)}</span>
+          <div class="meta">
+            <div class="name">${esc(u.author)}</div>
+            <div class="text">${esc(u.text)}</div>
+            <div class="meta-sub">@${esc(u.username)}</div>
+          </div>
+          <a class="go" href="${esc(u.link||u.url)}" target="_blank" rel="noopener">SOURCE →</a>
+          <button class="btn-translate" onclick="toggleTranslate(this, this.parentElement.querySelector('.text'), this.parentElement.querySelector('.text').textContent)">译</button>
+        </li>
+      `).join('');
+    }
+
+    function renderPapers(papers) {
+      const grid = $('papersGrid');
+      $('btnTranslatePapers').style.display = papers.length ? 'inline-flex' : 'none';
+      if (!papers.length) {
+        grid.innerHTML = `<div style="grid-column:1/-1;color:var(--ink-mute);font-size:14px;padding:24px 4px;">暂无论文数据,点击「↻ 刷新论文」从 arXiv 拉取。</div>`;
+        return;
+      }
+      grid.innerHTML = papers.map((p,i) => `
+        <div class="paper-card">
+          <a href="${esc(p.url)}" target="_blank" rel="noopener" style="display:block;">
+            <span class="tag">arXiv / ${esc(p.date||'')}</span>
+            <h3>${esc(p.title)}</h3>
+            <p class="paper-desc">${esc(p.subtitle||'')}</p>
+            <span class="arrow">READ →</span>
+          </a>
+          <button class="btn-translate paper-tl" style="margin-top:12px;" onclick="event.preventDefault(); toggleTranslate(this, this.parentElement.querySelector('.paper-desc'), this.parentElement.querySelector('.paper-desc').textContent)">译</button>
+        </div>
+      `).join('');
+    }
+
+    function renderSummary(data) {
+      const card = $('summaryBodyModal');
+      if (data && data.summary) {
+        const lines = data.summary.split('\n');
+        let html = '', seenH1 = false;
+        for (const line of lines) {
+          const l = line.trim();
+          if (!l) continue;
+          if (l.startsWith('# ')) { if (!seenH1) { seenH1 = true; continue; } }
+          if (l.startsWith('### ')) { html += `<h3>${esc(l.slice(4))}</h3>`; continue; }
+          if (l.startsWith('## ')) { html += `<h2>${esc(l.slice(3))}</h2>`; continue; }
+          if (l.startsWith('# ')) { html += `<h2>${esc(l.slice(2))}</h2>`; continue; }
+          const text = esc(l.replace(/^\d+[\.、]\s*/, '')).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+          html += `<p>${text}</p>`;
+        }
+        card.innerHTML = html;
+      } else {
+        card.innerHTML = `<div class="summary-empty">点击右上「✨ AI 总结」让 AI 帮你梳理今日值得关注的内容。</div>`;
+      }
+    }
+
+    /* ── 统一从 /api/data 加载所有数据 ── */
+    let _dataCache = null;
+    async function loadAll() {
+      try {
+        const r = await fetch('/api/data?_t=' + Date.now(), { cache: 'no-store' });
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        const data = await r.json();
+        _dataCache = data;
+        renderFocus(data.people || []);
+        renderUpdates(data.updates || []);
+        renderPapers(data.papers || []);
+        const ut = $('updateTime');
+        if (ut && data.updates_meta?.generated_at) ut.textContent = '更新于 ' + tsFmt(data.updates_meta.generated_at);
+        const pt = $('papersTime');
+        if (pt && data.papers_meta?.generated_at) pt.textContent = '更新于 ' + tsFmt(data.papers_meta.generated_at);
+        const st = $('summaryTimeModal');
+        if (st && data.summary_meta?.generated_at) st.textContent = '更新于 ' + tsFmt(data.summary_meta.generated_at);
+        renderSummary({ summary: data.summary || '' });
+      } catch (e) {
+        console.warn('loadAll failed:', e);
+      }
+    }
+
+    /* ── AI 总结 ── */
+    async function doSummarize() {
+      const btn = $('btnSummarize');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spin">✨</span> AI 思考中…';
+      toast('AI 正在分析今日动态和论文…', 10000);
+      try {
+        const r = await fetch('/api/summarize?_t=' + Date.now());
+        const d = await r.json();
+        if (d.ok) {
+          toast('总结生成完成!');
+          openSummary();
+          // 再拉一次拿最新 summary
+          await loadAll();
+        } else {
+          toast('生成失败: ' + (d.error||'未知错误').slice(0,200), 5000);
+        }
+      } catch(e) {
+        toast('生成失败: 无法连接 server', 5000);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '✨ AI 总结';
+      }
+    }
+
+    function openSummary() {
+      $('summaryModal').classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeSummary() {
+      $('summaryModal').classList.remove('is-open');
+      document.body.style.overflow = '';
+    }
+
+    /* ── Modal 内嵌问答 ── */
+    let summaryChatHistory = [];
+    const SUMM_CHAT_KEY = 'nexa_summary_chat';
+    function loadSummaryChat() { try { summaryChatHistory = JSON.parse(localStorage.getItem(SUMM_CHAT_KEY) || '[]'); } catch(e) { summaryChatHistory = []; } }
+    function saveSummaryChat() { try { localStorage.setItem(SUMM_CHAT_KEY, JSON.stringify(summaryChatHistory.slice(-20))); } catch(e) {} }
+    function renderSummaryChat() {
+      const box = $('summaryChatMsgs');
+      const welcome = $('summaryChatWelcome');
+      if (!summaryChatHistory.length) {
+        box.innerHTML = '';
+        if (welcome) welcome.style.display = '';
+        return;
+      }
+      if (welcome) welcome.style.display = 'none';
+      box.innerHTML = '';
+      for (const m of summaryChatHistory) {
+        const div = document.createElement('div');
+        div.className = 'msg ' + (m.role === 'user' ? 'msg-user' : 'msg-ai');
+        div.innerHTML = m.role === 'user' ? m.content.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') : renderMd(m.content);
+        box.appendChild(div);
+      }
+      box.parentElement.scrollTop = box.parentElement.scrollHeight;
+    }
+    function appendSummaryMsg(role, content) {
+      const box = $('summaryChatMsgs');
+      const welcome = $('summaryChatWelcome');
+      if (welcome) welcome.style.display = 'none';
+      const div = document.createElement('div');
+      div.className = 'msg ' + (role === 'user' ? 'msg-user' : 'msg-ai');
+      div.innerHTML = role === 'user'
+        ? content.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+        : content;
+      box.appendChild(div);
+      box.parentElement.scrollTop = box.parentElement.scrollHeight;
+      return div;
+    }
+    function sendSummaryChat() {
+      const input = $('summaryChatInput');
+      const send = $('summaryChatSend');
+      const q = input.value.trim();
+      if (!q) return;
+      appendSummaryMsg('user', q);
+      input.value = '';
+      send.disabled = true;
+      const thinking = appendSummaryMsg('ai', '<span class="typing-dots"><span></span><span></span><span></span></span>');
+      thinking.classList.add('thinking');
+      const historyForApi = summaryChatHistory.slice(-12).map(m => ({role: m.role, content: m.content}));
+      fetch('/api/chat', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({question: q, history: historyForApi})
+      }).then(r => r.json()).then(d => {
+        thinking.classList.remove('thinking');
+        if (d.ok) {
+          thinking.innerHTML = renderMd(d.answer);
+          summaryChatHistory.push({role: 'user', content: q});
+          summaryChatHistory.push({role: 'assistant', content: d.answer});
+          saveSummaryChat();
+        } else {
+          thinking.innerHTML = `<p>⚠️ 出错了: ${d.error || '未知错误'}</p>`;
+        }
+      }).catch(e => {
+        thinking.classList.remove('thinking');
+        thinking.innerHTML = `<p>⚠️ 无法连接 server</p>`;
+      }).finally(() => {
+        send.disabled = false;
+        input.focus();
+        $('summaryChatMsgs').parentElement.scrollTop = $('summaryChatMsgs').parentElement.scrollHeight;
+      });
+    }
+
+    /* ── AI 问答浮层 ── */
+    let chatHistory = [];
+    const CHAT_KEY = 'nexa_chat_history';
+    function loadChatHistory() { try { chatHistory = JSON.parse(localStorage.getItem(CHAT_KEY) || '[]'); } catch(e) { chatHistory = []; } }
+    function saveChatHistory() { try { localStorage.setItem(CHAT_KEY, JSON.stringify(chatHistory.slice(-20))); } catch(e) {} }
+    function toggleChat() {
+      const panel = $('chatPanel');
+      panel.classList.toggle('is-open');
+      if (panel.classList.contains('is-open')) {
+        renderChatHistory();
+        $('chatInput').focus();
+      }
+    }
+    function renderChatHistory() {
+      const box = $('chatMessages');
+      if (!chatHistory.length) return;
+      const welcome = box.querySelector('.chat-welcome');
+      if (welcome) welcome.remove();
+      box.innerHTML = '';
+      for (const m of chatHistory) appendMsg(m.role, m.content, false);
+      box.scrollTop = box.scrollHeight;
+    }
+    function appendMsg(role, content, scroll=true) {
+      const box = $('chatMessages');
+      const welcome = box.querySelector('.chat-welcome');
+      if (welcome) welcome.remove();
+      const div = document.createElement('div');
+      div.className = 'msg ' + (role === 'user' ? 'msg-user' : 'msg-ai');
+      div.innerHTML = renderMd(content);
+      box.appendChild(div);
+      if (scroll) box.scrollTop = box.scrollHeight;
+      return div;
+    }
+    function renderMd(text) {
+      const esc2 = (s) => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      let s = esc2(text);
+      s = s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+      s = s.split(/\n{2,}/).map(p => `<p>${p.replace(/\n/g, '<br/>')}</p>`).join('');
+      return s;
+    }
+    function askChip(btn) { $('chatInput').value = btn.textContent; sendChat(); }
+    async function sendChat() {
+      const input = $('chatInput');
+      const send = $('chatSend');
+      const q = input.value.trim();
+      if (!q) return;
+      const chips = $('chatMessages').querySelector('.chat-chips');
+      if (chips) chips.style.display = 'none';
+      appendMsg('user', q);
+      input.value = '';
+      send.disabled = true;
+      const thinking = appendMsg('ai', '<span class="typing-dots"><span></span><span></span><span></span></span>');
+      thinking.classList.add('thinking');
+      const historyForApi = chatHistory.slice(-12).map(m => ({role: m.role, content: m.content}));
+      try {
+        const r = await fetch('/api/chat', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({question: q, history: historyForApi})
+        });
+        const d = await r.json();
+        thinking.classList.remove('thinking');
+        if (d.ok) {
+          thinking.innerHTML = renderMd(d.answer);
+          chatHistory.push({role: 'user', content: q});
+          chatHistory.push({role: 'assistant', content: d.answer});
+          saveChatHistory();
+        } else {
+          thinking.innerHTML = `<p>⚠️ 出错了: ${d.error || '未知错误'}</p>`;
+        }
+      } catch(e) {
+        thinking.classList.remove('thinking');
+        thinking.innerHTML = `<p>⚠️ 无法连接 server</p>`;
+      } finally {
+        send.disabled = false;
+        input.focus();
+        $('chatMessages').scrollTop = $('chatMessages').scrollHeight;
+      }
+    }
+    function clearChat() {
+      chatHistory = [];
+      try { localStorage.removeItem(CHAT_KEY); } catch(e) {}
+      const box = $('chatMessages');
+      box.innerHTML = `<div class="chat-welcome">
+        <p>👋 你好!我是 NEXA AI 助手。</p>
+        <p>我可以基于今日的推文、论文和 AI 总结回答你的问题。比如:</p>
+        <div class="chat-chips">
+          <button class="chat-chip" onclick="askChip(this)">解释 Ilya 关于 Scaling 的推文</button>
+          <button class="chat-chip" onclick="askChip(this)">今日最值得读的 3 篇论文是哪些</button>
+          <button class="chat-chip" onclick="askChip(this)">我是初学者,今天该学什么</button>
+          <button class="chat-chip" onclick="askChip(this)">今日提到的关键概念有哪些</button>
+        </div>
+      </div>`;
+    }
+
+    /* ── 启动 ── */
+    (function(){
+      loadSummaryChat();
+      renderSummaryChat();
+      const wrap = $('summaryChatChips');
+      if (wrap) wrap.addEventListener('click', e => {
+        const btn = e.target.closest('button[data-q]');
+        if (!btn) return;
+        $('summaryChatInput').value = btn.getAttribute('data-q');
+        sendSummaryChat();
+      });
+      const input = $('summaryChatInput');
+      if (input) input.addEventListener('keydown', e => {
+        if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendSummaryChat(); }
+      });
+      loadChatHistory();
+      const ci = $('chatInput');
+      if (ci) ci.addEventListener('keydown', e => {
+        if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChat(); }
+      });
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') closeSummary();
+      });
+      loadAll();
+    })();
+  </script>
+</body>
+</html>

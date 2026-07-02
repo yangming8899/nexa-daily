@@ -1,0 +1,44 @@
+{
+  "papers": [
+    {
+      "title": "Attention Is All You Need",
+      "subtitle": "提出 Transformer 架构,摒弃 RNN/CNN,仅用注意力机制就刷新了机器翻译 SOTA,奠定了此后所有大模型的基础。",
+      "url": "https://arxiv.org/abs/1706.03762"
+    },
+    {
+      "title": "GPT-4 Technical Report",
+      "subtitle": "OpenAI 发布的多模态大模型技术报告,在专业与学术基准上达到人类水平,支持图像与文本输入并生成文本。",
+      "url": "https://arxiv.org/abs/2303.08774"
+    },
+    {
+      "title": "LLaMA: Open and Efficient Foundation Language Models",
+      "subtitle": "Meta 开源的 7B-65B 参数基础语言模型,证明用更多公开数据训练的小模型也能匹敌闭源大模型。",
+      "url": "https://arxiv.org/abs/2302.13971"
+    },
+    {
+      "title": "DeepSeek-V3 Technical Report",
+      "subtitle": "DeepSeek 最新开源 MoE 大模型,671B 总参/37B 激活,在多项基准上逼近闭源旗舰,训练成本极低。",
+      "url": "https://arxiv.org/abs/2412.19437"
+    },
+    {
+      "title": "Gemini: A Family of Highly Capable Multimodal Models",
+      "subtitle": "Google DeepMind 的原生多模态大模型系列,在视频、音频、图像、文本上联合训练,Ultra 版本首次在 MMLU 上超越人类专家。",
+      "url": "https://arxiv.org/abs/2312.11805"
+    },
+    {
+      "title": "Sora: Creating video from text",
+      "subtitle": "OpenAI 发布的文生视频模型技术报告,展示了对物理世界动态、长时间一致性的初步理解,开启视频生成新阶段。",
+      "url": "https://arxiv.org/abs/2403.04692"
+    },
+    {
+      "title": "AlphaFold: High-accuracy protein structure prediction",
+      "subtitle": "DeepMind 用注意力网络直接从氨基酸序列预测 3D 蛋白质结构,在 CASP14 上达到原子级精度,破解生物学 50 年难题。",
+      "url": "https://www.nature.com/articles/s41586-021-03819-2"
+    },
+    {
+      "title": "Segment Anything",
+      "subtitle": "Meta 提出的可提示图像分割基础模型 (SAM),支持零样本迁移到新任务,成为视觉领域的 GPT-3 时刻。",
+      "url": "https://arxiv.org/abs/2304.02643"
+    }
+  ]
+}

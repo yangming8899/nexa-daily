@@ -1,0 +1,15 @@
+# Vercel
+.vercel
+
+# Node
+node_modules/
+*.log
+.env
+.env.local
+
+# OS
+.DS_Store
+
+# 编辑器
+.vscode/
+.idea/

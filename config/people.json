@@ -1,0 +1,12 @@
+{
+  "people": [
+    { "name": "Andrej Karpathy", "title": "前 OpenAI 创始成员,顶级 AI 布道者", "url": "https://xcancel.com/karpathy" },
+    { "name": "Yann LeCun (杨立昆)", "title": "Meta 首席 AI 科学家,图灵奖得主", "url": "https://xcancel.com/ylecun" },
+    { "name": "Demis Hassabis", "title": "Google DeepMind 创始人兼 CEO", "url": "https://xcancel.com/demishassabis" },
+    { "name": "Sam Altman", "title": "OpenAI 首席执行官", "url": "https://xcancel.com/sama" },
+    { "name": "Ilya Sutskever", "title": "前 OpenAI 首席科学家,AGI 精神领袖", "url": "https://xcancel.com/ilyasut" },
+    { "name": "Jim Fan (范瑞杰)", "title": "NVIDIA 高级研究科学家,具身智能专家", "url": "https://xcancel.com/DrJimFan" },
+    { "name": "OpenAI", "title": "行业风向标,新模型首发阵地", "url": "https://xcancel.com/OpenAI" },
+    { "name": "Google DeepMind", "title": "前沿 AI 与科学计算巨头", "url": "https://xcancel.com/GoogleDeepMind" }
+  ]
+}
