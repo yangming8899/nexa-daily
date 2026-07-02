@@ -66,7 +66,7 @@
 
     .hero {
       display: flex; align-items: flex-end; justify-content: space-between; gap: 40px;
-      padding: 56px 0 32px; border-bottom: 1px solid var(--line);
+      padding: 64px 0 48px; border-bottom: 1px solid var(--line);
     }
     .hero .tagline { font-family: var(--sans); font-size: 14px; color: var(--ink-soft); max-width: 320px; }
     .hero h1 {
@@ -74,10 +74,10 @@
       font-size: clamp(64px, 10vw, 132px); line-height: 0.95; letter-spacing: -0.03em; text-align: right;
     }
 
-    .section { padding: 48px 0 12px; }
+    .section { padding: 64px 0 12px; }
     .section-head {
       display: flex; align-items: baseline; justify-content: space-between; gap: 24px;
-      padding-bottom: 16px; border-bottom: 1px solid var(--line); margin-bottom: 8px;
+      padding-bottom: 20px; border-bottom: 1px solid var(--line); margin-bottom: 24px;
       flex-wrap: wrap;
     }
     .section-head h2 { font-family: var(--serif); font-weight: 600; font-size: clamp(28px, 3.2vw, 42px); line-height: 1; letter-spacing: -0.02em; }
@@ -87,11 +87,16 @@
 
     .focus-list { list-style: none; }
     .update-item {
-      display: grid; grid-template-columns: 88px 56px 1fr auto 56px;
-      align-items: start; gap: 20px; padding: 18px 4px;
+      display: grid; grid-template-columns: 88px 56px 1fr auto 44px;
+      align-items: start; gap: 18px; padding: 20px 4px;
       border-bottom: 1px solid var(--line);
       transition: background .2s ease, padding .2s ease;
     }
+    .update-actions {
+      display: flex; flex-direction: column; gap: 8px; align-items: flex-start;
+      padding-top: 2px;
+    }
+    .update-actions .go { font-size: 11px; }
     .update-item:hover { background: var(--bg-soft); padding-left: 12px; padding-right: 12px; }
     .update-item .date { font-family: var(--mono); font-size: 13px; color: var(--ink-mute); letter-spacing: 0.04em; padding-top: 2px; }
     .update-item .num { font-family: var(--serif); font-weight: 500; font-size: 32px; color: var(--ink); text-align: right; line-height: 1; }
@@ -117,7 +122,7 @@
     .btn-fav {
       background: none; border: 1px solid var(--line);
       border-radius: 6px;
-      width: 28px; height: 28px;
+      width: 30px; height: 30px;
       display: inline-flex; align-items: center; justify-content: center;
       cursor: pointer;
       color: var(--ink-mute);
@@ -125,17 +130,18 @@
       line-height: 1;
       transition: all .2s ease;
       padding: 0;
+      align-self: start;
     }
     .btn-fav:hover { color: #ff8a3d; border-color: #ff8a3d; }
     .btn-fav.is-fav { color: #ff8a3d; border-color: #ff8a3d; background: #fff5f0; }
-    .update-item .btn-fav { position: absolute; top: 12px; right: 12px; }
-    .update-item { position: relative; }
+    /* 论文卡片里 ⭐ 浮在右上角(不影响其它布局) */
     .paper-card { position: relative; }
     .paper-card .btn-fav.paper-fav {
       position: absolute;
       top: 14px; right: 14px;
       z-index: 2;
     }
+    .paper-card .btn-fav.paper-fav.is-fav { color: #ff8a3d; border-color: #ff8a3d; background: #fff5f0; }
 
     .focus-grid {
       display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;
@@ -1409,8 +1415,10 @@
             <div class="text">${esc(u.text)}</div>
             <div class="meta-sub">@${esc(u.username)}</div>
           </div>
-          <a class="go" href="${esc(u.link||u.url)}" target="_blank" rel="noopener">SOURCE →</a>
-          <button class="btn-translate" onclick="toggleTranslate(this, this.parentElement.querySelector('.text'), this.parentElement.querySelector('.text').textContent)">译</button>
+          <div class="update-actions">
+            <a class="go" href="${esc(u.link||u.url)}" target="_blank" rel="noopener">SOURCE →</a>
+            <button class="btn-translate" onclick="toggleTranslate(this, this.parentElement.querySelector('.text'), this.parentElement.querySelector('.text').textContent)">译</button>
+          </div>
           <button class="btn-fav ${isFavorited(u, 'tweet') ? 'is-fav' : ''}" data-i="${i}" data-type="tweet" data-username="${esc(u.username||'')}" title="收藏">★</button>
         </li>
       `).join('');
