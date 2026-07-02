@@ -1231,12 +1231,14 @@
         const sources = data.sources || _currentSources || { updates: [], papers: [] };
         const updates = sources.updates || [];
         const papers = sources.papers || [];
+        console.log('[renderSummary] sources:', updates.length, 'updates,', papers.length, 'papers');
         let html = '', seenH1 = false;
         let inTweetsList = false, inPapersList = false;
         for (let i = 0; i < lines.length; i++) {
           const line = lines[i];
           const l = line.trim();
-          if (!l) { inTweetsList = false; inPapersList = false; continue; }
+          // 空行不重置 list 状态(空行只用于段落分隔)
+          if (!l) continue;
           if (l.startsWith('# ')) { if (!seenH1) { seenH1 = true; continue; } }
           if (l.startsWith('### ')) {
             const h = l.slice(4).trim();
@@ -1275,43 +1277,74 @@
      * 通过实体匹配找对应的原始来源(论文 / 推文)。
      */
     function renderSummaryItem(line, sources, isPapers) {
-      // 去掉 "1. " "2、 " 这种编号
-      const m = line.match(/^(\d+)[\.、]\s*(.+)/);
-      const num = m ? m[1] : '';
-      let body = m ? m[2] : line;
+      // 匹配模式:
+      //   "1. **Title**"      (有编号)
+      //   "**Title**: desc"   (无编号,加粗标题冒号开头)
+      //   "**《Title》** desc" (无编号,书名号开头)
+      // 提取编号
+      const numM = line.match(/^(\d+)[\.、]\s*/);
+      const num = numM ? numM[1] : '';
+      const body = numM ? line.slice(numM[0].length) : line;
       // 提取加粗的标题(可能含《》包起来的论文名)
       const titleMatch = body.match(/^\*\*《?(.+?)》?\*\*/);
       const authorMatch = body.match(/^\*\*(.+?)\*\*[:：]/);
       const keyword = (titleMatch?.[1] || authorMatch?.[1] || '').trim();
       // 找匹配 source
-      const match = findMatchingSource(keyword, sources, isPapers);
+      const match = findMatchingSource(keyword, body, sources, isPapers);
       const text = esc(body).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
       const linkHtml = match
         ? `<a class="summary-link" data-url="${esc(match.url)}" title="查看来源: ${esc(match.label)}">↗ 打开来源</a>`
         : '';
       return `<div class="summary-item">
-        ${num ? `<span class="summary-num">${num}</span>` : ''}
+        ${num ? `<span class="summary-num">${num}</span>` : '<span class="summary-num">·</span>'}
         <p class="summary-text">${text}</p>
         ${linkHtml}
       </div>`;
     }
 
-    function findMatchingSource(keyword, sources, isPapers) {
-      if (!keyword || !sources || !sources.length) return null;
-      const kw = keyword.toLowerCase();
-      // 1) 完整关键词匹配
-      for (const s of sources) {
-        const key = (isPapers ? s.title : (s.author || s.username || '')).toLowerCase();
-        if (key && key.includes(kw)) {
-          return { url: s.link || s.url, label: isPapers ? s.title : `${s.author} 的推文` };
+    function findMatchingSource(keyword, fullLine, sources, isPapers) {
+      if (!sources || !sources.length) return null;
+      const kw = (keyword || '').toLowerCase();
+      // 1) 完整关键词直接匹配 (如 "OpenAI", "Gemini")
+      if (kw) {
+        for (const s of sources) {
+          const key = (isPapers ? s.title : (s.author || s.username || '')).toLowerCase();
+          if (key && kw.includes(key)) {
+            return { url: s.link || s.url, label: isPapers ? s.title : `${s.author} 的推文` };
+          }
+          if (key && key.includes(kw)) {
+            return { url: s.link || s.url, label: isPapers ? s.title : `${s.author} 的推文` };
+          }
         }
       }
-      // 2) 关键词分词后部分匹配
-      const words = kw.split(/[\s,.\-_]+/).filter(w => w.length >= 3);
+      // 2) 在论文匹配时,尝试匹配标题 (如 "Seed2.0 Model Card")
+      if (isPapers) {
+        for (const s of sources) {
+          if (s.title && kw && s.title.toLowerCase().includes(kw)) {
+            return { url: s.link || s.url, label: s.title };
+          }
+        }
+        // 3) 分词匹配:取最长的英文/数字 token,在所有 source title 里搜
+        const tokens = kw.match(/[a-z0-9]+|[\u4e00-\u9fa5]+/g) || [];
+        for (const t of tokens) {
+          if (t.length < 3) continue;
+          for (const s of sources) {
+            if (s.title && s.title.toLowerCase().includes(t)) {
+              return { url: s.link || s.url, label: s.title };
+            }
+          }
+        }
+      }
+      // 4) 在整行里搜 source title 的关键 token
+      const fl = (fullLine || '').toLowerCase();
       for (const s of sources) {
-        const key = (isPapers ? s.title : (s.author || s.username || '')).toLowerCase();
-        for (const w of words) {
-          if (key.includes(w)) return { url: s.link || s.url, label: isPapers ? s.title : `${s.author} 的推文` };
+        const tokens = isPapers
+          ? (s.title || '').toLowerCase().match(/[a-z0-9]{4,}/g) || []
+          : (s.username || '').toLowerCase().match(/[a-z0-9]{3,}/g) || [];
+        for (const t of tokens) {
+          if (fl.includes(t)) {
+            return { url: s.link || s.url, label: isPapers ? s.title : `${s.author} 的推文` };
+          }
         }
       }
       return null;
