@@ -381,120 +381,161 @@
     }
     .toast.show { opacity: 1; }
 
-    /* ═══════ Loading Overlay · 走路的小猫 ═══════ */
-    .loading-overlay {
-      position: fixed; inset: 0;
-      background: rgba(246, 245, 241, 0.96);
-      backdrop-filter: blur(8px);
+    /* ═══════ Loading Card · 浮窗小猫(右下角) ═══════ */
+    .loading-card {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      width: 340px;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.12), 0 2px 6px rgba(0,0,0,.04);
+      padding: 18px 20px 16px;
       z-index: 2000;
       display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      animation: overlayFade .25s ease;
+      animation: cardSlide .35s cubic-bezier(.2,.8,.4,1);
+      font-family: var(--sans);
     }
-    .loading-overlay.is-open { display: flex; }
-    @keyframes overlayFade { from { opacity: 0 } to { opacity: 1 } }
+    .loading-card.is-open { display: block; }
+    @keyframes cardSlide {
+      from { transform: translateY(20px); opacity: 0; }
+      to   { transform: translateY(0);    opacity: 1; }
+    }
 
-    .loading-scene {
+    .loading-card-head {
+      display: flex; align-items: baseline; justify-content: space-between;
+      gap: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 14px;
+    }
+    .loading-card-title {
+      font-family: var(--serif);
+      font-size: 17px;
+      font-weight: 500;
+      color: var(--ink);
+      letter-spacing: -0.01em;
+    }
+    .loading-card-step {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--ink-mute);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .loading-card-close {
+      background: none; border: 1px solid var(--line);
+      width: 22px; height: 22px; border-radius: 50%;
+      font-size: 11px; color: var(--ink-mute); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .loading-card-close:hover { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+
+    /* 场景:鼠标互动区域(420x180 的"鼠标领地") */
+    .loading-stage {
       position: relative;
-      width: min(420px, 80vw);
-      height: 180px;
-      overflow: hidden;
-    }
-
-    /* 键盘地面 */
-    .loading-keys {
-      position: absolute;
-      left: 0; right: 0; bottom: 30px;
-      height: 14px;
-      background: repeating-linear-gradient(
-        90deg,
-        #e3e2dc 0 22px, #d6d5ce 22px 24px
-      );
-      border-top: 1px solid #c5c4bd;
-      border-radius: 2px;
-    }
-
-    /* 进度条 */
-    .loading-bar {
-      position: absolute;
-      left: 0; right: 0; top: 30px;
-      height: 4px;
+      width: 100%;
+      height: 160px;
       background: var(--bg-soft);
-      border-radius: 4px;
+      border-radius: 10px;
       overflow: hidden;
-    }
-    .loading-bar-fill {
-      height: 100%;
-      background: var(--accent);
-      width: 0%;
-      transition: width .6s ease;
-      border-radius: 4px;
+      cursor: crosshair;
     }
 
-    /* 走路的小猫 - 用 div + 渐变画一个剪影 */
-    .walking-cat {
+    /* 鼠标指针 */
+    .cursor-pointer {
       position: absolute;
-      bottom: 36px;
-      left: 0;
-      width: 64px; height: 48px;
-      animation: catWalk 4s linear forwards;
+      width: 16px; height: 22px;
+      pointer-events: none;
+      transform: translate(-2px, -2px);
+      transition: transform .15s ease-out;
+      z-index: 3;
     }
-    @keyframes catWalk {
-      0%   { left: -10%; transform: translateY(0) scaleX(1); }
-      48%  { transform: translateY(-2px) scaleX(1); }
-      49%  { transform: translateY(-2px) scaleX(-1); }
-      50%  { left: 110%; transform: translateY(0) scaleX(1); }
-      51%  { left: 110%; transform: translateY(0) scaleX(-1); }
-      100% { left: -10%; transform: translateY(0) scaleX(-1); }
+    .cursor-pointer svg { display: block; filter: drop-shadow(0 2px 3px rgba(0,0,0,.15)); }
+
+    /* 鼠标点击波纹 */
+    .click-ripple {
+      position: absolute;
+      border: 2px solid var(--accent);
+      border-radius: 50%;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      animation: rippleOut .6s ease-out forwards;
+    }
+    @keyframes rippleOut {
+      0%   { width: 0;   height: 0;   opacity: 0.8; }
+      100% { width: 60px; height: 60px; opacity: 0; }
     }
 
-    /* 猫身体 - 用 CSS 拼一只 */
+    /* 小猫 */
+    .cat {
+      position: absolute;
+      width: 50px; height: 38px;
+      left: 50%; top: 50%;
+      transform-origin: center;
+      transition: left .35s cubic-bezier(.4,.2,.2,1),
+                  top  .35s cubic-bezier(.4,.2,.2,1),
+                  transform .2s ease-out;
+      will-change: left, top, transform;
+      z-index: 2;
+    }
+    .cat.is-jumping { animation: catJump .5s ease-out; }
+    @keyframes catJump {
+      0%   { transform: translate(var(--cat-flip, scaleX(1)), 0); }
+      30%  { transform: translate(var(--cat-flip, scaleX(1)), -28px) scale(1.05); }
+      60%  { transform: translate(var(--cat-flip, scaleX(1)), -8px)  scale(1.02); }
+      100% { transform: translate(var(--cat-flip, scaleX(1)), 0); }
+    }
+
+    /* 猫咪身体部件 - 用 CSS 画 */
     .cat-body {
       position: absolute;
-      left: 6px; bottom: 4px;
-      width: 36px; height: 22px;
+      left: 4px; bottom: 6px;
+      width: 28px; height: 16px;
       background: var(--ink);
       border-radius: 50% 50% 45% 45% / 60% 60% 40% 40%;
     }
     .cat-head {
       position: absolute;
-      left: 38px; bottom: 16px;
-      width: 18px; height: 18px;
+      left: 28px; bottom: 12px;
+      width: 16px; height: 16px;
       background: var(--ink);
       border-radius: 50%;
     }
     .cat-ear {
       position: absolute;
       width: 0; height: 0;
-      border-left: 5px solid transparent;
-      border-right: 5px solid transparent;
-      border-bottom: 8px solid var(--ink);
+      border-left: 4px solid transparent;
+      border-right: 4px solid transparent;
+      border-bottom: 7px solid var(--ink);
     }
-    .cat-ear.l { left: 38px; bottom: 30px; transform: rotate(-20deg); }
-    .cat-ear.r { left: 48px; bottom: 30px; transform: rotate(20deg); }
+    .cat-ear.l { left: 28px; bottom: 24px; transform: rotate(-15deg); }
+    .cat-ear.r { left: 38px; bottom: 24px; transform: rotate(15deg); }
     .cat-eye {
       position: absolute;
-      width: 3px; height: 3px;
+      width: 2px; height: 2px;
       background: var(--accent);
       border-radius: 50%;
-      animation: catBlink 3s ease-in-out infinite;
     }
-    .cat-eye.l { left: 44px; top: 22px; }
-    .cat-eye.r { left: 50px; top: 22px; }
-    @keyframes catBlink {
-      0%, 92%, 100% { transform: scaleY(1); }
-      95%, 97%      { transform: scaleY(0.1); }
+    .cat-eye.l { left: 33px; top: 18px; }
+    .cat-eye.r { left: 38px; top: 18px; }
+    .cat-nose {
+      position: absolute;
+      left: 36px; top: 22px;
+      width: 0; height: 0;
+      border-left: 2px solid transparent;
+      border-right: 2px solid transparent;
+      border-top: 2px solid #ff8a6b;
     }
     .cat-tail {
       position: absolute;
-      left: 4px; bottom: 12px;
-      width: 14px; height: 4px;
+      left: 0; bottom: 12px;
+      width: 12px; height: 4px;
       background: var(--ink);
       border-radius: 4px;
       transform-origin: right center;
-      animation: catTail 1s ease-in-out infinite;
+      animation: catTail .8s ease-in-out infinite;
     }
     @keyframes catTail {
       0%, 100% { transform: rotate(15deg); }
@@ -502,43 +543,80 @@
     }
     .cat-leg {
       position: absolute;
-      width: 3px; height: 10px;
+      width: 3px; height: 8px;
       background: var(--ink);
       border-radius: 2px;
       transform-origin: top center;
+      bottom: 0;
     }
-    .cat-leg.f1 { left: 14px; bottom: 0; animation: catLegA .5s ease-in-out infinite; }
-    .cat-leg.f2 { left: 22px; bottom: 0; animation: catLegB .5s ease-in-out infinite; }
-    .cat-leg.b1 { left: 32px; bottom: 0; animation: catLegB .5s ease-in-out infinite; }
-    .cat-leg.b2 { left: 40px; bottom: 0; animation: catLegA .5s ease-in-out infinite; }
-    @keyframes catLegA { 0%, 100% { transform: rotate(25deg); } 50% { transform: rotate(-25deg); } }
-    @keyframes catLegB { 0%, 100% { transform: rotate(-25deg); } 50% { transform: rotate(25deg); } }
+    .cat-leg.f1 { left: 10px; animation: catLegA .4s ease-in-out infinite; }
+    .cat-leg.f2 { left: 16px; animation: catLegB .4s ease-in-out infinite; }
+    .cat-leg.b1 { left: 24px; animation: catLegB .4s ease-in-out infinite; }
+    .cat-leg.b2 { left: 30px; animation: catLegA .4s ease-in-out infinite; }
+    @keyframes catLegA { 0%, 100% { transform: rotate(20deg); } 50% { transform: rotate(-20deg); } }
+    @keyframes catLegB { 0%, 100% { transform: rotate(-20deg); } 50% { transform: rotate(20deg); } }
 
-    /* 提示文字 */
-    .loading-text {
-      margin-top: 28px;
-      font-family: var(--serif);
-      font-size: 22px;
-      font-weight: 500;
-      color: var(--ink);
-      letter-spacing: -0.01em;
-      min-height: 30px;
-      text-align: center;
+    /* 鼠标周围的「奶酪碎屑」粒子 */
+    .particle {
+      position: absolute;
+      width: 4px; height: 4px;
+      background: var(--accent);
+      border-radius: 50%;
+      pointer-events: none;
+      opacity: 0;
     }
-    .loading-step {
-      margin-top: 8px;
-      font-family: var(--mono);
-      font-size: 11px;
-      color: var(--ink-mute);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+    .particle.active {
+      animation: particleFade 1.2s ease-out forwards;
+    }
+    @keyframes particleFade {
+      0%   { opacity: 0; transform: translate(0, 0) scale(0.5); }
+      20%  { opacity: 1; }
+      100% { opacity: 0; transform: translate(var(--dx, 30px), var(--dy, -20px)) scale(0.2); }
+    }
+
+    /* 状态文字 + 进度条 */
+    .loading-status {
+      margin-top: 14px;
+      font-family: var(--sans);
+      font-size: 13px;
+      color: var(--ink-soft);
+      line-height: 1.5;
+      min-height: 20px;
+      transition: opacity .2s ease;
+    }
+    .loading-progress {
+      margin-top: 10px;
+      height: 3px;
+      background: var(--bg-soft);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .loading-progress-fill {
+      height: 100%;
+      background: var(--accent);
+      width: 0%;
+      transition: width .5s ease;
+      border-radius: 3px;
     }
     .loading-percent {
-      position: absolute;
-      right: 0; top: -20px;
       font-family: var(--mono);
-      font-size: 10px;
+      font-size: 11px;
       color: var(--accent);
+      margin-top: 6px;
+      letter-spacing: 0.04em;
+    }
+
+    /* 完成状态 */
+    .loading-card.is-done .cat { animation: catPurr 1.2s ease-in-out; }
+    @keyframes catPurr {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      25%      { transform: translate(0, -3px) scale(1.05); }
+      50%      { transform: translate(0, 0) scale(1.02); }
+      75%      { transform: translate(0, -2px) scale(1.03); }
+    }
+
+    @media (max-width: 600px) {
+      .loading-card { right: 12px; bottom: 12px; width: calc(100vw - 24px); }
     }
 
     footer {
@@ -703,14 +781,23 @@
 
   <div class="toast" id="toast"></div>
 
-  <!-- Loading 遮罩:小猫走路动画 -->
-  <div class="loading-overlay" id="loadingOverlay">
-    <div class="loading-scene">
-      <div class="loading-bar">
-        <span class="loading-percent" id="loadingPercent">0%</span>
-        <div class="loading-bar-fill" id="loadingBarFill"></div>
+  <!-- Loading 浮窗:右下角小猫,鼠标互动 -->
+  <div class="loading-card" id="loadingCard">
+    <div class="loading-card-head">
+      <span class="loading-card-title" id="loadingCardTitle">NEXA 正在工作</span>
+      <span class="loading-card-step" id="loadingCardStep">CONNECTING</span>
+      <button class="loading-card-close" id="loadingCardClose" title="关闭">✕</button>
+    </div>
+    <div class="loading-stage" id="loadingStage">
+      <!-- 鼠标指针 -->
+      <div class="cursor-pointer" id="cursorPointer" style="left: 50%; top: 50%;">
+        <svg width="16" height="22" viewBox="0 0 16 22" fill="none">
+          <path d="M2 2 L2 17 L6 13 L8.5 19 L10.5 18 L8 12 L14 12 Z"
+                fill="#111" stroke="#fff" stroke-width="1.2" stroke-linejoin="round"/>
+        </svg>
       </div>
-      <div class="walking-cat" id="walkingCat">
+      <!-- 小猫 -->
+      <div class="cat" id="cat">
         <div class="cat-tail"></div>
         <div class="cat-leg f1"></div>
         <div class="cat-leg f2"></div>
@@ -722,11 +809,12 @@
         <div class="cat-head"></div>
         <div class="cat-eye l"></div>
         <div class="cat-eye r"></div>
+        <div class="cat-nose"></div>
       </div>
-      <div class="loading-keys"></div>
     </div>
-    <div class="loading-text" id="loadingText">正在加载...</div>
-    <div class="loading-step" id="loadingStep">Connecting</div>
+    <div class="loading-status" id="loadingStatus">等待开始…</div>
+    <div class="loading-progress"><div class="loading-progress-fill" id="loadingProgressFill"></div></div>
+    <div class="loading-percent" id="loadingPercent">0%</div>
   </div>
 
   <script>
@@ -745,36 +833,138 @@
       clearTimeout(t._tid); t._tid = setTimeout(() => t.classList.remove('show'), ms);
     }
 
-    /* ── Loading 遮罩:走路的小猫 ── */
-    // 用法:
-    //   showLoading([{text:'抓推文', pct:30}, {text:'抓论文', pct:60}, {text:'AI 总结', pct:90}])
-    //   updateLoading('正在抓推文…', 'STAGE 1/3', 30)
-    //   hideLoading()
-    function showLoading(stages = []) {
-      $('loadingOverlay').classList.add('is-open');
-      $('loadingBarFill').style.width = '0%';
+    /* ── Loading 浮窗:右下角小猫,鼠标互动 ── */
+    let _loadingStuck = false;
+
+    function showLoading() {
+      const card = $('loadingCard');
+      card.classList.add('is-open');
+      card.classList.remove('is-done');
+      $('loadingProgressFill').style.width = '0%';
       $('loadingPercent').textContent = '0%';
-      $('loadingText').textContent = '正在加载…';
-      $('loadingStep').textContent = 'CONNECTING';
-      _loadingStages = stages;
-      // 重启走路动画
-      const cat = $('walkingCat');
-      cat.style.animation = 'none';
-      void cat.offsetWidth; // 强制 reflow
-      cat.style.animation = '';
+      $('loadingStatus').textContent = '准备中…';
+      $('loadingCardStep').textContent = 'CONNECTING';
+      // 重置猫位置(中心)
+      _moveCat(50, 50, false);
+      _catFacingRight = true;
+      _catEl.style.transform = 'scaleX(1)';
+      _catEl.classList.remove('is-jumping');
     }
     function updateLoading(text, step, pct) {
-      if (text) $('loadingText').textContent = text;
-      if (step) $('loadingStep').textContent = step;
+      if (text) $('loadingStatus').textContent = text;
+      if (step) $('loadingCardStep').textContent = step;
       if (typeof pct === 'number') {
-        $('loadingBarFill').style.width = pct + '%';
+        $('loadingProgressFill').style.width = pct + '%';
         $('loadingPercent').textContent = Math.round(pct) + '%';
       }
     }
     function hideLoading() {
-      $('loadingOverlay').classList.remove('is-open');
+      $('loadingCard').classList.remove('is-open');
+      $('loadingCard').classList.remove('is-done');
     }
-    let _loadingStages = [];
+    function markLoadingDone(successText = '搞定啦!') {
+      $('loadingCard').classList.add('is-done');
+      $('loadingStatus').textContent = successText;
+      $('loadingCardStep').textContent = 'DONE';
+      $('loadingProgressFill').style.width = '100%';
+      $('loadingPercent').textContent = '100%';
+      // 让猫追到鼠标当前位置(庆祝一下)
+      const stage = $('loadingStage').getBoundingClientRect();
+      const cursor = $('cursorPointer').getBoundingClientRect();
+      const x = ((cursor.left + cursor.width / 2 - stage.left) / stage.width) * 100;
+      const y = ((cursor.top  + cursor.height / 2 - stage.top)  / stage.height) * 100;
+      _moveCat(x, y, true);
+    }
+
+    /* ── 猫追逐鼠标 ── */
+    const _stageEl = $('loadingStage');
+    const _cursorEl = $('cursorPointer');
+    const _catEl = $('cat');
+    let _catFacingRight = true;
+
+    function _moveCat(xPct, yPct, instant) {
+      // 把猫的中心放在 (xPct, yPct),留出猫的宽度偏移
+      const catW = 50, catH = 38;
+      const stage = _stageEl.getBoundingClientRect();
+      const maxX = stage.width - catW;
+      const maxY = stage.height - catH;
+      const x = Math.max(0, Math.min(maxX, (xPct / 100) * stage.width - catW / 2));
+      const y = Math.max(0, Math.min(maxY, (yPct / 100) * stage.height - catH / 2));
+      _catEl.style.left = x + 'px';
+      _catEl.style.top = y + 'px';
+      // 朝向:根据猫相对鼠标的水平方向翻转
+      const cursorX = (xPct / 100) * stage.width;
+      const catCenterX = x + catW / 2;
+      const shouldFaceRight = cursorX >= catCenterX;
+      if (shouldFaceRight !== _catFacingRight) {
+        _catFacingRight = shouldFaceRight;
+        _catEl.style.setProperty('--cat-flip', shouldFaceRight ? 'scaleX(1)' : 'scaleX(-1)');
+      }
+    }
+
+    function _spawnRipple(x, y) {
+      const r = document.createElement('div');
+      r.className = 'click-ripple';
+      r.style.left = x + 'px';
+      r.style.top = y + 'px';
+      _stageEl.appendChild(r);
+      setTimeout(() => r.remove(), 600);
+    }
+
+    function _spawnParticle(x, y) {
+      const angle = Math.random() * Math.PI * 2;
+      const dist = 25 + Math.random() * 20;
+      const p = document.createElement('div');
+      p.className = 'particle active';
+      p.style.left = x + 'px';
+      p.style.top = y + 'px';
+      p.style.setProperty('--dx', Math.cos(angle) * dist + 'px');
+      p.style.setProperty('--dy', Math.sin(angle) * dist + 'px');
+      _stageEl.appendChild(p);
+      setTimeout(() => p.remove(), 1200);
+    }
+
+    // 鼠标在 stage 内移动 → 移动鼠标指针和猫
+    _stageEl.addEventListener('mousemove', (e) => {
+      const rect = _stageEl.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const xPct = (x / rect.width) * 100;
+      const yPct = (y / rect.height) * 100;
+      // 移动鼠标指针
+      _cursorEl.style.left = xPct + '%';
+      _cursorEl.style.top = yPct + '%';
+      // 猫追着鼠标
+      _moveCat(xPct, yPct, false);
+    });
+    // 鼠标进入/离开
+    _stageEl.addEventListener('mouseenter', () => {
+      _cursorEl.style.opacity = '1';
+    });
+    _stageEl.addEventListener('mouseleave', () => {
+      _cursorEl.style.opacity = '0.2';
+    });
+    // 点击 → 猫跳起 + 波纹 + 粒子
+    _stageEl.addEventListener('click', (e) => {
+      const rect = _stageEl.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      _spawnRipple(x, y);
+      _spawnParticle(x, y);
+      _spawnParticle(x, y);
+      _spawnParticle(x, y);
+      // 让猫跳到点击位置
+      const xPct = (x / rect.width) * 100;
+      const yPct = (y / rect.height) * 100;
+      _moveCat(xPct, yPct, false);
+      _catEl.classList.remove('is-jumping');
+      void _catEl.offsetWidth;
+      _catEl.classList.add('is-jumping');
+      setTimeout(() => _catEl.classList.remove('is-jumping'), 500);
+    });
+
+    // 关闭按钮
+    $('loadingCardClose').addEventListener('click', hideLoading);
 
     /* ── 翻译缓存 & API (浏览器直接走免费 Google/MyMemory) ── */
     const _tc = {};
@@ -859,9 +1049,9 @@
         const r = await fetch('/api/refresh-papers');
         const d = await r.json();
         if (d.ok) {
-          updateLoading(`抓到 ${d.count} 篇论文!`, 'DONE', 100);
+          markLoadingDone(`抓到 ${d.count} 篇论文!`);
           await loadAll(true);
-          setTimeout(hideLoading, 400);
+          setTimeout(hideLoading, 1200);
           toast(`刷新完成! 共 ${d.count} 篇论文`);
         } else {
           hideLoading();
@@ -921,8 +1111,8 @@
       } catch(e) { console.warn('papers fetch failed:', e); }
       updateLoading('更新中…', 'SYNCING', 95);
       await loadAll(true); // 强制刷新,绕过缓存
-      updateLoading('全部完成!', 'DONE', 100);
-      setTimeout(hideLoading, 500);
+      markLoadingDone(`推文 ${results.tweets} 条 · 论文 ${results.papers} 篇`);
+      setTimeout(hideLoading, 1200);
       toast(`刷新完成: 推文 ${results.tweets} 条 · 论文 ${results.papers} 篇`);
       btn.disabled = false; icon.classList.remove('spin');
     }
@@ -1078,8 +1268,8 @@
         const r = await fetch('/api/summarize?_t=' + Date.now());
         const d = await r.json();
         if (d.ok) {
-          updateLoading('总结完成!', 'DONE', 100);
-          setTimeout(hideLoading, 400);
+          markLoadingDone('AI 总结搞定!');
+          setTimeout(hideLoading, 1200);
           openSummary();
           // 强制刷新,拿最新 summary
           await loadAll(true);
