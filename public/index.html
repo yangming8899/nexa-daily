@@ -381,6 +381,166 @@
     }
     .toast.show { opacity: 1; }
 
+    /* ═══════ Loading Overlay · 走路的小猫 ═══════ */
+    .loading-overlay {
+      position: fixed; inset: 0;
+      background: rgba(246, 245, 241, 0.96);
+      backdrop-filter: blur(8px);
+      z-index: 2000;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      animation: overlayFade .25s ease;
+    }
+    .loading-overlay.is-open { display: flex; }
+    @keyframes overlayFade { from { opacity: 0 } to { opacity: 1 } }
+
+    .loading-scene {
+      position: relative;
+      width: min(420px, 80vw);
+      height: 180px;
+      overflow: hidden;
+    }
+
+    /* 键盘地面 */
+    .loading-keys {
+      position: absolute;
+      left: 0; right: 0; bottom: 30px;
+      height: 14px;
+      background: repeating-linear-gradient(
+        90deg,
+        #e3e2dc 0 22px, #d6d5ce 22px 24px
+      );
+      border-top: 1px solid #c5c4bd;
+      border-radius: 2px;
+    }
+
+    /* 进度条 */
+    .loading-bar {
+      position: absolute;
+      left: 0; right: 0; top: 30px;
+      height: 4px;
+      background: var(--bg-soft);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .loading-bar-fill {
+      height: 100%;
+      background: var(--accent);
+      width: 0%;
+      transition: width .6s ease;
+      border-radius: 4px;
+    }
+
+    /* 走路的小猫 - 用 div + 渐变画一个剪影 */
+    .walking-cat {
+      position: absolute;
+      bottom: 36px;
+      left: 0;
+      width: 64px; height: 48px;
+      animation: catWalk 4s linear forwards;
+    }
+    @keyframes catWalk {
+      0%   { left: -10%; transform: translateY(0) scaleX(1); }
+      48%  { transform: translateY(-2px) scaleX(1); }
+      49%  { transform: translateY(-2px) scaleX(-1); }
+      50%  { left: 110%; transform: translateY(0) scaleX(1); }
+      51%  { left: 110%; transform: translateY(0) scaleX(-1); }
+      100% { left: -10%; transform: translateY(0) scaleX(-1); }
+    }
+
+    /* 猫身体 - 用 CSS 拼一只 */
+    .cat-body {
+      position: absolute;
+      left: 6px; bottom: 4px;
+      width: 36px; height: 22px;
+      background: var(--ink);
+      border-radius: 50% 50% 45% 45% / 60% 60% 40% 40%;
+    }
+    .cat-head {
+      position: absolute;
+      left: 38px; bottom: 16px;
+      width: 18px; height: 18px;
+      background: var(--ink);
+      border-radius: 50%;
+    }
+    .cat-ear {
+      position: absolute;
+      width: 0; height: 0;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-bottom: 8px solid var(--ink);
+    }
+    .cat-ear.l { left: 38px; bottom: 30px; transform: rotate(-20deg); }
+    .cat-ear.r { left: 48px; bottom: 30px; transform: rotate(20deg); }
+    .cat-eye {
+      position: absolute;
+      width: 3px; height: 3px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: catBlink 3s ease-in-out infinite;
+    }
+    .cat-eye.l { left: 44px; top: 22px; }
+    .cat-eye.r { left: 50px; top: 22px; }
+    @keyframes catBlink {
+      0%, 92%, 100% { transform: scaleY(1); }
+      95%, 97%      { transform: scaleY(0.1); }
+    }
+    .cat-tail {
+      position: absolute;
+      left: 4px; bottom: 12px;
+      width: 14px; height: 4px;
+      background: var(--ink);
+      border-radius: 4px;
+      transform-origin: right center;
+      animation: catTail 1s ease-in-out infinite;
+    }
+    @keyframes catTail {
+      0%, 100% { transform: rotate(15deg); }
+      50%      { transform: rotate(-15deg); }
+    }
+    .cat-leg {
+      position: absolute;
+      width: 3px; height: 10px;
+      background: var(--ink);
+      border-radius: 2px;
+      transform-origin: top center;
+    }
+    .cat-leg.f1 { left: 14px; bottom: 0; animation: catLegA .5s ease-in-out infinite; }
+    .cat-leg.f2 { left: 22px; bottom: 0; animation: catLegB .5s ease-in-out infinite; }
+    .cat-leg.b1 { left: 32px; bottom: 0; animation: catLegB .5s ease-in-out infinite; }
+    .cat-leg.b2 { left: 40px; bottom: 0; animation: catLegA .5s ease-in-out infinite; }
+    @keyframes catLegA { 0%, 100% { transform: rotate(25deg); } 50% { transform: rotate(-25deg); } }
+    @keyframes catLegB { 0%, 100% { transform: rotate(-25deg); } 50% { transform: rotate(25deg); } }
+
+    /* 提示文字 */
+    .loading-text {
+      margin-top: 28px;
+      font-family: var(--serif);
+      font-size: 22px;
+      font-weight: 500;
+      color: var(--ink);
+      letter-spacing: -0.01em;
+      min-height: 30px;
+      text-align: center;
+    }
+    .loading-step {
+      margin-top: 8px;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--ink-mute);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .loading-percent {
+      position: absolute;
+      right: 0; top: -20px;
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--accent);
+    }
+
     footer {
       margin-top: 80px; padding-top: 24px; border-top: 1px solid var(--line);
       display: flex; justify-content: space-between; align-items: center;
@@ -543,6 +703,32 @@
 
   <div class="toast" id="toast"></div>
 
+  <!-- Loading 遮罩:小猫走路动画 -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-scene">
+      <div class="loading-bar">
+        <span class="loading-percent" id="loadingPercent">0%</span>
+        <div class="loading-bar-fill" id="loadingBarFill"></div>
+      </div>
+      <div class="walking-cat" id="walkingCat">
+        <div class="cat-tail"></div>
+        <div class="cat-leg f1"></div>
+        <div class="cat-leg f2"></div>
+        <div class="cat-body"></div>
+        <div class="cat-leg b1"></div>
+        <div class="cat-leg b2"></div>
+        <div class="cat-ear l"></div>
+        <div class="cat-ear r"></div>
+        <div class="cat-head"></div>
+        <div class="cat-eye l"></div>
+        <div class="cat-eye r"></div>
+      </div>
+      <div class="loading-keys"></div>
+    </div>
+    <div class="loading-text" id="loadingText">正在加载...</div>
+    <div class="loading-step" id="loadingStep">Connecting</div>
+  </div>
+
   <script>
     const $ = id => document.getElementById(id);
     function pad2(n) { return String(n).padStart(2, '0'); }
@@ -558,6 +744,37 @@
       const t = $('toast'); t.textContent = msg; t.classList.add('show');
       clearTimeout(t._tid); t._tid = setTimeout(() => t.classList.remove('show'), ms);
     }
+
+    /* ── Loading 遮罩:走路的小猫 ── */
+    // 用法:
+    //   showLoading([{text:'抓推文', pct:30}, {text:'抓论文', pct:60}, {text:'AI 总结', pct:90}])
+    //   updateLoading('正在抓推文…', 'STAGE 1/3', 30)
+    //   hideLoading()
+    function showLoading(stages = []) {
+      $('loadingOverlay').classList.add('is-open');
+      $('loadingBarFill').style.width = '0%';
+      $('loadingPercent').textContent = '0%';
+      $('loadingText').textContent = '正在加载…';
+      $('loadingStep').textContent = 'CONNECTING';
+      _loadingStages = stages;
+      // 重启走路动画
+      const cat = $('walkingCat');
+      cat.style.animation = 'none';
+      void cat.offsetWidth; // 强制 reflow
+      cat.style.animation = '';
+    }
+    function updateLoading(text, step, pct) {
+      if (text) $('loadingText').textContent = text;
+      if (step) $('loadingStep').textContent = step;
+      if (typeof pct === 'number') {
+        $('loadingBarFill').style.width = pct + '%';
+        $('loadingPercent').textContent = Math.round(pct) + '%';
+      }
+    }
+    function hideLoading() {
+      $('loadingOverlay').classList.remove('is-open');
+    }
+    let _loadingStages = [];
 
     /* ── 翻译缓存 & API (浏览器直接走免费 Google/MyMemory) ── */
     const _tc = {};
@@ -636,22 +853,25 @@
     async function doRefreshPapers() {
       const btn = $('btnRefreshPapers');
       btn.disabled = true;
-      btn.innerHTML = '<span class="spin">↻</span> 刷新中…';
-      toast('正在从 arXiv 拉取最新论文…', 6000);
+      showLoading();
+      updateLoading('正在抓取 arXiv 论文…', 'FETCHING PAPERS', 30);
       try {
         const r = await fetch('/api/refresh-papers');
         const d = await r.json();
         if (d.ok) {
+          updateLoading(`抓到 ${d.count} 篇论文!`, 'DONE', 100);
+          await loadAll(true);
+          setTimeout(hideLoading, 400);
           toast(`刷新完成! 共 ${d.count} 篇论文`);
-          await loadAll();
         } else {
+          hideLoading();
           toast('刷新失败: ' + (d.error||'未知错误').slice(0,200), 5000);
         }
       } catch(e) {
+        hideLoading();
         toast('刷新失败: 无法连接 server', 5000);
       } finally {
         btn.disabled = false;
-        btn.innerHTML = '↻ 刷新论文';
       }
     }
 
@@ -683,7 +903,8 @@
     async function doRefreshAll() {
       const btn = $('btnRefreshAll'), icon = $('refreshIcon');
       btn.disabled = true; icon.classList.add('spin');
-      toast('正在抓取推文和论文…', 10000);
+      showLoading();
+      updateLoading('正在抓取推文…', 'STEP 1/2 · FETCHING TWEETS', 25);
       const results = { tweets: 0, papers: 0 };
       try {
         const r1 = await fetch('/api/refresh');
@@ -691,13 +912,17 @@
         if (d1.ok) results.tweets = d1.count || 0;
         else console.warn('tweets refresh failed:', d1.error);
       } catch(e) { console.warn('tweets fetch failed:', e); }
+      updateLoading(`抓了 ${results.tweets} 条推文,继续抓论文…`, 'STEP 2/2 · FETCHING PAPERS', 65);
       try {
         const r2 = await fetch('/api/refresh-papers');
         const d2 = await r2.json();
         if (d2.ok) results.papers = d2.count || 0;
         else console.warn('papers refresh failed:', d2.error);
       } catch(e) { console.warn('papers fetch failed:', e); }
+      updateLoading('更新中…', 'SYNCING', 95);
       await loadAll(true); // 强制刷新,绕过缓存
+      updateLoading('全部完成!', 'DONE', 100);
+      setTimeout(hideLoading, 500);
       toast(`刷新完成: 推文 ${results.tweets} 条 · 论文 ${results.papers} 篇`);
       btn.disabled = false; icon.classList.remove('spin');
     }
@@ -847,24 +1072,27 @@
       }
       // 否则才调用 AI 生成
       btn.disabled = true;
-      btn.innerHTML = '<span class="spin">✨</span> AI 思考中…';
-      toast('AI 正在分析今日动态和论文…', 10000);
+      showLoading();
+      updateLoading('AI 正在分析今日动态和论文…', 'GENERATING SUMMARY', 30);
       try {
         const r = await fetch('/api/summarize?_t=' + Date.now());
         const d = await r.json();
         if (d.ok) {
-          toast('总结生成完成!');
+          updateLoading('总结完成!', 'DONE', 100);
+          setTimeout(hideLoading, 400);
           openSummary();
           // 强制刷新,拿最新 summary
           await loadAll(true);
+          toast('总结生成完成!');
         } else {
+          hideLoading();
           toast('生成失败: ' + (d.error||'未知错误').slice(0,200), 5000);
         }
       } catch(e) {
+        hideLoading();
         toast('生成失败: 无法连接 server', 5000);
       } finally {
         btn.disabled = false;
-        btn.innerHTML = '✨ AI 总结';
       }
     }
 
