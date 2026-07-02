@@ -211,6 +211,50 @@
     .summary-modal-body .summary-empty {
       color: var(--ink-mute); font-size: 14px; padding: 24px 0; font-style: italic; text-align: center;
     }
+    .summary-modal-body .summary-item {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px dashed var(--line);
+    }
+    .summary-modal-body .summary-item:last-child { border-bottom: none; }
+    .summary-modal-body .summary-num {
+      flex: 0 0 24px;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--ink-mute);
+      padding-top: 4px;
+      letter-spacing: 0.04em;
+    }
+    .summary-modal-body .summary-text {
+      flex: 1 1 auto;
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.65;
+      color: var(--ink-soft);
+    }
+    .summary-modal-body .summary-text strong { color: var(--ink); font-weight: 600; }
+    .summary-modal-body .summary-link {
+      flex: 0 0 auto;
+      align-self: center;
+      display: inline-flex; align-items: center; gap: 4px;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: transparent;
+      border: 1px solid var(--accent);
+      padding: 5px 10px;
+      border-radius: 100px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all .15s ease;
+      white-space: nowrap;
+    }
+    .summary-modal-body .summary-link:hover {
+      background: var(--accent);
+      color: var(--bg);
+    }
     .summary-ask-wrap {
       margin-top: 24px;
       border-top: 1px solid var(--line);
@@ -1183,21 +1227,94 @@
       const card = $('summaryBodyModal');
       if (data && data.summary) {
         const lines = data.summary.split('\n');
+        // 拿到 source 数据(推文和论文),让总结里的每条可以跳转到原始来源
+        const sources = data.sources || _currentSources || { updates: [], papers: [] };
+        const updates = sources.updates || [];
+        const papers = sources.papers || [];
         let html = '', seenH1 = false;
-        for (const line of lines) {
+        let inTweetsList = false, inPapersList = false;
+        for (let i = 0; i < lines.length; i++) {
+          const line = lines[i];
           const l = line.trim();
-          if (!l) continue;
+          if (!l) { inTweetsList = false; inPapersList = false; continue; }
           if (l.startsWith('# ')) { if (!seenH1) { seenH1 = true; continue; } }
-          if (l.startsWith('### ')) { html += `<h3>${esc(l.slice(4))}</h3>`; continue; }
+          if (l.startsWith('### ')) {
+            const h = l.slice(4).trim();
+            inTweetsList = /动态|推文|tweet/i.test(h);
+            inPapersList = /论文|paper/i.test(h);
+            html += `<h3>${esc(h)}</h3>`;
+            continue;
+          }
           if (l.startsWith('## ')) { html += `<h2>${esc(l.slice(3))}</h2>`; continue; }
           if (l.startsWith('# ')) { html += `<h2>${esc(l.slice(2))}</h2>`; continue; }
-          const text = esc(l.replace(/^\d+[\.、]\s*/, '')).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-          html += `<p>${text}</p>`;
+          // 处理列表项
+          if (inTweetsList || inPapersList) {
+            const itemHtml = renderSummaryItem(l, inPapersList ? papers : updates, inPapersList);
+            html += itemHtml;
+          } else {
+            const text = esc(l).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+            html += `<p>${text}</p>`;
+          }
         }
         card.innerHTML = html;
+        // 绑定点击跳转
+        card.querySelectorAll('a.summary-link').forEach(a => {
+          a.addEventListener('click', (e) => {
+            // Cmd/Ctrl + click 让用户自己处理(新标签页);普通 click 也新标签页打开
+            e.preventDefault();
+            window.open(a.dataset.url, '_blank', 'noopener');
+          });
+        });
       } else {
         card.innerHTML = `<div class="summary-empty">点击右上「✨ AI 总结」让 AI 帮你梳理今日值得关注的内容。</div>`;
       }
+    }
+
+    /**
+     * 把一行总结文字(形如 "1. **DeepSeek-V3** 发布: ...")解析成可点击的卡片,
+     * 通过实体匹配找对应的原始来源(论文 / 推文)。
+     */
+    function renderSummaryItem(line, sources, isPapers) {
+      // 去掉 "1. " "2、 " 这种编号
+      const m = line.match(/^(\d+)[\.、]\s*(.+)/);
+      const num = m ? m[1] : '';
+      let body = m ? m[2] : line;
+      // 提取加粗的标题(可能含《》包起来的论文名)
+      const titleMatch = body.match(/^\*\*《?(.+?)》?\*\*/);
+      const authorMatch = body.match(/^\*\*(.+?)\*\*[:：]/);
+      const keyword = (titleMatch?.[1] || authorMatch?.[1] || '').trim();
+      // 找匹配 source
+      const match = findMatchingSource(keyword, sources, isPapers);
+      const text = esc(body).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+      const linkHtml = match
+        ? `<a class="summary-link" data-url="${esc(match.url)}" title="查看来源: ${esc(match.label)}">↗ 打开来源</a>`
+        : '';
+      return `<div class="summary-item">
+        ${num ? `<span class="summary-num">${num}</span>` : ''}
+        <p class="summary-text">${text}</p>
+        ${linkHtml}
+      </div>`;
+    }
+
+    function findMatchingSource(keyword, sources, isPapers) {
+      if (!keyword || !sources || !sources.length) return null;
+      const kw = keyword.toLowerCase();
+      // 1) 完整关键词匹配
+      for (const s of sources) {
+        const key = (isPapers ? s.title : (s.author || s.username || '')).toLowerCase();
+        if (key && key.includes(kw)) {
+          return { url: s.link || s.url, label: isPapers ? s.title : `${s.author} 的推文` };
+        }
+      }
+      // 2) 关键词分词后部分匹配
+      const words = kw.split(/[\s,.\-_]+/).filter(w => w.length >= 3);
+      for (const s of sources) {
+        const key = (isPapers ? s.title : (s.author || s.username || '')).toLowerCase();
+        for (const w of words) {
+          if (key.includes(w)) return { url: s.link || s.url, label: isPapers ? s.title : `${s.author} 的推文` };
+        }
+      }
+      return null;
     }
 
     /* ── 统一从 /api/data 加载所有数据 ── */
@@ -1205,6 +1322,7 @@
     const DATA_CACHE_KEY = 'nexa_data_cache';
     const DATA_CACHE_TTL = 60_000; // 60 秒
     let _dataCache = null;
+    let _currentSources = { updates: [], papers: [] }; // 当前推文+论文,让 summary 里每条可跳转
 
     function getCachedData() {
       try {
@@ -1223,6 +1341,7 @@
       // 1) 先用内存 + localStorage 缓存(瞬间完成)
       const cached = _dataCache || getCachedData();
       if (cached && !force) {
+        _currentSources = { updates: cached.updates || [], papers: cached.papers || [] };
         renderFromData(cached);
         return;
       }
@@ -1233,6 +1352,8 @@
         const data = await r.json();
         _dataCache = data;
         setCachedData(data);
+        // 保存当前推文/论文,让 AI 总结里的条目可以跳转到原始来源
+        _currentSources = { updates: data.updates || [], papers: data.papers || [] };
         renderFromData(data);
       } catch (e) {
         console.warn('loadAll failed:', e);
