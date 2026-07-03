@@ -783,16 +783,6 @@
     }
     .loading-card-close:hover { background: var(--ink); color: var(--bg); border-color: var(--ink); }
 
-    /* 场景:鼠标互动区域(420x180 的"鼠标领地") */
-    .loading-stage {
-      position: relative;
-      width: 100%;
-      height: 160px;
-      background: var(--bg-soft);
-      border-radius: 10px;
-      overflow: hidden;
-      cursor: crosshair;
-    }
 
     /* 鼠标指针 */
     .cursor-pointer {
@@ -1030,35 +1020,35 @@
     .cat-whisker.r1 { left: 48px; top: 26px; transform: rotate(8deg); }
     .cat-whisker.r2 { left: 48px; top: 27.5px; transform: rotate(-4deg); }
 
-    /* 奶酪 */
+    /* 烤鸡胸肉 (代替奶酪) */
     .cheese {
       position: absolute;
-      width: 14px; height: 12px;
-      transform: translate(-50%, -50%) rotate(-12deg);
+      width: 22px; height: 18px;
+      transform: translate(-50%, -50%) rotate(-8deg);
       pointer-events: none;
       z-index: 4;
       animation: cheeseIn .25s cubic-bezier(.2,.8,.4,1.4);
     }
-    .cheese svg { display: block; width: 100%; height: 100%; filter: drop-shadow(0 2px 2px rgba(0,0,0,.12)); }
+    .cheese svg { display: block; width: 100%; height: 100%; filter: drop-shadow(0 2px 2px rgba(0,0,0,.18)); }
     .cheese.eaten { animation: cheeseOut .3s ease-out forwards; }
     .cheese.dropped { animation: cheeseDrop .5s ease-out forwards; }
     .cheese.cat-carrying { animation: cheeseCarry .4s ease-out; transition: left .4s cubic-bezier(.4,.2,.2,1), top .4s cubic-bezier(.4,.2,.2,1); }
     @keyframes cheeseIn {
-      0%   { transform: translate(-50%, -50%) rotate(-12deg) scale(0.3); opacity: 0; }
-      100% { transform: translate(-50%, -50%) rotate(-12deg) scale(1); opacity: 1; }
+      0%   { transform: translate(-50%, -50%) rotate(-8deg) scale(0.3); opacity: 0; }
+      100% { transform: translate(-50%, -50%) rotate(-8deg) scale(1); opacity: 1; }
     }
     @keyframes cheeseOut {
-      0%   { transform: translate(-50%, -50%) rotate(-12deg) scale(1); opacity: 1; }
-      100% { transform: translate(-50%, -50%) rotate(-12deg) scale(0); opacity: 0; }
+      0%   { transform: translate(-50%, -50%) rotate(-8deg) scale(1); opacity: 1; }
+      100% { transform: translate(-50%, -50%) rotate(-8deg) scale(0); opacity: 0; }
     }
     @keyframes cheeseDrop {
-      0%   { transform: translate(-50%, -100%) rotate(-12deg) scale(1); }
-      60%  { transform: translate(-50%, -45%) rotate(-6deg) scale(1.05); }
-      100% { transform: translate(-50%, -50%) rotate(-4deg) scale(.9); opacity: .9; }
+      0%   { transform: translate(-50%, -100%) rotate(-8deg) scale(1); }
+      60%  { transform: translate(-50%, -45%) rotate(-4deg) scale(1.05); }
+      100% { transform: translate(-50%, -50%) rotate(-2deg) scale(.9); opacity: .95; }
     }
     @keyframes cheeseCarry {
-      0%   { transform: translate(-50%, -50%) rotate(-12deg) scale(1); }
-      100% { transform: translate(-50%, -130%) rotate(-8deg) scale(.85); }
+      0%   { transform: translate(-50%, -50%) rotate(-8deg) scale(1); }
+      100% { transform: translate(-50%, -120%) rotate(-4deg) scale(.85); }
     }
     /* 「嗯～」吃到的状态文字 */
     .cat-emoji {
@@ -1087,11 +1077,11 @@
       100% { opacity: 0; transform: translateY(-12px); }
     }
 
-    /* 鼠标周围的「奶酪碎屑」粒子 */
+    /* 鼠标周围的「鸡胸肉碎屑」粒子 */
     .particle {
       position: absolute;
       width: 4px; height: 4px;
-      background: var(--cat-cheese);
+      background: #d4a373;
       border-radius: 50%;
       pointer-events: none;
       opacity: 0;
@@ -1103,6 +1093,65 @@
       0%   { opacity: 0; transform: translate(0, 0) scale(0.5); }
       20%  { opacity: 1; }
       100% { opacity: 0; transform: translate(var(--dx, 30px), var(--dy, -20px)) scale(0.2); }
+    }
+
+    /* 喂猫小窗 · 右下角 */
+    .cat-launcher {
+      position: fixed; right: 18px; bottom: 18px;
+      width: 50px; height: 50px; border-radius: 50%;
+      background: #fff; border: 1px solid var(--line);
+      font-size: 24px; cursor: pointer; z-index: 1500;
+      box-shadow: 0 6px 16px -6px rgba(0,0,0,.28);
+      transition: transform .2s ease;
+      display: flex; align-items: center; justify-content: center;
+      padding: 0; line-height: 1;
+    }
+    .cat-launcher:hover { transform: scale(1.1) rotate(-6deg); }
+    .cat-launcher:active { transform: scale(.95); }
+    .cat-launcher.is-active { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+    .cat-launcher.is-active::after {
+      content: ''; position: absolute; right: 4px; bottom: 4px;
+      width: 9px; height: 9px; background: #ff5b1f;
+      border-radius: 50%; border: 2px solid #fff;
+    }
+    .cat-dock {
+      position: fixed; right: 18px; bottom: 80px;
+      width: 380px; height: 290px;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      box-shadow: 0 24px 70px -12px rgba(0,0,0,.22);
+      z-index: 1400;
+      display: none; flex-direction: column;
+      overflow: hidden;
+      transform: translateY(8px) scale(.96);
+      opacity: 0;
+      transition: transform .2s ease, opacity .2s ease;
+    }
+    .cat-dock.is-open { display: flex; transform: translateY(0) scale(1); opacity: 1; }
+    .cat-dock-head {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 12px; border-bottom: 1px solid var(--line);
+      background: var(--bg-soft);
+    }
+    .cat-dock-title { font-family: var(--serif); font-size: 13px; font-weight: 600; }
+    .cat-dock-hint { flex: 1; font-family: var(--mono); font-size: 10px; color: var(--ink-mute); letter-spacing: 0.04em; }
+    .cat-dock-close {
+      background: none; border: 1px solid var(--line);
+      width: 22px; height: 22px; border-radius: 50%;
+      font-size: 11px; color: var(--ink-mute); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      padding: 0; line-height: 1;
+    }
+    .cat-dock-close:hover { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+    .cat-stage {
+      position: relative; flex: 1;
+      background:
+        radial-gradient(circle at 30% 40%, rgba(255,138,61,.08) 0%, transparent 50%),
+        radial-gradient(circle at 70% 70%, rgba(74,40,24,.06) 0%, transparent 50%),
+        var(--bg-soft);
+      cursor: none;
+      overflow: hidden;
     }
 
     /* 状态文字 + 进度条 */
@@ -1359,7 +1408,22 @@
       <span class="loading-card-step" id="loadingCardStep">CONNECTING</span>
       <button class="loading-card-close" id="loadingCardClose" title="关闭">✕</button>
     </div>
-    <div class="loading-stage" id="loadingStage">
+    <div class="loading-status" id="loadingStatus">等待开始…</div>
+    <div class="loading-progress"><div class="loading-progress-fill" id="loadingProgressFill"></div></div>
+    <div class="loading-percent" id="loadingPercent">0%</div>
+  </div>
+
+  <!-- 起司猫游戏 (右下角浮窗,不绑定 Loading) -->
+  <button class="cat-launcher" id="catLauncher" onclick="toggleCatGame()" title="喂猫">
+    🐱
+  </button>
+  <div class="cat-dock" id="catDock">
+    <div class="cat-dock-head">
+      <span class="cat-dock-title">喂起司猫</span>
+      <span class="cat-dock-hint">点击舞台扔鸡胸肉</span>
+      <button class="cat-dock-close" onclick="toggleCatGame()" title="关闭">✕</button>
+    </div>
+    <div class="cat-stage" id="loadingStage">
       <!-- 鼠标指针 -->
       <div class="cursor-pointer" id="cursorPointer" style="left: 50%; top: 50%;">
         <svg width="16" height="22" viewBox="0 0 16 22" fill="none">
@@ -1394,9 +1458,6 @@
         <div class="cat-emoji" id="catEmoji">嗯～</div>
       </div>
     </div>
-    <div class="loading-status" id="loadingStatus">等待开始…</div>
-    <div class="loading-progress"><div class="loading-progress-fill" id="loadingProgressFill"></div></div>
-    <div class="loading-percent" id="loadingPercent">0%</div>
   </div>
 
   <script>
@@ -1454,23 +1515,8 @@
       $('loadingCardStep').textContent = 'DONE';
       $('loadingProgressFill').style.width = '100%';
       $('loadingPercent').textContent = '100%';
-      // 庆祝:在鼠标位置放一块奶酪让猫庆祝一下
-      const stage = $('loadingStage').getBoundingClientRect();
-      const cursor = $('cursorPointer').getBoundingClientRect();
-      const x = cursor.left + cursor.width / 2 - stage.left;
-      const y = cursor.top + cursor.height / 2 - stage.top;
-      // 1) 猫跑去吃
-      if (typeof _dropCheese === 'function') {
-        _dropCheese(x, y);
-      }
-      // 2) 2 秒后再来一次(庆祝加倍)
-      setTimeout(() => {
-        const s2 = $('loadingStage').getBoundingClientRect();
-        const c2 = $('cursorPointer').getBoundingClientRect();
-        const x2 = c2.left + c2.width / 2 - s2.left;
-        const y2 = c2.top + c2.height / 2 - s2.top + 30;
-        if (typeof _dropCheese === 'function' && _catState === 'idle') _dropCheese(x2, y2);
-      }, 2000);
+      // 注意:不抢猫游戏窗口!只 toast 提示
+      setTimeout(() => toast(`✓ ${successText}`), 100);
     }
 
     /* ── 起司猫互动游戏:点击投食 + 主动送礼 ── */
@@ -1483,13 +1529,19 @@
     let _giftTimer = null;
     const CAT_W = 58, CAT_H = 44;
 
-    // 奶酪 SVG 字符串(暖黄三角带小孔)
-    const CHEESE_SVG = `
-      <svg viewBox="0 0 14 12" xmlns="http://www.w3.org/2000/svg">
-        <path d="M1 11 L13 11 L7 1 Z" fill="#f5c542" stroke="#c8941a" stroke-width="0.8" stroke-linejoin="round"/>
-        <circle cx="6" cy="7" r="0.9" fill="#c8941a"/>
-        <circle cx="8.5" cy="8.5" r="0.7" fill="#c8941a"/>
-        <circle cx="5" cy="9" r="0.6" fill="#c8941a"/>
+    // 烤鸡胸肉 SVG 字符串 (奶白 + 焦圈 + 肉纹理)
+    const CHICKEN_SVG = `
+      <svg viewBox="0 0 22 18" xmlns="http://www.w3.org/2000/svg">
+        <!-- 主体肉块 (椭圆形,带烤焦边) -->
+        <ellipse cx="11" cy="9" rx="9" ry="6.5" fill="#f0e4cc" stroke="#7a4a2c" stroke-width="0.8"/>
+        <!-- 焦圈/烤痕 -->
+        <ellipse cx="11" cy="9" rx="6" ry="4" fill="none" stroke="#c8941a" stroke-width="0.6" opacity=".7"/>
+        <ellipse cx="11" cy="9" rx="3" ry="2" fill="none" stroke="#c8941a" stroke-width="0.5" opacity=".5"/>
+        <!-- 肉纹理 (粉白细线) -->
+        <path d="M5 8 Q8 7, 11 8 T17 8" stroke="#f5b3a8" stroke-width="0.5" fill="none" opacity=".7"/>
+        <path d="M6 11 Q9 10, 12 11 T17 11" stroke="#f5b3a8" stroke-width="0.5" fill="none" opacity=".6"/>
+        <!-- 高光 -->
+        <ellipse cx="8" cy="6.5" rx="2.5" ry="1" fill="#fff" opacity=".55"/>
       </svg>`;
 
     function _moveCat(xPct, yPct) {
@@ -1549,12 +1601,12 @@
       // 生成奶酪
       const c = document.createElement('div');
       c.className = 'cheese';
-      c.innerHTML = CHEESE_SVG;
+      c.innerHTML = CHICKEN_SVG;
       c.style.left = x + 'px';
       c.style.top = y + 'px';
       _stageEl.appendChild(c);
       _spawnRipple(x, y);
-      for (let i = 0; i < 4; i++) _spawnParticle(x, y, 'var(--cat-cheese)');
+      for (let i = 0; i < 4; i++) _spawnParticle(x, y, '#d4a373');
 
       // 猫跑去吃
       const stage = _stageEl.getBoundingClientRect();
@@ -1606,11 +1658,11 @@
       _catEl.classList.remove('is-sleeping');
       _catState = 'walking';
       _moveCat(corner.x, corner.y);
-      // 2. 到达后生成一块奶酪"叼起"
+      // 2. 到达后叼一块鸡胸肉
       setTimeout(() => {
         const c = document.createElement('div');
         c.className = 'cheese cat-carrying';
-        c.innerHTML = CHEESE_SVG;
+        c.innerHTML = CHICKEN_SVG;
         c.style.left = '50%';
         c.style.top = '50%';
         _stageEl.appendChild(c);
@@ -1653,8 +1705,37 @@
       _giftTimer = setTimeout(_catBringGift, delay);
     }
 
-    // 鼠标移动 → 只移动鼠标指针,猫**不**再跟随
+    /* ── 喂猫小窗的打开/关闭 ── */
+    let _catGameOpen = false;
+    function toggleCatGame() {
+      const dock = $('catDock');
+      const launcher = $('catLauncher');
+      _catGameOpen = !_catGameOpen;
+      if (_catGameOpen) {
+        dock.classList.add('is-open');
+        launcher.classList.add('is-active');
+        // 重新调度送礼(在 idle 时给猫带东西)
+        if (_catState === 'idle') _scheduleNextGift();
+        // 鼠标先放中央
+        _cursorEl.style.left = '50%';
+        _cursorEl.style.top  = '50%';
+        // 猫放中央
+        _moveCat(50, 50);
+      } else {
+        dock.classList.remove('is-open');
+        launcher.classList.remove('is-active');
+        // 停掉 pending 礼物
+        if (_giftTimer) clearTimeout(_giftTimer);
+      }
+    }
+    // 全局 ESC 关闭
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && _catGameOpen) toggleCatGame();
+    });
+
+    // 鼠标移动 → 只移动鼠标指针,猫**不**再跟随 (只在 dock 打开时生效)
     _stageEl.addEventListener('mousemove', (e) => {
+      if (!_catGameOpen) return;
       const rect = _stageEl.getBoundingClientRect();
       const xPct = ((e.clientX - rect.left) / rect.width) * 100;
       const yPct = ((e.clientY - rect.top)  / rect.height) * 100;
@@ -1662,18 +1743,19 @@
       _cursorEl.style.top  = yPct + '%';
     });
     // 鼠标进入/离开
-    _stageEl.addEventListener('mouseenter', () => { _cursorEl.style.opacity = '1'; });
-    _stageEl.addEventListener('mouseleave', () => { _cursorEl.style.opacity = '0.2'; });
+    _stageEl.addEventListener('mouseenter', () => { if (_catGameOpen) _cursorEl.style.opacity = '1'; });
+    _stageEl.addEventListener('mouseleave', () => { if (_catGameOpen) _cursorEl.style.opacity = '0.2'; });
 
-    // 点击 → 投奶酪
+    // 点击 → 投鸡胸肉 (只在 dock 打开时)
     _stageEl.addEventListener('click', (e) => {
+      if (!_catGameOpen) return;
       const rect = _stageEl.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
       _dropCheese(x, y);
     });
 
-    // 启动送礼调度
+    // 启动送礼调度 (后台常驻,不依赖 dock)
     _scheduleNextGift();
 
     // 关闭按钮
