@@ -81,9 +81,9 @@ async function handleData(req, res) {
 }
 
 // ── GET /api/refresh ───────────────────────────────────────
+// 拉 GitHub 上最新的 data/cache.json(由 GH Actions 定时抓取),存 KV
 async function handleRefresh(req, res) {
-  // 防刷锁:90s 内只跑一次,避免 scrape.do 限流
-  const lock = acquireRefreshLock('refresh', 90_000);
+  const lock = acquireRefreshLock('refresh', 30_000);
   if (!lock.acquired) {
     return res.status(429).json({
       ok: false,
@@ -91,84 +91,47 @@ async function handleRefresh(req, res) {
       waitMs: lock.waitLeftMs,
     });
   }
-  const people = readJson('people.json').people;
-  console.log(`[refresh] 抓取 ${people.length} 位专家…`);
-  const debug = req.url?.includes('debug=1');
-  const result = await sources.fetchAllUpdates(people);
-  console.log(`[refresh] 抓取结果: count=${result.count}, updates=${result.updates.length}, errors=${result.errors?.length || 0}`);
-  for (const e of (result.errors || [])) {
-    console.log(`[refresh] err @${e.username}: ${e.err}`);
+
+  // 1) 先尝试从 GitHub raw 拉最新 cache.json(GH Actions 写入的最新的)
+  const ghUrl = 'https://raw.githubusercontent.com/yangming8899/nexa-daily/main/data/cache.json';
+  let ghFetch = null;
+  try {
+    const r = await fetch(ghUrl, { headers: { 'User-Agent': 'NEXA-Daily/3.0' }, signal: AbortSignal.timeout(5000) });
+    if (r.ok) ghFetch = await r.json();
+  } catch (e) {
+    console.warn('[refresh] gh raw fetch failed:', e.message.slice(0, 80));
   }
 
-  // 降级策略:
-  // 1) 抓到 ≥ 1 条 → 写 KV
-  // 2) 抓到 0 条 → 用 data/cache.json 预生成快照(永远不让 UI 空)
-  let saved;
-  if (result.count > 0) {
-    saved = await store.setUpdates(result);
-    console.log(`[refresh] 抓到 ${result.count} 条,已写入 KV`);
-  } else {
-    const fb = readFallbackCache();
-    const errList = (result.errors || []).map(e => e.username);
-    console.log(`[refresh] 全部抓取失败 (${errList.length} 个错误),降级到 cache.json`);
-    saved = {
-      count: fb.count || 0,
-      updates: fb.updates || [],
-      generated_at: fb.generated_at || '',
-      from_fallback: true,
-      note: fb.note || (fb.count ? '抓取受限,显示预生成精选' : '无降级数据'),
-    };
-  }
-  // debug: 还探测每个用户当前的抓取状态
-  let probe = null;
-  if (debug) {
-    probe = [];
-    const s = require('../lib/sources');
-    for (const p of people) {
-      const u = (p.url||'').match(/(?:xcancel|x|twitter|nitter)\.com\/([^/?#]+)/i)?.[1];
-      if (!u) continue;
-      try {
-        const r = await s.fetchUserTweets(u);
-        // 也返回 sample HTML 片段,排查过滤
-        let html = '', fetchErr = null;
-        try {
-          html = await s.fetchText(`https://nitter.net/${u}`);
-        } catch (e) { fetchErr = e.message; }
-        probe.push({
-          user: u,
-          name: p.name,
-          count: r.length,
-          sample_text: r.slice(0, 2).map(t => t.text.slice(0, 80)),
-          html_len: html.length,
-          html_first: html ? html.slice(0, 300) : '',
-          fetch_err: fetchErr,
-        });
-      } catch (e) {
-        probe.push({ user: u, name: p.name, err: e.message.slice(0, 150).replace(/token=[a-z0-9]+/i, 'token=***') });
-      }
-    }
-  }
+  // 2) 本地 cache.json 兜底
+  const fb = readFallbackCache();
+
+  // 3) 合并策略:优先用最新的(generated_at 大者优先)
+  const local = {
+    count: fb.count || 0,
+    updates: fb.updates || [],
+    generated_at: fb.generated_at || '',
+    note: fb.note || '',
+  };
+  const remote = ghFetch ? {
+    count: ghFetch.count || 0,
+    updates: ghFetch.updates || [],
+    generated_at: ghFetch.generated_at || '',
+    note: ghFetch.note || '',
+  } : null;
+  const winner = (!remote || new Date(remote.generated_at) < new Date(local.generated_at)) ? local : remote;
+
+  const saved = await store.setUpdates({
+    count: winner.count,
+    updates: winner.updates,
+  });
+  console.log(`[refresh] 写入 KV: count=${winner.count} src=${remote === winner ? 'gh' : 'local'}`);
+
   res.json({
     ok: true,
     count: saved.count,
     generated_at: saved.generated_at,
-    from_fallback: !!saved.from_fallback,
-    note: saved.note,
-    ...(debug ? {
-      sample: result.updates.slice(0, 3),
-      errors: result.errors || [],
-      probe: probe?.map(p => ({
-        user: p.user,
-        name: p.name,
-        count: p.count,
-        sample_text: p.sample_text,
-        html_len: p.html_len,
-        html_first: p.html_first,
-        fetch_err: p.fetch_err,
-        // 过滤敏感信息,只保留前 80 字符
-        err: p.err ? p.err.replace(/token=[a-z0-9]+/i, 'token=***').slice(0, 120) : undefined,
-      })),
-    } : {}),
+    from_fallback: false,
+    note: remote ? '从 GitHub Actions 拉取最新缓存' : '使用本地精选缓存',
   });
 }
 

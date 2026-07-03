@@ -1,0 +1,43 @@
+name: Fetch Tweets Daily
+
+on:
+  schedule:
+    # UTC 时间: 每天 0:00 / 6:00 / 12:00 / 18:00 各跑一次
+    - cron: '0 0,6,12,18 * * *'
+  workflow_dispatch: # 允许手动触发
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install deps
+        run: |
+          if [ -f package.json ]; then
+            npm install --no-audit --no-fund || true
+          fi
+
+      - name: Run fetch script
+        env:
+          SCRAPE_DO_TOKEN: ${{ secrets.SCRAPE_DO_TOKEN }}
+        run: node scripts/fetch.mjs
+
+      - name: Commit & push cache.json
+        run: |
+          git config user.name 'nexa-bot'
+          git config user.email 'bot@nexa.local'
+          git add data/cache.json
+          if git diff --cached --quiet; then
+            echo "no changes"
+          else
+            git commit -m "chore(cache): refresh tweets ($(date -u +%FT%TZ))"
+            git push
+          fi
