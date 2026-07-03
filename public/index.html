@@ -1199,6 +1199,12 @@
       .loading-card { right: 12px; bottom: 12px; width: calc(100vw - 24px); }
     }
 
+    /* 当猫游戏开启时,loading card 上移避免遮挡 */
+    body.cat-open .loading-card.is-open {
+      bottom: 320px;
+      transition: bottom .25s ease;
+    }
+
     footer {
       margin-top: 80px; padding-top: 24px; border-top: 1px solid var(--line);
       display: flex; justify-content: space-between; align-items: center;
@@ -1419,7 +1425,7 @@
   </button>
   <div class="cat-dock" id="catDock">
     <div class="cat-dock-head">
-      <span class="cat-dock-title">喂起司猫</span>
+      <span class="cat-dock-title">投喂猫猫</span>
       <span class="cat-dock-hint">点击舞台扔鸡胸肉</span>
       <button class="cat-dock-close" onclick="toggleCatGame()" title="关闭">✕</button>
     </div>
@@ -1714,6 +1720,7 @@
       if (_catGameOpen) {
         dock.classList.add('is-open');
         launcher.classList.add('is-active');
+        document.body.classList.add('cat-open');
         // 重新调度送礼(在 idle 时给猫带东西)
         if (_catState === 'idle') _scheduleNextGift();
         // 鼠标先放中央
@@ -1724,6 +1731,7 @@
       } else {
         dock.classList.remove('is-open');
         launcher.classList.remove('is-active');
+        document.body.classList.remove('cat-open');
         // 停掉 pending 礼物
         if (_giftTimer) clearTimeout(_giftTimer);
       }
@@ -2377,6 +2385,8 @@
     /* ── AI 总结 ── */
     async function doSummarize(force = false) {
       const btn = $('btnSummarize');
+      // AI 总结开始 → 自动开猫猫游戏 (用户可以玩)
+      if (!_catGameOpen) toggleCatGame();
       // 如果已有今日 summary 且未强制刷新,直接打开 modal 显示,不重新跑 AI
       const cached = _dataCache || getCachedData();
       if (!force && cached?.summary && cached.summary_meta?.generated_at) {
