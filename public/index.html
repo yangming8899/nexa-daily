@@ -1265,6 +1265,7 @@
         <span class="summary-modal-meta" id="summaryTimeModal"></span>
         <button class="summary-modal-close" onclick="closeSummary()" title="关闭 (Esc)">✕</button>
       </div>
+      <div id="summaryFreshness" style="padding:8px 20px 0;font-family:var(--mono);font-size:11px;color:var(--ink-mute);letter-spacing:0.04em;display:flex;align-items:center;gap:10px;flex-wrap:wrap;"></div>
       <div class="summary-modal-body" id="summaryBodyModal">
         <div class="summary-empty">点击右上「✨ AI 总结」让 AI 帮你梳理今日值得关注的内容。</div>
       </div>
@@ -1934,6 +1935,8 @@
 
     function renderSummary(data) {
       const card = $('summaryBodyModal');
+      // 更新顶部新鲜度条
+      renderSummaryFreshness(data);
       if (data && data.summary) {
         const lines = data.summary.split('\n');
         // 拿到 source 数据(推文和论文),让总结里的每条可以跳转到原始来源
@@ -2028,6 +2031,45 @@
         ${linkHtml}
         ${favHtml}
       </div>`;
+    }
+
+    /* ── AI 总结新鲜度条 (透明告知用户当前数据是否最新) ── */
+    function renderSummaryFreshness(data) {
+      const el = $('summaryFreshness');
+      if (!el) return;
+      const meta = data?.meta || {};
+      const sources = meta.source_counts || { updates: 0, papers: 0 };
+      const isFallback = !!meta.from_fallback;
+      const updatedAt = meta.generated_at || data?.generated_at;
+      const ageHours = updatedAt ? (Date.now() - new Date(updatedAt).getTime()) / 3600_000 : 999;
+
+      let dot, label;
+      if (!updatedAt) {
+        dot = '#d6d5ce';
+        label = '尚未生成 AI 总结';
+      } else if (ageHours > 48) {
+        dot = '#ff8a3d';
+        label = `⚠️ 已过期 ${Math.round(ageHours / 24)} 天`;
+      } else if (ageHours > 12) {
+        dot = '#ff8a3d';
+        label = `⚠️ ${Math.round(ageHours)}h 前生成 · 可能不是最新`;
+      } else if (isFallback) {
+        dot = '#ff8a3d';
+        label = `⚠️ 基于精选缓存生成 · 抓取受限`;
+      } else {
+        dot = '#22c55e';
+        label = ageHours < 2 ? `✓ ${Math.round(ageHours * 60)} 分钟前生成` : `✓ ${Math.round(ageHours)}h 前生成`;
+      }
+      const src = `${sources.updates || 0} 推文 · ${sources.papers || 0} 论文`;
+
+      el.innerHTML = `
+        <span style="display:inline-flex;align-items:center;gap:5px;color:${dot};">
+          <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${dot};box-shadow:0 0 6px ${dot};"></span>
+          ${label}
+        </span>
+        <span>基于 ${src}</span>
+        <button class="btn-sm" onclick="doSummarize(true)" style="margin-left:auto;padding:3px 10px;font-size:10px;">重新生成</button>
+      `;
     }
 
     function findMatchingSource(keyword, fullLine, sources, isPapers) {
@@ -2220,7 +2262,10 @@
       if (pt && data.papers_meta?.generated_at) pt.textContent = '更新于 ' + tsFmt(data.papers_meta.generated_at);
       const st = $('summaryTimeModal');
       if (st && data.summary_meta?.generated_at) st.textContent = '更新于 ' + tsFmt(data.summary_meta.generated_at);
-      renderSummary({ summary: data.summary || '' });
+      renderSummary({
+        summary: data.summary || '',
+        meta: data.summary_meta,
+      });
       updateLiveDot(data.updates_meta);
     }
 
@@ -2248,15 +2293,15 @@
     }
 
     /* ── AI 总结 ── */
-    async function doSummarize() {
+    async function doSummarize(force = false) {
       const btn = $('btnSummarize');
-      // 如果已有今日 summary,直接打开 modal 显示,不重新跑 AI
+      // 如果已有今日 summary 且未强制刷新,直接打开 modal 显示,不重新跑 AI
       const cached = _dataCache || getCachedData();
-      if (cached?.summary && cached.summary_meta?.generated_at) {
+      if (!force && cached?.summary && cached.summary_meta?.generated_at) {
         const age = Date.now() - new Date(cached.summary_meta.generated_at).getTime();
         if (age < 24 * 3600 * 1000) {
           openSummary();
-          renderSummary({ summary: cached.summary });
+          renderSummary({ summary: cached.summary, meta: cached.summary_meta });
           const st = $('summaryTimeModal');
           if (st && cached.summary_meta?.generated_at) st.textContent = '更新于 ' + tsFmt(cached.summary_meta.generated_at);
           return;

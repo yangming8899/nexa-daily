@@ -171,6 +171,15 @@ async function handleGetSummary(req, res) {
   res.json(summary);
 }
 
+// ── DELETE /api/summary (清掉过期总结,前端选「重新生成」前手动清) ──
+async function handleClearSummary(req, res) {
+  res.setHeader('Cache-Control', 'no-store');
+  // 直接写 KV 一个空 summary
+  const saved = await store.setSummary({ summary: '', source_counts: { updates: 0, papers: 0 } });
+  console.log('[summary] cleared');
+  res.json({ ok: true, cleared: true });
+}
+
 // ── POST /api/chat ─────────────────────────────────────────
 async function handleChat(req, res) {
   const body = req.body || {};
@@ -259,6 +268,7 @@ module.exports = async (req, res) => {
     if (url === '/api/refresh-papers')  return await handleRefreshPapers(req, res);
     if (url === '/api/summarize')       return await handleSummarize(req, res);
     if (url === '/api/summary')         return await handleGetSummary(req, res);
+    if (req.method === 'DELETE' && url === '/api/summary') return await handleClearSummary(req, res);
 
     res.status(404).json({ error: 'Not found' });
   } catch (e) {
