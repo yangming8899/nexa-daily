@@ -13,6 +13,8 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import https from 'https';
+import http from 'http';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
@@ -40,7 +42,7 @@ async function fetchText(url) {
 
 function fetchDirect(url, headers) {
   return new Promise((resolve, reject) => {
-    const lib = url.startsWith('https') ? require('https') : require('http');
+    const lib = url.startsWith('https') ? https : http;
     const req = lib.request(url, { headers, timeout: TIMEOUT_MS }, (res) => {
       if ([301, 302, 303, 307, 308].includes(res.statusCode) && res.headers.location) {
         return fetchText(res.headers.location).then(resolve, reject);
