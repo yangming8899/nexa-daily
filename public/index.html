@@ -1215,6 +1215,10 @@
       <div class="section-head">
         <h2>Updates</h2>
         <div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;">
+          <span id="liveDot" style="display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:11px;color:var(--ink-mute);letter-spacing:0.05em;">
+            <span class="dot" style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#d6d5ce;flex-shrink:0;"></span>
+            <span class="label">检查中…</span>
+          </span>
           <button class="btn-sm" id="btnTranslateAll" onclick="translateAll()" style="display:none;">译 全部</button>
           <span class="generated" id="updateTime"></span>
           <span class="zh">最新动态</span>
@@ -2217,6 +2221,30 @@
       const st = $('summaryTimeModal');
       if (st && data.summary_meta?.generated_at) st.textContent = '更新于 ' + tsFmt(data.summary_meta.generated_at);
       renderSummary({ summary: data.summary || '' });
+      updateLiveDot(data.updates_meta);
+    }
+
+    /* ── 实时采集指示灯 (0 = 精选兜底,绿 = 真实抓取成功) ── */
+    function updateLiveDot(meta) {
+      const el = $('liveDot');
+      if (!el) return;
+      const dot = el.querySelector('.dot');
+      const label = el.querySelector('.label');
+      const isFallback = !!(meta && meta.from_fallback);
+      const hoursOld = meta?.generated_at
+        ? (Date.now() - new Date(meta.generated_at).getTime()) / 3600_000
+        : 999;
+      if (isFallback || hoursOld > 48) {
+        // 橙色 = 精选模式/数据过期
+        dot.style.background = '#ff8a3d';
+        dot.style.boxShadow = '0 0 6px rgba(255,138,61,.6)';
+        label.textContent = hoursOld > 72 ? '精选/待采集' : '精选模式';
+      } else {
+        // 绿色 = 真实抓取成功
+        dot.style.background = '#22c55e';
+        dot.style.boxShadow = '0 0 6px rgba(34,197,94,.6)';
+        label.textContent = hoursOld < 6 ? '实时 · 刚抓到' : `实时 · ${Math.round(hoursOld)}h前`;
+      }
     }
 
     /* ── AI 总结 ── */
