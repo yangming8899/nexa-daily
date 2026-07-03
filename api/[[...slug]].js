@@ -261,15 +261,18 @@ module.exports = async (req, res) => {
 
   try {
     if (req.method === 'POST' && url === '/api/chat') return await handleChat(req, res);
-    if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
 
     if (url === '/api' || url === '/api/' || url === '/api/data') return await handleData(req, res);
     if (url === '/api/refresh')         return await handleRefresh(req, res);
     if (url === '/api/refresh-papers')  return await handleRefreshPapers(req, res);
     if (url === '/api/summarize')       return await handleSummarize(req, res);
-    if (url === '/api/summary')         return await handleGetSummary(req, res);
-    if (req.method === 'DELETE' && url === '/api/summary') return await handleClearSummary(req, res);
+    if (url === '/api/summary') {
+      if (req.method === 'DELETE') return await handleClearSummary(req, res);
+      if (req.method === 'GET') return await handleGetSummary(req, res);
+      return res.status(405).json({ error: 'Method not allowed' });
+    }
 
+    if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
     res.status(404).json({ error: 'Not found' });
   } catch (e) {
     console.error('[api]', url, e);
