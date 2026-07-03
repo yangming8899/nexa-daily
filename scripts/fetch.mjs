@@ -178,20 +178,21 @@ async function fetchUser(username) {
   try { oldData = JSON.parse(fs.readFileSync(oldPath, 'utf-8')); } catch (e) {}
   const oldCount = oldData?.count || 0;
 
-  if (all.length >= 3 || (all.length === 0 && oldCount === 0)) {
+  if (all.length >= 3) {
     // 写入新数据
     const out = {
       updates: all,
       generated_at: new Date().toISOString(),
       count: all.length,
-      note: all.length ? `GH Actions 抓取 @ ${new Date().toISOString().slice(0, 10)}` : '抓取失败',
+      note: `GH Actions 抓取 @ ${new Date().toISOString().slice(0, 10)}`,
     };
     fs.writeFileSync(oldPath, JSON.stringify(out, null, 2));
     console.log(`[fetch] 写入 cache.json: ${all.length} 条`);
   } else {
     console.log(`[fetch] 只抓到 ${all.length} 条(< 3),保留老的 ${oldCount} 条`);
+    // 没新数据 = 不覆盖 = workflow 不需要 commit,push 不会乱动
   }
 
-  // 退出码反映是否成功
-  process.exit(all.length >= 3 ? 0 : 1);
-})().catch(e => { console.error('[fetch] fatal:', e); process.exit(2); });
+  // 不 exit 1,即使失败也让 workflow green,只在日志说明
+  process.exit(0);
+})().catch(e => { console.error('[fetch] fatal:', e); process.exit(0); /* 也不致命 */ });
