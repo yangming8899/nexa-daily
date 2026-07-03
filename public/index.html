@@ -1797,18 +1797,32 @@
       btn.disabled = false;
     }
 
+    // 客户端 30s 冷却,避免用户点太快
+    let _refreshCooldownUntil = 0;
     /* ── 刷新全部 ── */
     async function doRefreshAll() {
+      // 客户端冷却检查
+      if (Date.now() < _refreshCooldownUntil) {
+        const wait = Math.ceil((_refreshCooldownUntil - Date.now()) / 1000);
+        toast(`请求太频繁,${wait}s 后再试`);
+        return;
+      }
       const btn = $('btnRefreshAll'), icon = $('refreshIcon');
       btn.disabled = true; icon.classList.add('spin');
+      _refreshCooldownUntil = Date.now() + 30_000;
       showLoading();
       updateLoading('正在抓取推文…', 'STEP 1/2 · FETCHING TWEETS', 25);
-      const results = { tweets: 0, papers: 0, err: null };
+      const results = { tweets: 0, papers: 0, err: null, fromFallback: false };
       try {
         const r1 = await fetch('/api/refresh');
         const d1 = await r1.json();
-        if (d1.ok) results.tweets = d1.count || 0;
-        else { results.err = d1.error || '未知错误'; console.warn('tweets refresh failed:', d1.error); }
+        if (d1.ok) {
+          results.tweets = d1.count || 0;
+          results.fromFallback = !!d1.from_fallback;
+          if (d1.from_fallback) results.err = '实时抓取受限,显示精选';
+        } else {
+          results.err = d1.error || '未知错误';
+        }
       } catch(e) { results.err = e.message; console.warn('tweets fetch failed:', e); }
       updateLoading(`抓了 ${results.tweets} 条推文,继续抓论文…`, 'STEP 2/2 · FETCHING PAPERS', 65);
       try {
@@ -1819,8 +1833,9 @@
       } catch(e) { console.warn('papers fetch failed:', e); }
       updateLoading('更新中…', 'SYNCING', 95);
       await loadAll(true); // 强制刷新,绕过缓存
+      const fbMark = results.fromFallback ? ' · 精选模式' : '';
       const msg = results.err
-        ? `推文 ${results.tweets} · 论文 ${results.papers} · ${results.err}`
+        ? `推文 ${results.tweets} · 论文 ${results.papers} · ${results.err}${fbMark}`
         : `推文 ${results.tweets} 条 · 论文 ${results.papers} 篇`;
       markLoadingDone(msg);
       setTimeout(hideLoading, 1500);
@@ -2192,7 +2207,11 @@
       renderUpdates(data.updates || []);
       renderPapers(data.papers || []);
       const ut = $('updateTime');
-      if (ut && data.updates_meta?.generated_at) ut.textContent = '更新于 ' + tsFmt(data.updates_meta.generated_at);
+      if (ut && data.updates_meta?.generated_at) {
+        // 降级数据标注 (例如:「精选精选动态 · 抓取受限」)
+        const fbHint = data.updates_meta?.from_fallback ? ' · 精选' : '';
+        ut.textContent = '更新于 ' + tsFmt(data.updates_meta.generated_at) + fbHint;
+      }
       const pt = $('papersTime');
       if (pt && data.papers_meta?.generated_at) pt.textContent = '更新于 ' + tsFmt(data.papers_meta.generated_at);
       const st = $('summaryTimeModal');

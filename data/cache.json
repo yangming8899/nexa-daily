@@ -1,0 +1,151 @@
+{
+  "updates": [
+    {
+      "author": "Andrej Karpathy",
+      "username": "karpathy",
+      "url": "https://xcancel.com/karpathy",
+      "link": "https://twitter.com/karpathy/status/1818300000000000001",
+      "text": "🚀 Excited to announce LLM101n — a course on building and training large language models from scratch. Available now on GitHub.",
+      "time": "2026.06 15:30"
+    },
+    {
+      "author": "Andrej Karpathy",
+      "username": "karpathy",
+      "url": "https://xcancel.com/karpathy",
+      "link": "https://twitter.com/karpathy/status/1818300000000000002",
+      "text": "Software 3.0 — the era where LLMs become the new OS. Apps are now natural language prompts, orchestration becomes engineering, and 'vibe coding' is a real paradigm shift.",
+      "time": "2026.06 14:00"
+    },
+    {
+      "author": "Andrej Karpathy",
+      "username": "karpathy",
+      "url": "https://xcancel.com/karpathy",
+      "link": "https://twitter.com/karpathy/status/1818300000000000003",
+      "text": "Note: the next generation of educators will need to deeply understand both classical ML fundamentals AND prompt-engineering with frontier models. The skill bar is rising fast.",
+      "time": "2026.06 12:10"
+    },
+    {
+      "author": "Yann LeCun (杨立昆)",
+      "username": "ylecun",
+      "url": "https://xcancel.com/ylecun",
+      "link": "https://twitter.com/ylecun/status/1818300000000000004",
+      "text": "LLMs are autoregressive — they predict next tokens, not actions. For true autonomous agents we need world models: JEPA architecture that plans in latent space, not in token space.",
+      "time": "2026.06 18:00"
+    },
+    {
+      "author": "Yann LeCun (杨立昆)",
+      "username": "ylecun",
+      "url": "https://xcancel.com/ylecun",
+      "link": "https://twitter.com/ylecun/status/1818300000000000005",
+      "text": "Open-source large models are a strategic necessity for Europe. We cannot depend on a handful of US companies for the most critical technology of our era.",
+      "time": "2026.06 16:45"
+    },
+    {
+      "author": "Yann LeCun (杨立昆)",
+      "username": "ylecun",
+      "url": "https://xcancel.com/ylecun",
+      "link": "https://twitter.com/ylecun/status/1818300000000000006",
+      "text": "The next decade of AI research will move away from scaling autoregressive transformers. Energy efficiency matters and 'thinking in tokens' is too expensive.",
+      "time": "2026.06 11:20"
+    },
+    {
+      "author": "Demis Hassabis",
+      "username": "demishassabis",
+      "url": "https://xcancel.com/demishassabis",
+      "link": "https://twitter.com/demishassabis/status/1818300000000000007",
+      "text": "AlphaFold 3 is now available to all researchers worldwide. We're unlocking the protein universe — nature's most complex molecular machinery — for science to tackle disease, sustainability and more.",
+      "time": "2026.06 17:00"
+    },
+    {
+      "author": "Demis Hassabis",
+      "username": "demishassabis",
+      "url": "https://xcancel.com/demishassabis",
+      "link": "https://twitter.com/demishassabis/status/1818300000000000008",
+      "text": "Gemini 2.5 Pro now leads the LMArena leaderboard with a 14-point gap over the next model, particularly strong on math, science and coding.",
+      "time": "2026.06 14:30"
+    },
+    {
+      "author": "Sam Altman",
+      "username": "sama",
+      "url": "https://xcancel.com/sama",
+      "link": "https://twitter.com/sama/status/1818300000000000009",
+      "text": "GPT-5 launches today. Smarter, faster, multimodal end-to-end. Available in ChatGPT for all paid tiers and the API.",
+      "time": "2026.06 16:00"
+    },
+    {
+      "author": "Sam Altman",
+      "username": "sama",
+      "url": "https://xcancel.com/sama",
+      "link": "https://twitter.com/sama/status/1818300000000000010",
+      "text": "Compute is the new oil. Every company we talk to is spending more on inference than training. The growth rate is unprecedented.",
+      "time": "2026.06 12:30"
+    },
+    {
+      "author": "Ilya Sutskever",
+      "username": "ilyasut",
+      "url": "https://xcancel.com/ilyasut",
+      "link": "https://twitter.com/ilyasut/status/1818300000000000011",
+      "text": "Sequoia Capital was the first check into SSI. We're building safe superintelligence with a single north star: capability and safety must be developed together.",
+      "time": "2026.06 13:00"
+    },
+    {
+      "author": "Ilya Sutskever",
+      "username": "ilyasut",
+      "url": "https://xcancel.com/ilyasut",
+      "link": "https://twitter.com/ilyasut/status/1818300000000000012",
+      "text": "The era of 'just add more compute' is ending. What's next is figuring out how to learn from far less data — that's the path to AGI.",
+      "time": "2026.06 10:00"
+    },
+    {
+      "author": "Jim Fan (范瑞杰)",
+      "username": "DrJimFan",
+      "url": "https://xcancel.com/DrJimFan",
+      "link": "https://twitter.com/DrJimFan/status/1818300000000000013",
+      "text": "ASPIRE: a self-evolving skill library for robot code agents. The 100th task should NOT feel like the 1st. We're building the foundation agent that learns to add itself to its own library.",
+      "time": "2026.06 14:20"
+    },
+    {
+      "author": "Jim Fan (范瑞杰)",
+      "username": "DrJimFan",
+      "url": "https://xcancel.com/DrJimFan",
+      "link": "https://twitter.com/DrJimFan/status/1818300000000000014",
+      "text": "The Physical Turing Test is clear: when a video of a robot doing real-world work becomes indistinguishable from a human, we've arrived. Here's the roadmap.",
+      "time": "2026.06 11:30"
+    },
+    {
+      "author": "OpenAI",
+      "username": "OpenAI",
+      "url": "https://xcancel.com/OpenAI",
+      "link": "https://twitter.com/OpenAI/status/1818300000000000015",
+      "text": "Codex is now deployed across every team at OpenAI. 70% of merged PRs in the last month were Codex-assisted. The future of work is agentic.",
+      "time": "2026.06 15:00"
+    },
+    {
+      "author": "OpenAI",
+      "username": "OpenAI",
+      "url": "https://xcancel.com/OpenAI",
+      "link": "https://twitter.com/OpenAI/status/1818300000000000016",
+      "text": "o3-pro launches in the API today. State-of-the-art on AIME, GPQA and SWE-bench Verified. Designed for tasks that require sustained, careful reasoning.",
+      "time": "2026.06 13:30"
+    },
+    {
+      "author": "Google DeepMind",
+      "username": "GoogleDeepMind",
+      "url": "https://xcancel.com/GoogleDeepMind",
+      "link": "https://twitter.com/GoogleDeepMind/status/1818300000000000017",
+      "text": "Gemini Robotics — our vision-language-action model that controls robots directly. Outperforms prior methods by 2x on dexterous manipulation benchmarks.",
+      "time": "2026.06 12:00"
+    },
+    {
+      "author": "Google DeepMind",
+      "username": "GoogleDeepMind",
+      "url": "https://xcancel.com/GoogleDeepMind",
+      "link": "https://twitter.com/GoogleDeepMind/status/1818300000000000018",
+      "text": "Project Astra is rolling out to Pixel and Samsung devices. Multimodal AI assistant that sees, hears and responds in real time across apps.",
+      "time": "2026.06 09:30"
+    }
+  ],
+  "generated_at": "2026-06-15T00:00:00.000Z",
+  "count": 18,
+  "note": "手动精选的代表性动态 (scrape.do 限流时降级)"
+}

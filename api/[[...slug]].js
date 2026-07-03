@@ -8,8 +8,17 @@ const sources = require('../lib/sources');
 const { callMinimax, stripThinking } = require('../lib/minimax');
 
 const CONFIG_DIR = path.join(process.cwd(), 'config');
+const DATA_DIR = path.join(process.cwd(), 'data');
 function readJson(file) {
   return JSON.parse(fs.readFileSync(path.join(CONFIG_DIR, file), 'utf-8'));
+}
+// 降级数据:抓取失败时读的预生成快照
+function readFallbackCache() {
+  try {
+    return JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'cache.json'), 'utf-8'));
+  } catch (e) {
+    return { updates: [], generated_at: '', count: 0, note: '无降级缓存' };
+  }
 }
 
 function setCors(res) {
@@ -40,11 +49,31 @@ async function handleData(req, res) {
     store.getSummary(),
   ]);
   res.setHeader('Cache-Control', 'no-store');
+  // 计算 updates 的 display + meta
+  // 若 KV 里没有真实抓取,读本地 cache.json 作为兜底(避免 UI 空)
+  let displayUpdates = updates.updates || [];
+  let displayMeta = {
+    generated_at: updates.generated_at, count: updates.count, note: updates.note,
+    from_fallback: false,
+  };
+  if (displayUpdates.length === 0) {
+    const fb = readFallbackCache();
+    if ((fb.updates || []).length > 0) {
+      displayUpdates = fb.updates;
+      displayMeta = {
+        generated_at: fb.generated_at,
+        count: fb.count,
+        note: fb.note || '实时抓取受限,显示精选动态',
+        from_fallback: true,
+      };
+    }
+  }
+
   res.json({
     people,
     papers: papers.count ? papers.papers : seedPapers,
-    updates: updates.updates || [],
-    updates_meta: { generated_at: updates.generated_at, count: updates.count, note: updates.note },
+    updates: displayUpdates,
+    updates_meta: displayMeta,
     papers_meta:  { generated_at: papers.generated_at,  count: papers.count,  note: papers.note },
     summary: summary.summary || '',
     summary_meta: { generated_at: summary.generated_at, source_counts: summary.source_counts, note: summary.note },
@@ -53,8 +82,8 @@ async function handleData(req, res) {
 
 // ── GET /api/refresh ───────────────────────────────────────
 async function handleRefresh(req, res) {
-  // 防刷锁:60s 内只跑一次,避免 scrape.do 限流
-  const lock = acquireRefreshLock('refresh', 60_000);
+  // 防刷锁:90s 内只跑一次,避免 scrape.do 限流
+  const lock = acquireRefreshLock('refresh', 90_000);
   if (!lock.acquired) {
     return res.status(429).json({
       ok: false,
@@ -70,20 +99,26 @@ async function handleRefresh(req, res) {
   for (const e of (result.errors || [])) {
     console.log(`[refresh] err @${e.username}: ${e.err}`);
   }
-  // 保护:如果抓了 0 条且 KV 里有老数据,保留老数据(避免 scrape.do 限流覆盖掉)
+
+  // 降级策略:
+  // 1) 抓到 ≥ 1 条 → 写 KV
+  // 2) 抓到 0 条 → 用 data/cache.json 预生成快照(永远不让 UI 空)
   let saved;
-  if (result.count === 0) {
-    const old = await store.getUpdates();
-    if ((old.updates || []).length > 0) {
-      console.log(`[refresh] 抓到 0 条,保留 KV 里 ${old.updates.length} 条老数据`);
-      saved = { count: old.updates.length, updates: old.updates, generated_at: old.generated_at, kept_old: true };
-    } else {
-      saved = await store.setUpdates(result);
-    }
-  } else {
+  if (result.count > 0) {
     saved = await store.setUpdates(result);
+    console.log(`[refresh] 抓到 ${result.count} 条,已写入 KV`);
+  } else {
+    const fb = readFallbackCache();
+    const errList = (result.errors || []).map(e => e.username);
+    console.log(`[refresh] 全部抓取失败 (${errList.length} 个错误),降级到 cache.json`);
+    saved = {
+      count: fb.count || 0,
+      updates: fb.updates || [],
+      generated_at: fb.generated_at || '',
+      from_fallback: true,
+      note: fb.note || (fb.count ? '抓取受限,显示预生成精选' : '无降级数据'),
+    };
   }
-  console.log(`[refresh] 完成,共 ${saved.count} 条`);
   // debug: 还探测每个用户当前的抓取状态
   let probe = null;
   if (debug) {
@@ -117,7 +152,8 @@ async function handleRefresh(req, res) {
     ok: true,
     count: saved.count,
     generated_at: saved.generated_at,
-    version_marker: 'NEXA_V42_DEBUG_HTML_LEN',
+    from_fallback: !!saved.from_fallback,
+    note: saved.note,
     ...(debug ? {
       sample: result.updates.slice(0, 3),
       errors: result.errors || [],
