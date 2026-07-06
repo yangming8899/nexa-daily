@@ -1,151 +1,255 @@
 {
   "updates": [
     {
-      "author": "Andrej Karpathy",
-      "username": "karpathy",
-      "url": "https://xcancel.com/karpathy",
-      "link": "https://twitter.com/karpathy/status/1818300000000000001",
-      "text": "🚀 Excited to announce LLM101n — a course on building and training large language models from scratch. Available now on GitHub.",
-      "time": "2026.06 15:30"
-    },
-    {
-      "author": "Andrej Karpathy",
-      "username": "karpathy",
-      "url": "https://xcancel.com/karpathy",
-      "link": "https://twitter.com/karpathy/status/1818300000000000002",
-      "text": "Software 3.0 — the era where LLMs become the new OS. Apps are now natural language prompts, orchestration becomes engineering, and 'vibe coding' is a real paradigm shift.",
-      "time": "2026.06 14:00"
-    },
-    {
-      "author": "Andrej Karpathy",
-      "username": "karpathy",
-      "url": "https://xcancel.com/karpathy",
-      "link": "https://twitter.com/karpathy/status/1818300000000000003",
-      "text": "Note: the next generation of educators will need to deeply understand both classical ML fundamentals AND prompt-engineering with frontier models. The skill bar is rising fast.",
-      "time": "2026.06 12:10"
+      "author": "Yann LeCun (杨立昆)",
+      "username": "ylecun",
+      "url": "https://xcancel.com/ylecun",
+      "link": "https://twitter.com/ylecun/status/2073425439188484351",
+      "text": "Yet we still don't have level-5 self-driving cars, and certainly not self-serving cars that can learn to drive in a few hours of practice like any teenager. We don't even have domestic robots that can do what 10-year olds can do the first time we ask them. We don't even have robots that are nearly as smart as a house cat. The G in AGI is nonsense.",
+      "time": "Yann LeCun"
     },
     {
       "author": "Yann LeCun (杨立昆)",
       "username": "ylecun",
       "url": "https://xcancel.com/ylecun",
-      "link": "https://twitter.com/ylecun/status/1818300000000000004",
-      "text": "LLMs are autoregressive — they predict next tokens, not actions. For true autonomous agents we need world models: JEPA architecture that plans in latent space, not in token space.",
-      "time": "2026.06 18:00"
+      "link": "https://twitter.com/ylecun/status/2073427970656452822",
+      "text": "If there were any lingering doubts that you and your friends were against the very principles of democracy, you just removed them.",
+      "time": "Yann LeCun"
     },
     {
       "author": "Yann LeCun (杨立昆)",
       "username": "ylecun",
       "url": "https://xcancel.com/ylecun",
-      "link": "https://twitter.com/ylecun/status/1818300000000000005",
-      "text": "Open-source large models are a strategic necessity for Europe. We cannot depend on a handful of US companies for the most critical technology of our era.",
-      "time": "2026.06 16:45"
-    },
-    {
-      "author": "Yann LeCun (杨立昆)",
-      "username": "ylecun",
-      "url": "https://xcancel.com/ylecun",
-      "link": "https://twitter.com/ylecun/status/1818300000000000006",
-      "text": "The next decade of AI research will move away from scaling autoregressive transformers. Energy efficiency matters and 'thinking in tokens' is too expensive.",
-      "time": "2026.06 11:20"
-    },
-    {
-      "author": "Demis Hassabis",
-      "username": "demishassabis",
-      "url": "https://xcancel.com/demishassabis",
-      "link": "https://twitter.com/demishassabis/status/1818300000000000007",
-      "text": "AlphaFold 3 is now available to all researchers worldwide. We're unlocking the protein universe — nature's most complex molecular machinery — for science to tackle disease, sustainability and more.",
-      "time": "2026.06 17:00"
-    },
-    {
-      "author": "Demis Hassabis",
-      "username": "demishassabis",
-      "url": "https://xcancel.com/demishassabis",
-      "link": "https://twitter.com/demishassabis/status/1818300000000000008",
-      "text": "Gemini 2.5 Pro now leads the LMArena leaderboard with a 14-point gap over the next model, particularly strong on math, science and coding.",
-      "time": "2026.06 14:30"
+      "link": "https://twitter.com/ylecun/status/2073037974153896312",
+      "text": "Exactly. I've been disseminating a similar message for years. The concentration of power in AI and the desire for control is by far the biggest danger of AI. It could lead to a few private companies and/or countries being in control of access to information, access to knowledge, and access to the tools of economic expansion. It's a kind of medieval obscurantism akin to the Ottoman empire banning the use of the printing press for 200 years, in part to keep control of the dogma, but also to protec",
+      "time": "Yann LeCun"
     },
     {
       "author": "Sam Altman",
       "username": "sama",
       "url": "https://xcancel.com/sama",
-      "link": "https://twitter.com/sama/status/1818300000000000009",
-      "text": "GPT-5 launches today. Smarter, faster, multimodal end-to-end. Available in ChatGPT for all paid tiers and the API.",
-      "time": "2026.06 16:00"
+      "link": "https://twitter.com/sama/status/2073791666553844074",
+      "text": "our older kid put two words together for the first time and i am approximately as amazed by this cognitive feat as i am by GPT-5.6 discovering new math",
+      "time": "Sam Altman"
     },
     {
       "author": "Sam Altman",
       "username": "sama",
       "url": "https://xcancel.com/sama",
-      "link": "https://twitter.com/sama/status/1818300000000000010",
-      "text": "Compute is the new oil. Every company we talk to is spending more on inference than training. The growth rate is unprecedented.",
-      "time": "2026.06 12:30"
+      "link": "https://twitter.com/sama/status/2073636003215249515",
+      "text": "they really nailed it with \"life, liberty, and the pursuit of happiness\"",
+      "time": "Sam Altman"
     },
     {
-      "author": "Ilya Sutskever",
-      "username": "ilyasut",
-      "url": "https://xcancel.com/ilyasut",
-      "link": "https://twitter.com/ilyasut/status/1818300000000000011",
-      "text": "Sequoia Capital was the first check into SSI. We're building safe superintelligence with a single north star: capability and safety must be developed together.",
-      "time": "2026.06 13:00"
+      "author": "Sam Altman",
+      "username": "sama",
+      "url": "https://xcancel.com/sama",
+      "link": "https://twitter.com/sama/status/2073635910512726444",
+      "text": "grateful to the people that created the idea of america, everyone who built it over the past 250 years, and the people who will carry it forward for the next 250. most impressive social experiment in history.",
+      "time": "Sam Altman"
     },
     {
-      "author": "Ilya Sutskever",
-      "username": "ilyasut",
-      "url": "https://xcancel.com/ilyasut",
-      "link": "https://twitter.com/ilyasut/status/1818300000000000012",
-      "text": "The era of 'just add more compute' is ending. What's next is figuring out how to learn from far less data — that's the path to AGI.",
-      "time": "2026.06 10:00"
+      "author": "Sam Altman",
+      "username": "sama",
+      "url": "https://xcancel.com/sama",
+      "link": "https://twitter.com/sama/status/2072773542576586790",
+      "text": "going to world cup games is always awesome, but watching the USA win in the USA during USA birthday week was just incredible",
+      "time": "Sam Altman"
     },
     {
-      "author": "Jim Fan (范瑞杰)",
-      "username": "DrJimFan",
-      "url": "https://xcancel.com/DrJimFan",
-      "link": "https://twitter.com/DrJimFan/status/1818300000000000013",
-      "text": "ASPIRE: a self-evolving skill library for robot code agents. The 100th task should NOT feel like the 1st. We're building the foundation agent that learns to add itself to its own library.",
-      "time": "2026.06 14:20"
-    },
-    {
-      "author": "Jim Fan (范瑞杰)",
-      "username": "DrJimFan",
-      "url": "https://xcancel.com/DrJimFan",
-      "link": "https://twitter.com/DrJimFan/status/1818300000000000014",
-      "text": "The Physical Turing Test is clear: when a video of a robot doing real-world work becomes indistinguishable from a human, we've arrived. Here's the roadmap.",
-      "time": "2026.06 11:30"
+      "author": "Sam Altman",
+      "username": "sama",
+      "url": "https://xcancel.com/sama",
+      "link": "https://twitter.com/sama/status/2070614769678393846",
+      "text": "not quite all-you-can-eat tokens, but we are working on it",
+      "time": "Sam Altman"
     },
     {
       "author": "OpenAI",
       "username": "OpenAI",
       "url": "https://xcancel.com/OpenAI",
-      "link": "https://twitter.com/OpenAI/status/1818300000000000015",
-      "text": "Codex is now deployed across every team at OpenAI. 70% of merged PRs in the last month were Codex-assisted. The future of work is agentic.",
-      "time": "2026.06 15:00"
+      "link": "https://twitter.com/openai/status/2072004836674167294",
+      "text": "We’re introducing GeneBench-Pro, a research-level benchmark for a harder kind of AI progress: how well agents can navigate messy biological data, choose the right analysis path, and make judgment calls that real computational research depends on. openai.com/index/introducing…",
+      "time": "OpenAI"
     },
     {
       "author": "OpenAI",
       "username": "OpenAI",
       "url": "https://xcancel.com/OpenAI",
-      "link": "https://twitter.com/OpenAI/status/1818300000000000016",
-      "text": "o3-pro launches in the API today. State-of-the-art on AIME, GPQA and SWE-bench Verified. Designed for tasks that require sustained, careful reasoning.",
-      "time": "2026.06 13:30"
+      "link": "https://twitter.com/openai/status/2070555280052826429",
+      "text": "GPT‑5.6 Sol launches with our most robust safety stack yet. We strengthened real-time protections against high-risk cyber activity and repeated misuse, then spent weeks hardening the system with human red teaming and over 700,000 A100-equivalent GPU hours of automated testing.",
+      "time": "OpenAI"
+    },
+    {
+      "author": "OpenAI",
+      "username": "OpenAI",
+      "url": "https://xcancel.com/OpenAI",
+      "link": "https://twitter.com/openai/status/2070555278576439306",
+      "text": "GPT-5.6 Sol is our most capable model yet for cybersecurity. It shifts the performance-efficiency frontier for long-horizon security tasks including vulnerability research and exploitation.",
+      "time": "OpenAI"
+    },
+    {
+      "author": "OpenAI",
+      "username": "OpenAI",
+      "url": "https://xcancel.com/OpenAI",
+      "link": "https://twitter.com/openai/status/2070555276370169969",
+      "text": "GPT‑5.6 Sol sets a new state of the art on Terminal‑Bench 2.1, which tests complex command-line workflows requiring planning, iteration, and tool coordination.",
+      "time": "OpenAI"
+    },
+    {
+      "author": "OpenAI",
+      "username": "OpenAI",
+      "url": "https://xcancel.com/OpenAI",
+      "link": "https://twitter.com/openai/status/2070555274835046430",
+      "text": "Sol is our new flagship and a step function better than GPT-5.5. Terra delivers performance competitive to GPT-5.5 at 2x lower cost. Luna is our most cost-efficient model, delivering strong capability at our lowest cost. Together, the GPT-5.6 family gives people and developers more choice in how they balance intelligence, speed, and cost.",
+      "time": "OpenAI"
+    },
+    {
+      "author": "Jim Fan (范瑞杰)",
+      "username": "DrJimFan",
+      "url": "https://xcancel.com/DrJimFan",
+      "link": "https://twitter.com/drjimfan/status/2072337488782475390",
+      "text": "ENPIRE - ASPIRE, our 2nd work in the series for Physical AutoResearch. We are building the components for robot self-improvement, one /skill at a time.",
+      "time": "Jim Fan"
+    },
+    {
+      "author": "Jim Fan (范瑞杰)",
+      "username": "DrJimFan",
+      "url": "https://xcancel.com/DrJimFan",
+      "link": "https://twitter.com/drjimfan/status/2072004192294830583",
+      "text": "Project gallery and whitepaper: research.nvidia.com/labs/gea… ASPIRE is a great collaboration between NVIDIA GEAR lab, UMich, Berkeley, and CMU. Kudos to all the coauthors who pour their hearts into the project! Check out the deep dive thread from Guanzhi:",
+      "time": "Jim Fan"
+    },
+    {
+      "author": "Jim Fan (范瑞杰)",
+      "username": "DrJimFan",
+      "url": "https://xcancel.com/DrJimFan",
+      "link": "https://twitter.com/drjimfan/status/2072004190856212902",
+      "text": "Today, we give robots a /skills library that self-evolves and compounds indefinitely! Introducing ASPIRE: a robot solving its 100th task is no longer as clueless as solving its first. Coding agents observe multimodal sensory traces from simulation and real robots, launch an evolutionary search over control programs, and distill the best know-how into an ever-expanding library. ASPIRE is a new type of continual learning: \"training\" is skill refinement instead of gradient descent. \"Trained model\" ",
+      "time": "Jim Fan"
+    },
+    {
+      "author": "Jim Fan (范瑞杰)",
+      "username": "DrJimFan",
+      "url": "https://xcancel.com/DrJimFan",
+      "link": "https://twitter.com/drjimfan/status/2067283904986517866",
+      "text": "I made Physical AutoResearch sound simple (conceptually), but it took a village to pull off and lots of design thinking into the robot /loopcraft. The hardest part is everything we need to setup *before* pressing Enter. Here's a behind-the-scene tour: 1. Safety harness Letting 8 robots run unattended overnight means safety has to be more than a hint in the system prompt. ENPIRE hardwires it in 2 layers: (1) hard kinematic limit that trips an immediate task failure and auto-resets as soon as a ro",
+      "time": "Jim Fan"
+    },
+    {
+      "author": "Jim Fan (范瑞杰)",
+      "username": "DrJimFan",
+      "url": "https://xcancel.com/DrJimFan",
+      "link": "https://twitter.com/drjimfan/status/2066921739087729043",
+      "text": "Project site: research.nvidia.com/labs/gea… Wenli has written an excellent technical thread, please check it out!",
+      "time": "Jim Fan"
     },
     {
       "author": "Google DeepMind",
       "username": "GoogleDeepMind",
       "url": "https://xcancel.com/GoogleDeepMind",
-      "link": "https://twitter.com/GoogleDeepMind/status/1818300000000000017",
-      "text": "Gemini Robotics — our vision-language-action model that controls robots directly. Outperforms prior methods by 2x on dexterous manipulation benchmarks.",
-      "time": "2026.06 12:00"
+      "link": "https://twitter.com/googledeepmind/status/2071988054814773713",
+      "text": "Find out more → goo.gle/4oTOq9I",
+      "time": "Google Dee"
     },
     {
       "author": "Google DeepMind",
       "username": "GoogleDeepMind",
       "url": "https://xcancel.com/GoogleDeepMind",
-      "link": "https://twitter.com/GoogleDeepMind/status/1818300000000000018",
-      "text": "Project Astra is rolling out to Pixel and Samsung devices. Multimodal AI assistant that sees, hears and responds in real time across apps.",
-      "time": "2026.06 09:30"
+      "link": "https://twitter.com/googledeepmind/status/2071988052478615902",
+      "text": "Pair these models together using the Interactions API. 🤝 Quickly generate an image with Nano Banana 2 Lite, then immediately animate it using Gemini Omni Flash. Plus, you can maintain session history to stack up to three sequential edits.",
+      "time": "Google Dee"
+    },
+    {
+      "author": "Google DeepMind",
+      "username": "GoogleDeepMind",
+      "url": "https://xcancel.com/GoogleDeepMind",
+      "link": "https://twitter.com/googledeepmind/status/2071988050012303710",
+      "text": "Gemini Omni Flash shines in: 🔵 Conversational video editing 🔵 Multimodal referencing and combining inputs ​​🔵 Real-world knowledge 🔵 Connecting text and graphics directly to video actions It’s available in @GoogleAIStudio, the Gemini API and Gemini Enterprise Agent Platform for the first time.",
+      "time": "Google Dee"
+    },
+    {
+      "author": "Google DeepMind",
+      "username": "GoogleDeepMind",
+      "url": "https://xcancel.com/GoogleDeepMind",
+      "link": "https://twitter.com/googledeepmind/status/2071988047445438475",
+      "text": "Nano Banana 2 Lite delivers text-to-image outputs in just 4 seconds. It’s designed for quicker ideation and workflows where speed and cost are the primary roadblocks.",
+      "time": "Google Dee"
+    },
+    {
+      "author": "Google DeepMind",
+      "username": "GoogleDeepMind",
+      "url": "https://xcancel.com/GoogleDeepMind",
+      "link": "https://twitter.com/googledeepmind/status/2070180509523546481",
+      "text": "Gemini 3.5 Flash now supports native computer use. This built-in tool lets developers build custom agents that can see and take action across browser, mobile, and desktop interfaces. Find out more → goo.gle/4f4sNQA",
+      "time": "Google Dee"
+    },
+    {
+      "author": "Demis Hassabis",
+      "username": "demishassabis",
+      "url": "https://xcancel.com/demishassabis",
+      "link": "https://twitter.com/demishassabis/status/2068002732250640603",
+      "text": "Thanks John for an extraordinary partnership and wonderful collaboration over the past 9 years! What we achieved with AlphaFold changed the world, and showed the field what was possible with AI for science and medicine, lighting the way for how AI can benefit humanity.",
+      "time": "Demis Hass"
+    },
+    {
+      "author": "Demis Hassabis",
+      "username": "demishassabis",
+      "url": "https://xcancel.com/demishassabis",
+      "link": "https://twitter.com/demishassabis/status/2064873362799600042",
+      "text": "Awesome to see this innovation in text diffusion. DiffusionGemma is lightning fast, 4x faster than other Gemma 4 models! Congrats to @bodonoghue85 and the team who worked so hard on this - excited to see what people build with it!",
+      "time": "Demis Hass"
+    },
+    {
+      "author": "Demis Hassabis",
+      "username": "demishassabis",
+      "url": "https://xcancel.com/demishassabis",
+      "link": "https://twitter.com/demishassabis/status/2062241713398149524",
+      "text": "Celebrating the milestone of a massive 150+ million downloads of Gemma 4 with the release of the new Gemma 4 12B model! It's incredibly powerful for such a small model and it’s tiny enough to run locally on a laptop with just 16GB VRAM. Apache 2.0 license - happy building!",
+      "time": "Demis Hass"
+    },
+    {
+      "author": "Andrej Karpathy",
+      "username": "karpathy",
+      "url": "https://xcancel.com/karpathy",
+      "link": "https://twitter.com/karpathy/status/2069547676849557725",
+      "text": "This is a new paradigm for interacting with Claude that is significantly more \"inline\" with all the other human activity org-wide. Once you do all of the under the hood engineering work to make this \"just work\" (e.g. across tools, integrations, compute environments, memory, security, etc.), Claude basically joins the team in a seamless way - you can talk to it as you would talk to a person and it can help with a very large variety of workloads. Imo this is the 3rd major redesign of LLM UIUX. The",
+      "time": "Andrej Kar"
+    },
+    {
+      "author": "Andrej Karpathy",
+      "username": "karpathy",
+      "url": "https://xcancel.com/karpathy",
+      "link": "https://twitter.com/karpathy/status/2065490793092337691",
+      "text": "In awe of SpaceX and its story - past, present and the future. You can think about it in 10+ different ways and continue re-blowing your mind in circles. Huge congrats to the team! 🚀",
+      "time": "Andrej Kar"
+    },
+    {
+      "author": "Andrej Karpathy",
+      "username": "karpathy",
+      "url": "https://xcancel.com/karpathy",
+      "link": "https://twitter.com/karpathy/status/2064409694761054332",
+      "text": "This is a super exciting release - Claude Fable 5 is the same underlying model as Mythos but with added safeguards. The benchmarks are great and it's SOTA on everything by a margin but I'll add that *qualitatively* also, this is a major-version-bump-deserving step change forward (imo of the same order as Claude 4.5 was in November), peaking especially for long problem-solving sessions on very difficult problems. You can give it a lot more ambitious tasks than what you're used to, the model \"gets",
+      "time": "Andrej Kar"
+    },
+    {
+      "author": "Andrej Karpathy",
+      "username": "karpathy",
+      "url": "https://xcancel.com/karpathy",
+      "link": "https://twitter.com/karpathy/status/2056753169888334312",
+      "text": "Personal update: I've joined Anthropic. I think the next few years at the frontier of LLMs will be especially formative. I am very excited to join the team here and get back to R D. I remain deeply passionate about education and plan to resume my work on it in time.",
+      "time": "Andrej Kar"
+    },
+    {
+      "author": "Andrej Karpathy",
+      "username": "karpathy",
+      "url": "https://xcancel.com/karpathy",
+      "link": "https://twitter.com/karpathy/status/2053872850101285137",
+      "text": "This works really well btw, at the end of your query ask your LLM to \"structure your response as HTML\", then view the generated file in your browser. I've also had some success asking the LLM to present its output as slideshows, etc. More generally, imo audio is the human-preferred input to AIs but vision (images/animations/video) is the preferred output from them. Around a ~third of our brains are a massively parallel processor dedicated to vision, it is the 10-lane superhighway of information ",
+      "time": "Andrej Kar"
     }
   ],
-  "generated_at": "2026-06-15T00:00:00.000Z",
-  "count": 18,
-  "note": "手动精选的代表性动态 (scrape.do 限流时降级)"
+  "generated_at": "2026-07-06T02:16:06.229Z",
+  "count": 31,
+  "note": "GH Actions 抓取 @ 2026-07-06"
 }

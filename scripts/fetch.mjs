@@ -90,14 +90,16 @@ function parseNitterHtml(html, targetUser) {
     }
     if (/class="[^"]*pinned[^"]*"/i.test(item)) { debugMismatches.push({ reason: 'pinned' }); continue; }
     if (/class="[^"]*(?:promoted|ad-badge|sponsored)[^"]*"/i.test(item)) { debugMismatches.push({ reason: 'ad' }); continue; }
-    const isRetweet = /class="[^"]*(?:retweet-header)[^"]*"/i.test(item) || /^🔁/m.test(item);
-    if (isRetweet) { debugMismatches.push({ reason: 'retweet' }); continue; }
+    // 注意:不跳过 retweet-header —— nitter 把 "Yann retweeted" 显示成 retweet-header,
+    // 但其实引文后还有 ylecun 自己的评论内容 (quote-retweet),不算纯转推
+    // const isRetweet = /class="[^"]*(?:retweet-header)[^"]*"/i.test(item) || /^🔁/m.test(item);
+    // if (isRetweet) { debugMismatches.push({ reason: 'retweet' }); continue; }
     // 提取推文正文
     const contentMatch = item.match(/<div class="tweet-content[^"]*"[^>]*>([\s\S]*?)<\/div>/i);
     if (!contentMatch) continue;
     let text = contentMatch[1].replace(/<br\s*\/?>/gi, ' ').replace(/<[^>]+>/g, '').replace(/&[a-z]+;/gi, ' ').replace(/\s+/g, ' ').trim();
     if (!text) continue;
-    const linkMatch = item.match(/href="\/([^"\/?#]+)\/status\/(\d+)"/);
+    const linkMatch = item.match(/href="\/([^"\/?#]+)\/status\/(\d+)(?:#[^"]*)?"/);
     const statusId = linkMatch?.[2];
     const dateMatch = item.match(/<a[^>]+title="([^"]+)"[^>]*>[^<]+<\/a>/);
     const time = formatDate(dateMatch?.[1] || '');
