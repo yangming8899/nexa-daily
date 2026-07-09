@@ -7,6 +7,11 @@
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
   <title>NEXA Daily · AI Pulse, Filtered for You</title>
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -1846,6 +1851,8 @@
     async function doRefreshPapers() {
       const btn = $('btnRefreshPapers');
       btn.disabled = true;
+      // 抓取开始 → 自动开猫游戏
+      if (!_catGameOpen) toggleCatGame();
       showLoading();
       updateLoading('正在抓取 arXiv 论文…', 'FETCHING PAPERS', 30);
       try {
@@ -1905,6 +1912,8 @@
       const btn = $('btnRefreshAll'), icon = $('refreshIcon');
       btn.disabled = true; icon.classList.add('spin');
       _refreshCooldownUntil = Date.now() + 30_000;
+      // 抓取开始 → 自动开猫游戏 (用户玩着等)
+      if (!_catGameOpen) toggleCatGame();
       showLoading();
       updateLoading('正在抓取推文…', 'STEP 1/2 · FETCHING TWEETS', 25);
       const results = { tweets: 0, papers: 0, err: null, fromFallback: false };
