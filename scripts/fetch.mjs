@@ -62,6 +62,23 @@ function fetchDirect(url, headers) {
   });
 }
 
+// ── 推文链接真实性验证 ──
+// 用 publish.x.com/oEmbed 验证 tweet 是否真实存在
+// 返回 true=真, false=假(被删/未发布)
+async function verifyLink(link) {
+  if (!link || !link.includes('/status/')) return false;
+  // 加快速度:跳过假 ID 格式
+  if (link.includes('1818300000000000000') || link.includes('181830000000000000')) return false; // 历史残留
+  const u = `https://publish.x.com/oembed?omit_script=true&url=${encodeURIComponent(link)}`;
+  try {
+    const data = await fetchDirect(u, { 'User-Agent': 'NEXA-Daily/3.0' });
+    return data.startsWith('{') && data.includes('"author_name"');
+  } catch (e) {
+    // 网络错误当 unknown,放行(总比 false positive 强)
+    return true;
+  }
+}
+
 // ── Nitter HTML 解析(严格按作者过滤) ──
 function parseNitterHtml(html, targetUser) {
   const target = String(targetUser || '').toLowerCase();
@@ -174,24 +191,37 @@ async function fetchUser(username) {
   }
   all.sort((a, b) => (b.time || '').localeCompare(a.time || ''));
 
+  // 关键防御: 用 publish.x.com/oEmbed 验证每个 link 真实存在
+  // (防止 "Hmm...this page doesn't exist" 的假链接流入 cache.json)
+  console.log(`[fetch] 验证 ${all.length} 条链接真实性…`);
+  const verified = [];
+  for (const u of all) {
+    if (await verifyLink(u.link)) {
+      verified.push(u);
+    } else {
+      console.warn(`[verify] ✗ 跳过假链接: ${u.author} - ${u.link}`);
+    }
+  }
+  console.log(`[verify] 通过 ${verified.length}/${all.length}`);
+
   // 至少抓到 3 条才覆盖 cache.json;否则保留老的
   const oldPath = path.join(ROOT, 'data/cache.json');
   let oldData = null;
   try { oldData = JSON.parse(fs.readFileSync(oldPath, 'utf-8')); } catch (e) {}
   const oldCount = oldData?.count || 0;
 
-  if (all.length >= 3) {
+  if (verified.length >= 3) {
     // 写入新数据
     const out = {
-      updates: all,
+      updates: verified,
       generated_at: new Date().toISOString(),
-      count: all.length,
+      count: verified.length,
       note: `GH Actions 抓取 @ ${new Date().toISOString().slice(0, 10)}`,
     };
     fs.writeFileSync(oldPath, JSON.stringify(out, null, 2));
-    console.log(`[fetch] 写入 cache.json: ${all.length} 条`);
+    console.log(`[fetch] 写入 cache.json: ${verified.length} 条`);
   } else {
-    console.log(`[fetch] 只抓到 ${all.length} 条(< 3),保留老的 ${oldCount} 条`);
+    console.log(`[fetch] 只抓到 ${verified.length} 条(< 3),保留老的 ${oldCount} 条`);
     // 没新数据 = 不覆盖 = workflow 不需要 commit,push 不会乱动
   }
 

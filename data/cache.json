@@ -4,104 +4,88 @@
       "author": "Yann LeCun (杨立昆)",
       "username": "ylecun",
       "url": "https://xcancel.com/ylecun",
-      "link": "https://twitter.com/ylecun/status/2073425439188484351",
-      "text": "Yet we still don't have level-5 self-driving cars, and certainly not self-serving cars that can learn to drive in a few hours of practice like any teenager. We don't even have domestic robots that can do what 10-year olds can do the first time we ask them. We don't even have robots that are nearly as smart as a house cat. The G in AGI is nonsense.",
-      "time": "Yann LeCun"
-    },
-    {
-      "author": "Yann LeCun (杨立昆)",
-      "username": "ylecun",
-      "url": "https://xcancel.com/ylecun",
-      "link": "https://twitter.com/ylecun/status/2073427970656452822",
-      "text": "If there were any lingering doubts that you and your friends were against the very principles of democracy, you just removed them.",
-      "time": "Yann LeCun"
-    },
-    {
-      "author": "Yann LeCun (杨立昆)",
-      "username": "ylecun",
-      "url": "https://xcancel.com/ylecun",
-      "link": "https://twitter.com/ylecun/status/2073037974153896312",
-      "text": "Exactly. I've been disseminating a similar message for years. The concentration of power in AI and the desire for control is by far the biggest danger of AI. It could lead to a few private companies and/or countries being in control of access to information, access to knowledge, and access to the tools of economic expansion. It's a kind of medieval obscurantism akin to the Ottoman empire banning the use of the printing press for 200 years, in part to keep control of the dogma, but also to protec",
+      "link": "https://twitter.com/ylecun/status/2074499817661731084",
+      "text": "Super-fun in-depth discussion 🙏🙏🙏 World models, JEPA vs generative architectures, anti-collapse methods for JEPA SSL including contrastive, distillation, and information maximization methods, an explanation of SIGReg/LeJEPA/LeWM. Plus some bits on AMI Labs, Project Tapestry, as well as Lisp and homoiconic languages 😅",
       "time": "Yann LeCun"
     },
     {
       "author": "Sam Altman",
       "username": "sama",
       "url": "https://xcancel.com/sama",
-      "link": "https://twitter.com/sama/status/2073791666553844074",
-      "text": "our older kid put two words together for the first time and i am approximately as amazed by this cognitive feat as i am by GPT-5.6 discovering new math",
+      "link": "https://twitter.com/sama/status/2075068286107316317",
+      "text": "what a good video",
       "time": "Sam Altman"
     },
     {
       "author": "Sam Altman",
       "username": "sama",
       "url": "https://xcancel.com/sama",
-      "link": "https://twitter.com/sama/status/2073636003215249515",
-      "text": "they really nailed it with \"life, liberty, and the pursuit of happiness\"",
+      "link": "https://twitter.com/sama/status/2075063511290662996",
+      "text": "tbh i dont think sol gets that many dates either",
       "time": "Sam Altman"
     },
     {
       "author": "Sam Altman",
       "username": "sama",
       "url": "https://xcancel.com/sama",
-      "link": "https://twitter.com/sama/status/2073635910512726444",
-      "text": "grateful to the people that created the idea of america, everyone who built it over the past 250 years, and the people who will carry it forward for the next 250. most impressive social experiment in history.",
+      "link": "https://twitter.com/sama/status/2075048072837734448",
+      "text": "it surely doesnt",
       "time": "Sam Altman"
     },
     {
       "author": "Sam Altman",
       "username": "sama",
       "url": "https://xcancel.com/sama",
-      "link": "https://twitter.com/sama/status/2072773542576586790",
-      "text": "going to world cup games is always awesome, but watching the USA win in the USA during USA birthday week was just incredible",
+      "link": "https://twitter.com/sama/status/2075047983314571764",
+      "text": "🫶",
       "time": "Sam Altman"
     },
     {
       "author": "Sam Altman",
       "username": "sama",
       "url": "https://xcancel.com/sama",
-      "link": "https://twitter.com/sama/status/2070614769678393846",
-      "text": "not quite all-you-can-eat tokens, but we are working on it",
+      "link": "https://twitter.com/sama/status/2075047747250684352",
+      "text": "i do love rottweilers",
       "time": "Sam Altman"
     },
     {
       "author": "OpenAI",
       "username": "OpenAI",
       "url": "https://xcancel.com/OpenAI",
-      "link": "https://twitter.com/openai/status/2072004836674167294",
-      "text": "We’re introducing GeneBench-Pro, a research-level benchmark for a harder kind of AI progress: how well agents can navigate messy biological data, choose the right analysis path, and make judgment calls that real computational research depends on. openai.com/index/introducing…",
+      "link": "https://twitter.com/openai/status/2075019750569378007",
+      "text": "GPT-Live is now fully rolled out to all ChatGPT users on Go, Plus, and Pro plans. Free user rollout is in progress. Update to the latest version of the ChatGPT app on iOS or Android to try it out.",
       "time": "OpenAI"
     },
     {
       "author": "OpenAI",
       "username": "OpenAI",
       "url": "https://xcancel.com/OpenAI",
-      "link": "https://twitter.com/openai/status/2070555280052826429",
-      "text": "GPT‑5.6 Sol launches with our most robust safety stack yet. We strengthened real-time protections against high-risk cyber activity and repeated misuse, then spent weeks hardening the system with human red teaming and over 700,000 A100-equivalent GPU hours of automated testing.",
+      "link": "https://twitter.com/openai/status/2074972185895342084",
+      "text": "As coding models improve, evals need to become harder, fairer, and more trustworthy. Better benchmarks help the field understand real progress and where the frontier is moving.",
       "time": "OpenAI"
     },
     {
       "author": "OpenAI",
       "username": "OpenAI",
       "url": "https://xcancel.com/OpenAI",
-      "link": "https://twitter.com/openai/status/2070555278576439306",
-      "text": "GPT-5.6 Sol is our most capable model yet for cybersecurity. It shifts the performance-efficiency frontier for long-horizon security tasks including vulnerability research and exploitation.",
+      "link": "https://twitter.com/openai/status/2074972182640492731",
+      "text": "To audit SWE-Bench Pro, we used model-based investigator agents alongside independent reviews from five independent experienced software engineers. That helped us examine tasks at scale while keeping expert judgment at the center.",
       "time": "OpenAI"
     },
     {
       "author": "OpenAI",
       "username": "OpenAI",
       "url": "https://xcancel.com/OpenAI",
-      "link": "https://twitter.com/openai/status/2070555276370169969",
-      "text": "GPT‑5.6 Sol sets a new state of the art on Terminal‑Bench 2.1, which tests complex command-line workflows requiring planning, iteration, and tool coordination.",
+      "link": "https://twitter.com/openai/status/2074972180769907186",
+      "text": "Our audit of SWE-Bench Pro found that a meaningful share of public tasks contain issues that can distort results. Some correct solutions fail because of hidden requirements, contradictory instructions, overly strict tests, or incomplete grading criteria.",
       "time": "OpenAI"
     },
     {
       "author": "OpenAI",
       "username": "OpenAI",
       "url": "https://xcancel.com/OpenAI",
-      "link": "https://twitter.com/openai/status/2070555274835046430",
-      "text": "Sol is our new flagship and a step function better than GPT-5.5. Terra delivers performance competitive to GPT-5.5 at 2x lower cost. Luna is our most cost-efficient model, delivering strong capability at our lowest cost. Together, the GPT-5.6 family gives people and developers more choice in how they balance intelligence, speed, and cost.",
+      "link": "https://twitter.com/openai/status/2074972179385720836",
+      "text": "We audited SWE-Bench Pro, one of the most widely used AI coding benchmarks, and found it no longer reliably measures frontier coding capability. We find 30% of SWE-Bench Pro tasks to be broken, and are retracting our previous recommendation that the research community use it as a leading coding eval. openai.com/index/separating-…",
       "time": "OpenAI"
     },
     {
@@ -145,6 +129,70 @@
       "time": "Jim Fan"
     },
     {
+      "author": "Ilya Sutskever",
+      "username": "ilyasut",
+      "url": "https://xcancel.com/ilyasut",
+      "link": "https://twitter.com/ilyasut/status/2073568142480314771",
+      "text": "🇺🇸🦅250!",
+      "time": "Ilya Sutsk"
+    },
+    {
+      "author": "Ilya Sutskever",
+      "username": "ilyasut",
+      "url": "https://xcancel.com/ilyasut",
+      "link": "https://twitter.com/ilyasut/status/2027486969174102261",
+      "text": "It’s extremely good that Anthropic has not backed down, and it’s siginficant that OpenAI has taken a similar stance. In the future, there will be much more challenging situations of this nature, and it will be critical for the relevant leaders to rise up to the occasion, for fierce competitors to put their differences aside. Good to see that happen today.",
+      "time": "Ilya Sutsk"
+    },
+    {
+      "author": "Ilya Sutskever",
+      "username": "ilyasut",
+      "url": "https://xcancel.com/ilyasut",
+      "link": "https://twitter.com/ilyasut/status/1994424504370581726",
+      "text": "One point I made that didn’t come across: - Scaling the current thing will keep leading to improvements. In particular, it won’t stall. - But something important will continue to be missing.",
+      "time": "Ilya Sutsk"
+    },
+    {
+      "author": "Ilya Sutskever",
+      "username": "ilyasut",
+      "url": "https://xcancel.com/ilyasut",
+      "link": "https://twitter.com/ilyasut/status/1992328386258317591",
+      "text": "Important work",
+      "time": "Ilya Sutsk"
+    },
+    {
+      "author": "Ilya Sutskever",
+      "username": "ilyasut",
+      "url": "https://xcancel.com/ilyasut",
+      "link": "https://twitter.com/ilyasut/status/1977971110923968656",
+      "text": "truly the greatest day ever🎗️",
+      "time": "Ilya Sutsk"
+    },
+    {
+      "author": "Google DeepMind",
+      "username": "GoogleDeepMind",
+      "url": "https://xcancel.com/GoogleDeepMind",
+      "link": "https://twitter.com/googledeepmind/status/2074513847306572213",
+      "text": "The Predicting the Past Skill is a collaborative research partner. 🏛️ We teamed up with @TSommerschield on 3️⃣ case studies to prove it. By blending specialized AI with Gemini’s reasoning, we showed how historians can explore ancient data in entirely new ways. Explore the platform → goo.gle/4vR5ZtC",
+      "time": "Google Dee"
+    },
+    {
+      "author": "Google DeepMind",
+      "username": "GoogleDeepMind",
+      "url": "https://xcancel.com/GoogleDeepMind",
+      "link": "https://twitter.com/googledeepmind/status/2074513665299034447",
+      "text": "Using AI for history analysis has 3 core challenges: 🔹 Creating custom analysis and visuals for every inscription. 🔹 Cross-source mapping to find large-scale patterns. 🔹 Utilizing advanced AI tools with no coding skills. Our Antigravity skill shifts all these complex workflows into plain English.",
+      "time": "Google Dee"
+    },
+    {
+      "author": "Google DeepMind",
+      "username": "GoogleDeepMind",
+      "url": "https://xcancel.com/GoogleDeepMind",
+      "link": "https://twitter.com/googledeepmind/status/2074513661750546762",
+      "text": "🏛️ We’re unveiling a new way to converse with the ancient world. By grounding Gemini directly in our expert models Aeneas and Ithaca, our Predicting the Past Skill in Google @antigravity lets historians study Greek and Latin texts using plain English. 🧵",
+      "time": "Google Dee"
+    },
+    {
       "author": "Google DeepMind",
       "username": "GoogleDeepMind",
       "url": "https://xcancel.com/GoogleDeepMind",
@@ -158,30 +206,6 @@
       "url": "https://xcancel.com/GoogleDeepMind",
       "link": "https://twitter.com/googledeepmind/status/2071988052478615902",
       "text": "Pair these models together using the Interactions API. 🤝 Quickly generate an image with Nano Banana 2 Lite, then immediately animate it using Gemini Omni Flash. Plus, you can maintain session history to stack up to three sequential edits.",
-      "time": "Google Dee"
-    },
-    {
-      "author": "Google DeepMind",
-      "username": "GoogleDeepMind",
-      "url": "https://xcancel.com/GoogleDeepMind",
-      "link": "https://twitter.com/googledeepmind/status/2071988050012303710",
-      "text": "Gemini Omni Flash shines in: 🔵 Conversational video editing 🔵 Multimodal referencing and combining inputs ​​🔵 Real-world knowledge 🔵 Connecting text and graphics directly to video actions It’s available in @GoogleAIStudio, the Gemini API and Gemini Enterprise Agent Platform for the first time.",
-      "time": "Google Dee"
-    },
-    {
-      "author": "Google DeepMind",
-      "username": "GoogleDeepMind",
-      "url": "https://xcancel.com/GoogleDeepMind",
-      "link": "https://twitter.com/googledeepmind/status/2071988047445438475",
-      "text": "Nano Banana 2 Lite delivers text-to-image outputs in just 4 seconds. It’s designed for quicker ideation and workflows where speed and cost are the primary roadblocks.",
-      "time": "Google Dee"
-    },
-    {
-      "author": "Google DeepMind",
-      "username": "GoogleDeepMind",
-      "url": "https://xcancel.com/GoogleDeepMind",
-      "link": "https://twitter.com/googledeepmind/status/2070180509523546481",
-      "text": "Gemini 3.5 Flash now supports native computer use. This built-in tool lets developers build custom agents that can see and take action across browser, mobile, and desktop interfaces. Find out more → goo.gle/4f4sNQA",
       "time": "Google Dee"
     },
     {
@@ -249,7 +273,7 @@
       "time": "Andrej Kar"
     }
   ],
-  "generated_at": "2026-07-06T02:16:06.229Z",
-  "count": 31,
-  "note": "GH Actions 抓取 @ 2026-07-06"
+  "generated_at": "2026-07-09T04:08:23.652Z",
+  "count": 34,
+  "note": "GH Actions 抓取 @ 2026-07-09"
 }
