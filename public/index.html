@@ -1105,7 +1105,7 @@
       position: fixed; right: 18px; bottom: 18px;
       width: 50px; height: 50px; border-radius: 50%;
       background: #fff; border: 1px solid var(--line);
-      font-size: 24px; cursor: pointer; z-index: 1500;
+      font-size: 24px; cursor: pointer; z-index: 2500;  /* 高于 loading-card (2000) */
       box-shadow: 0 6px 16px -6px rgba(0,0,0,.28);
       transition: transform .2s ease;
       display: flex; align-items: center; justify-content: center;
@@ -1126,7 +1126,7 @@
       border: 1px solid var(--line);
       border-radius: 16px;
       box-shadow: 0 24px 70px -12px rgba(0,0,0,.22);
-      z-index: 1400;
+      z-index: 2400;  /* 高于 loading-card (2000) 和 summary-modal (1000) */
       display: none; flex-direction: column;
       overflow: hidden;
       transform: translateY(8px) scale(.96);
@@ -1204,9 +1204,13 @@
       .loading-card { right: 12px; bottom: 12px; width: calc(100vw - 24px); }
     }
 
-    /* 当猫游戏开启时,loading card 上移避免遮挡 */
+    /* 当猫游戏开启时,所有浮动窗口自动避让,让 dock 浮在最上层 */
+    /* cat-dock z-index (2400) > loading-card (2000) > summary-modal (1000) */
+    /* 所以 cat dock 永远在最上面 */
+
+    /* loading card: 上移避免和 dock 重叠 */
     body.cat-open .loading-card.is-open {
-      bottom: 320px;
+      bottom: 400px;
       transition: bottom .25s ease;
     }
 
